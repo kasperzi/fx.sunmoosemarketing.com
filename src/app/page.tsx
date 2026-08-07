@@ -38,17 +38,17 @@ export default function HomePage() {
                         <p className="nav-mega__heading">Country-Specific Brokers</p>
                         <div className="nav-mega__country-grid">
                           <ul className="nav-mega__list">
-                            <li><a href="#"><span className="flag-emoji">🇳🇱</span>Netherlands</a></li>
-                            <li><a href="#"><span className="flag-emoji">🇬🇧</span>United Kingdom</a></li>
-                            <li><a href="#"><span className="flag-emoji">🇩🇪</span>Germany</a></li>
-                            <li><a href="#"><span className="flag-emoji">🇫🇷</span>France</a></li>
-                            <li><a href="#"><span className="flag-emoji">🇨🇦</span>Canada</a></li>
+                            <li><a href="#"><img src="https://flagcdn.com/w20/nl.png" width="18" height="14" alt="" className="flag-emoji" />Netherlands</a></li>
+                            <li><a href="#"><img src="https://flagcdn.com/w20/gb.png" width="18" height="14" alt="" className="flag-emoji" />United Kingdom</a></li>
+                            <li><a href="#"><img src="https://flagcdn.com/w20/de.png" width="18" height="14" alt="" className="flag-emoji" />Germany</a></li>
+                            <li><a href="#"><img src="https://flagcdn.com/w20/fr.png" width="18" height="14" alt="" className="flag-emoji" />France</a></li>
+                            <li><a href="#"><img src="https://flagcdn.com/w20/ca.png" width="18" height="14" alt="" className="flag-emoji" />Canada</a></li>
                           </ul>
                           <ul className="nav-mega__list">
-                            <li><a href="#"><span className="flag-emoji">🇪🇸</span>Spain</a></li>
-                            <li><a href="#"><span className="flag-emoji">🇮🇳</span>India</a></li>
-                            <li><a href="#"><span className="flag-emoji">🇮🇹</span>Italy</a></li>
-                            <li><a href="#"><span className="flag-emoji">🇦🇺</span>Australia</a></li>
+                            <li><a href="#"><img src="https://flagcdn.com/w20/es.png" width="18" height="14" alt="" className="flag-emoji" />Spain</a></li>
+                            <li><a href="#"><img src="https://flagcdn.com/w20/in.png" width="18" height="14" alt="" className="flag-emoji" />India</a></li>
+                            <li><a href="#"><img src="https://flagcdn.com/w20/it.png" width="18" height="14" alt="" className="flag-emoji" />Italy</a></li>
+                            <li><a href="#"><img src="https://flagcdn.com/w20/au.png" width="18" height="14" alt="" className="flag-emoji" />Australia</a></li>
                           </ul>
                         </div>
                       </div>
@@ -118,167 +118,167 @@ export default function HomePage() {
                               <input type="text" placeholder="Search country..." autoComplete="off" />
                             </div>
                             <ul className="country-list" role="listbox">
-                                                            <li className="country-option" role="option" data-flag="🇦🇱" data-code="AL" data-name="Albania"><span className="flag-emoji">🇦🇱</span>Albania</li>
-                              <li className="country-option" role="option" data-flag="🇩🇿" data-code="DZ" data-name="Algeria"><span className="flag-emoji">🇩🇿</span>Algeria</li>
-                              <li className="country-option" role="option" data-flag="🇦🇩" data-code="AD" data-name="Andorra"><span className="flag-emoji">🇦🇩</span>Andorra</li>
-                              <li className="country-option" role="option" data-flag="🇦🇴" data-code="AO" data-name="Angola"><span className="flag-emoji">🇦🇴</span>Angola</li>
-                              <li className="country-option" role="option" data-flag="🇦🇬" data-code="AG" data-name="Antigua and Barbuda"><span className="flag-emoji">🇦🇬</span>Antigua and Barbuda</li>
-                              <li className="country-option" role="option" data-flag="🇦🇷" data-code="AR" data-name="Argentina"><span className="flag-emoji">🇦🇷</span>Argentina</li>
-                              <li className="country-option" role="option" data-flag="🇦🇲" data-code="AM" data-name="Armenia"><span className="flag-emoji">🇦🇲</span>Armenia</li>
-                              <li className="country-option" role="option" data-flag="🇦🇺" data-code="AU" data-name="Australia"><span className="flag-emoji">🇦🇺</span>Australia</li>
-                              <li className="country-option" role="option" data-flag="🇦🇹" data-code="AT" data-name="Austria"><span className="flag-emoji">🇦🇹</span>Austria</li>
-                              <li className="country-option" role="option" data-flag="🇦🇿" data-code="AZ" data-name="Azerbaijan"><span className="flag-emoji">🇦🇿</span>Azerbaijan</li>
-                              <li className="country-option" role="option" data-flag="🇧🇸" data-code="BS" data-name="Bahamas"><span className="flag-emoji">🇧🇸</span>Bahamas</li>
-                              <li className="country-option" role="option" data-flag="🇧🇭" data-code="BH" data-name="Bahrain"><span className="flag-emoji">🇧🇭</span>Bahrain</li>
-                              <li className="country-option" role="option" data-flag="🇧🇩" data-code="BD" data-name="Bangladesh"><span className="flag-emoji">🇧🇩</span>Bangladesh</li>
-                              <li className="country-option" role="option" data-flag="🇧🇧" data-code="BB" data-name="Barbados"><span className="flag-emoji">🇧🇧</span>Barbados</li>
-                              <li className="country-option" role="option" data-flag="🇧🇪" data-code="BE" data-name="Belgium"><span className="flag-emoji">🇧🇪</span>Belgium</li>
-                              <li className="country-option" role="option" data-flag="🇧🇿" data-code="BZ" data-name="Belize"><span className="flag-emoji">🇧🇿</span>Belize</li>
-                              <li className="country-option" role="option" data-flag="🇧🇯" data-code="BJ" data-name="Benin"><span className="flag-emoji">🇧🇯</span>Benin</li>
-                              <li className="country-option" role="option" data-flag="🇧🇹" data-code="BT" data-name="Bhutan"><span className="flag-emoji">🇧🇹</span>Bhutan</li>
-                              <li className="country-option" role="option" data-flag="🇧🇴" data-code="BO" data-name="Bolivia"><span className="flag-emoji">🇧🇴</span>Bolivia</li>
-                              <li className="country-option" role="option" data-flag="🇧🇦" data-code="BA" data-name="Bosnia and Herzegovina"><span className="flag-emoji">🇧🇦</span>Bosnia and Herzegovina</li>
-                              <li className="country-option" role="option" data-flag="🇧🇼" data-code="BW" data-name="Botswana"><span className="flag-emoji">🇧🇼</span>Botswana</li>
-                              <li className="country-option" role="option" data-flag="🇧🇷" data-code="BR" data-name="Brazil"><span className="flag-emoji">🇧🇷</span>Brazil</li>
-                              <li className="country-option" role="option" data-flag="🇧🇳" data-code="BN" data-name="Brunei"><span className="flag-emoji">🇧🇳</span>Brunei</li>
-                              <li className="country-option" role="option" data-flag="🇧🇬" data-code="BG" data-name="Bulgaria"><span className="flag-emoji">🇧🇬</span>Bulgaria</li>
-                              <li className="country-option" role="option" data-flag="🇧🇫" data-code="BF" data-name="Burkina Faso"><span className="flag-emoji">🇧🇫</span>Burkina Faso</li>
-                              <li className="country-option" role="option" data-flag="🇧🇮" data-code="BI" data-name="Burundi"><span className="flag-emoji">🇧🇮</span>Burundi</li>
-                              <li className="country-option" role="option" data-flag="🇨🇻" data-code="CV" data-name="Cabo Verde"><span className="flag-emoji">🇨🇻</span>Cabo Verde</li>
-                              <li className="country-option" role="option" data-flag="🇰🇭" data-code="KH" data-name="Cambodia"><span className="flag-emoji">🇰🇭</span>Cambodia</li>
-                              <li className="country-option" role="option" data-flag="🇨🇲" data-code="CM" data-name="Cameroon"><span className="flag-emoji">🇨🇲</span>Cameroon</li>
-                              <li className="country-option" role="option" data-flag="🇨🇦" data-code="CA" data-name="Canada"><span className="flag-emoji">🇨🇦</span>Canada</li>
-                              <li className="country-option" role="option" data-flag="🇨🇱" data-code="CL" data-name="Chile"><span className="flag-emoji">🇨🇱</span>Chile</li>
-                              <li className="country-option" role="option" data-flag="🇨🇳" data-code="CN" data-name="China"><span className="flag-emoji">🇨🇳</span>China</li>
-                              <li className="country-option" role="option" data-flag="🇨🇴" data-code="CO" data-name="Colombia"><span className="flag-emoji">🇨🇴</span>Colombia</li>
-                              <li className="country-option" role="option" data-flag="🇰🇲" data-code="KM" data-name="Comoros"><span className="flag-emoji">🇰🇲</span>Comoros</li>
-                              <li className="country-option" role="option" data-flag="🇨🇷" data-code="CR" data-name="Costa Rica"><span className="flag-emoji">🇨🇷</span>Costa Rica</li>
-                              <li className="country-option" role="option" data-flag="🇭🇷" data-code="HR" data-name="Croatia"><span className="flag-emoji">🇭🇷</span>Croatia</li>
-                              <li className="country-option" role="option" data-flag="🇨🇺" data-code="CU" data-name="Cuba"><span className="flag-emoji">🇨🇺</span>Cuba</li>
-                              <li className="country-option" role="option" data-flag="🇨🇾" data-code="CY" data-name="Cyprus"><span className="flag-emoji">🇨🇾</span>Cyprus</li>
-                              <li className="country-option" role="option" data-flag="🇨🇿" data-code="CZ" data-name="Czech Republic"><span className="flag-emoji">🇨🇿</span>Czech Republic</li>
-                              <li className="country-option" role="option" data-flag="🇩🇰" data-code="DK" data-name="Denmark"><span className="flag-emoji">🇩🇰</span>Denmark</li>
-                              <li className="country-option" role="option" data-flag="🇩🇯" data-code="DJ" data-name="Djibouti"><span className="flag-emoji">🇩🇯</span>Djibouti</li>
-                              <li className="country-option" role="option" data-flag="🇩🇲" data-code="DM" data-name="Dominica"><span className="flag-emoji">🇩🇲</span>Dominica</li>
-                              <li className="country-option" role="option" data-flag="🇩🇴" data-code="DO" data-name="Dominican Republic"><span className="flag-emoji">🇩🇴</span>Dominican Republic</li>
-                              <li className="country-option" role="option" data-flag="🇪🇨" data-code="EC" data-name="Ecuador"><span className="flag-emoji">🇪🇨</span>Ecuador</li>
-                              <li className="country-option" role="option" data-flag="🇪🇬" data-code="EG" data-name="Egypt"><span className="flag-emoji">🇪🇬</span>Egypt</li>
-                              <li className="country-option" role="option" data-flag="🇸🇻" data-code="SV" data-name="El Salvador"><span className="flag-emoji">🇸🇻</span>El Salvador</li>
-                              <li className="country-option" role="option" data-flag="🇬🇶" data-code="GQ" data-name="Equatorial Guinea"><span className="flag-emoji">🇬🇶</span>Equatorial Guinea</li>
-                              <li className="country-option" role="option" data-flag="🇪🇷" data-code="ER" data-name="Eritrea"><span className="flag-emoji">🇪🇷</span>Eritrea</li>
-                              <li className="country-option" role="option" data-flag="🇪🇪" data-code="EE" data-name="Estonia"><span className="flag-emoji">🇪🇪</span>Estonia</li>
-                              <li className="country-option" role="option" data-flag="🇸🇿" data-code="SZ" data-name="Eswatini"><span className="flag-emoji">🇸🇿</span>Eswatini</li>
-                              <li className="country-option" role="option" data-flag="🇪🇹" data-code="ET" data-name="Ethiopia"><span className="flag-emoji">🇪🇹</span>Ethiopia</li>
-                              <li className="country-option" role="option" data-flag="🇫🇯" data-code="FJ" data-name="Fiji"><span className="flag-emoji">🇫🇯</span>Fiji</li>
-                              <li className="country-option" role="option" data-flag="🇫🇮" data-code="FI" data-name="Finland"><span className="flag-emoji">🇫🇮</span>Finland</li>
-                              <li className="country-option" role="option" data-flag="🇫🇷" data-code="FR" data-name="France"><span className="flag-emoji">🇫🇷</span>France</li>
-                              <li className="country-option" role="option" data-flag="🇬🇦" data-code="GA" data-name="Gabon"><span className="flag-emoji">🇬🇦</span>Gabon</li>
-                              <li className="country-option" role="option" data-flag="🇬🇲" data-code="GM" data-name="Gambia"><span className="flag-emoji">🇬🇲</span>Gambia</li>
-                              <li className="country-option" role="option" data-flag="🇬🇪" data-code="GE" data-name="Georgia"><span className="flag-emoji">🇬🇪</span>Georgia</li>
-                              <li className="country-option" role="option" data-flag="🇩🇪" data-code="DE" data-name="Germany"><span className="flag-emoji">🇩🇪</span>Germany</li>
-                              <li className="country-option" role="option" data-flag="🇬🇭" data-code="GH" data-name="Ghana"><span className="flag-emoji">🇬🇭</span>Ghana</li>
-                              <li className="country-option" role="option" data-flag="🇬🇷" data-code="GR" data-name="Greece"><span className="flag-emoji">🇬🇷</span>Greece</li>
-                              <li className="country-option" role="option" data-flag="🇬🇩" data-code="GD" data-name="Grenada"><span className="flag-emoji">🇬🇩</span>Grenada</li>
-                              <li className="country-option" role="option" data-flag="🇬🇹" data-code="GT" data-name="Guatemala"><span className="flag-emoji">🇬🇹</span>Guatemala</li>
-                              <li className="country-option" role="option" data-flag="🇬🇳" data-code="GN" data-name="Guinea"><span className="flag-emoji">🇬🇳</span>Guinea</li>
-                              <li className="country-option" role="option" data-flag="🇬🇼" data-code="GW" data-name="Guinea-Bissau"><span className="flag-emoji">🇬🇼</span>Guinea-Bissau</li>
-                              <li className="country-option" role="option" data-flag="🇬🇾" data-code="GY" data-name="Guyana"><span className="flag-emoji">🇬🇾</span>Guyana</li>
-                              <li className="country-option" role="option" data-flag="🇭🇳" data-code="HN" data-name="Honduras"><span className="flag-emoji">🇭🇳</span>Honduras</li>
-                              <li className="country-option" role="option" data-flag="🇭🇺" data-code="HU" data-name="Hungary"><span className="flag-emoji">🇭🇺</span>Hungary</li>
-                              <li className="country-option" role="option" data-flag="🇮🇸" data-code="IS" data-name="Iceland"><span className="flag-emoji">🇮🇸</span>Iceland</li>
-                              <li className="country-option" role="option" data-flag="🇮🇳" data-code="IN" data-name="India"><span className="flag-emoji">🇮🇳</span>India</li>
-                              <li className="country-option" role="option" data-flag="🇮🇩" data-code="ID" data-name="Indonesia"><span className="flag-emoji">🇮🇩</span>Indonesia</li>
-                              <li className="country-option" role="option" data-flag="🇮🇪" data-code="IE" data-name="Ireland"><span className="flag-emoji">🇮🇪</span>Ireland</li>
-                              <li className="country-option" role="option" data-flag="🇮🇱" data-code="IL" data-name="Israel"><span className="flag-emoji">🇮🇱</span>Israel</li>
-                              <li className="country-option" role="option" data-flag="🇮🇹" data-code="IT" data-name="Italy"><span className="flag-emoji">🇮🇹</span>Italy</li>
-                              <li className="country-option" role="option" data-flag="🇯🇲" data-code="JM" data-name="Jamaica"><span className="flag-emoji">🇯🇲</span>Jamaica</li>
-                              <li className="country-option" role="option" data-flag="🇯🇵" data-code="JP" data-name="Japan"><span className="flag-emoji">🇯🇵</span>Japan</li>
-                              <li className="country-option" role="option" data-flag="🇯🇴" data-code="JO" data-name="Jordan"><span className="flag-emoji">🇯🇴</span>Jordan</li>
-                              <li className="country-option" role="option" data-flag="🇰🇪" data-code="KE" data-name="Kenya"><span className="flag-emoji">🇰🇪</span>Kenya</li>
-                              <li className="country-option" role="option" data-flag="🇰🇮" data-code="KI" data-name="Kiribati"><span className="flag-emoji">🇰🇮</span>Kiribati</li>
-                              <li className="country-option" role="option" data-flag="🇰🇼" data-code="KW" data-name="Kuwait"><span className="flag-emoji">🇰🇼</span>Kuwait</li>
-                              <li className="country-option" role="option" data-flag="🇰🇬" data-code="KG" data-name="Kyrgyzstan"><span className="flag-emoji">🇰🇬</span>Kyrgyzstan</li>
-                              <li className="country-option" role="option" data-flag="🇱🇦" data-code="LA" data-name="Laos"><span className="flag-emoji">🇱🇦</span>Laos</li>
-                              <li className="country-option" role="option" data-flag="🇱🇻" data-code="LV" data-name="Latvia"><span className="flag-emoji">🇱🇻</span>Latvia</li>
-                              <li className="country-option" role="option" data-flag="🇱🇸" data-code="LS" data-name="Lesotho"><span className="flag-emoji">🇱🇸</span>Lesotho</li>
-                              <li className="country-option" role="option" data-flag="🇱🇮" data-code="LI" data-name="Liechtenstein"><span className="flag-emoji">🇱🇮</span>Liechtenstein</li>
-                              <li className="country-option" role="option" data-flag="🇱🇹" data-code="LT" data-name="Lithuania"><span className="flag-emoji">🇱🇹</span>Lithuania</li>
-                              <li className="country-option" role="option" data-flag="🇱🇺" data-code="LU" data-name="Luxembourg"><span className="flag-emoji">🇱🇺</span>Luxembourg</li>
-                              <li className="country-option" role="option" data-flag="🇲🇬" data-code="MG" data-name="Madagascar"><span className="flag-emoji">🇲🇬</span>Madagascar</li>
-                              <li className="country-option" role="option" data-flag="🇲🇼" data-code="MW" data-name="Malawi"><span className="flag-emoji">🇲🇼</span>Malawi</li>
-                              <li className="country-option" role="option" data-flag="🇲🇾" data-code="MY" data-name="Malaysia"><span className="flag-emoji">🇲🇾</span>Malaysia</li>
-                              <li className="country-option" role="option" data-flag="🇲🇻" data-code="MV" data-name="Maldives"><span className="flag-emoji">🇲🇻</span>Maldives</li>
-                              <li className="country-option" role="option" data-flag="🇲🇹" data-code="MT" data-name="Malta"><span className="flag-emoji">🇲🇹</span>Malta</li>
-                              <li className="country-option" role="option" data-flag="🇲🇭" data-code="MH" data-name="Marshall Islands"><span className="flag-emoji">🇲🇭</span>Marshall Islands</li>
-                              <li className="country-option" role="option" data-flag="🇲🇷" data-code="MR" data-name="Mauritania"><span className="flag-emoji">🇲🇷</span>Mauritania</li>
-                              <li className="country-option" role="option" data-flag="🇲🇺" data-code="MU" data-name="Mauritius"><span className="flag-emoji">🇲🇺</span>Mauritius</li>
-                              <li className="country-option" role="option" data-flag="🇲🇽" data-code="MX" data-name="Mexico"><span className="flag-emoji">🇲🇽</span>Mexico</li>
-                              <li className="country-option" role="option" data-flag="🇫🇲" data-code="FM" data-name="Micronesia"><span className="flag-emoji">🇫🇲</span>Micronesia</li>
-                              <li className="country-option" role="option" data-flag="🇲🇩" data-code="MD" data-name="Moldova"><span className="flag-emoji">🇲🇩</span>Moldova</li>
-                              <li className="country-option" role="option" data-flag="🇲🇨" data-code="MC" data-name="Monaco"><span className="flag-emoji">🇲🇨</span>Monaco</li>
-                              <li className="country-option" role="option" data-flag="🇲🇳" data-code="MN" data-name="Mongolia"><span className="flag-emoji">🇲🇳</span>Mongolia</li>
-                              <li className="country-option" role="option" data-flag="🇲🇪" data-code="ME" data-name="Montenegro"><span className="flag-emoji">🇲🇪</span>Montenegro</li>
-                              <li className="country-option" role="option" data-flag="🇲🇦" data-code="MA" data-name="Morocco"><span className="flag-emoji">🇲🇦</span>Morocco</li>
-                              <li className="country-option" role="option" data-flag="🇲🇿" data-code="MZ" data-name="Mozambique"><span className="flag-emoji">🇲🇿</span>Mozambique</li>
-                              <li className="country-option" role="option" data-flag="🇳🇦" data-code="NA" data-name="Namibia"><span className="flag-emoji">🇳🇦</span>Namibia</li>
-                              <li className="country-option" role="option" data-flag="🇳🇷" data-code="NR" data-name="Nauru"><span className="flag-emoji">🇳🇷</span>Nauru</li>
-                              <li className="country-option" role="option" data-flag="🇳🇵" data-code="NP" data-name="Nepal"><span className="flag-emoji">🇳🇵</span>Nepal</li>
-                              <li className="country-option country-option--selected" role="option" data-flag="🇳🇱" data-code="NL" data-name="Netherlands"><span className="flag-emoji">🇳🇱</span>Netherlands</li>
-                              <li className="country-option" role="option" data-flag="🇳🇪" data-code="NE" data-name="Niger"><span className="flag-emoji">🇳🇪</span>Niger</li>
-                              <li className="country-option" role="option" data-flag="🇳🇬" data-code="NG" data-name="Nigeria"><span className="flag-emoji">🇳🇬</span>Nigeria</li>
-                              <li className="country-option" role="option" data-flag="🇳🇴" data-code="NO" data-name="Norway"><span className="flag-emoji">🇳🇴</span>Norway</li>
-                              <li className="country-option" role="option" data-flag="🇴🇲" data-code="OM" data-name="Oman"><span className="flag-emoji">🇴🇲</span>Oman</li>
-                              <li className="country-option" role="option" data-flag="🇵🇰" data-code="PK" data-name="Pakistan"><span className="flag-emoji">🇵🇰</span>Pakistan</li>
-                              <li className="country-option" role="option" data-flag="🇵🇼" data-code="PW" data-name="Palau"><span className="flag-emoji">🇵🇼</span>Palau</li>
-                              <li className="country-option" role="option" data-flag="🇵🇦" data-code="PA" data-name="Panama"><span className="flag-emoji">🇵🇦</span>Panama</li>
-                              <li className="country-option" role="option" data-flag="🇵🇬" data-code="PG" data-name="Papua New Guinea"><span className="flag-emoji">🇵🇬</span>Papua New Guinea</li>
-                              <li className="country-option" role="option" data-flag="🇵🇾" data-code="PY" data-name="Paraguay"><span className="flag-emoji">🇵🇾</span>Paraguay</li>
-                              <li className="country-option" role="option" data-flag="🇵🇪" data-code="PE" data-name="Peru"><span className="flag-emoji">🇵🇪</span>Peru</li>
-                              <li className="country-option" role="option" data-flag="🇵🇭" data-code="PH" data-name="Philippines"><span className="flag-emoji">🇵🇭</span>Philippines</li>
-                              <li className="country-option" role="option" data-flag="🇵🇱" data-code="PL" data-name="Poland"><span className="flag-emoji">🇵🇱</span>Poland</li>
-                              <li className="country-option" role="option" data-flag="🇵🇹" data-code="PT" data-name="Portugal"><span className="flag-emoji">🇵🇹</span>Portugal</li>
-                              <li className="country-option" role="option" data-flag="🇶🇦" data-code="QA" data-name="Qatar"><span className="flag-emoji">🇶🇦</span>Qatar</li>
-                              <li className="country-option" role="option" data-flag="🇷🇴" data-code="RO" data-name="Romania"><span className="flag-emoji">🇷🇴</span>Romania</li>
-                              <li className="country-option" role="option" data-flag="🇷🇼" data-code="RW" data-name="Rwanda"><span className="flag-emoji">🇷🇼</span>Rwanda</li>
-                              <li className="country-option" role="option" data-flag="🇰🇳" data-code="KN" data-name="Saint Kitts and Nevis"><span className="flag-emoji">🇰🇳</span>Saint Kitts and Nevis</li>
-                              <li className="country-option" role="option" data-flag="🇱🇨" data-code="LC" data-name="Saint Lucia"><span className="flag-emoji">🇱🇨</span>Saint Lucia</li>
-                              <li className="country-option" role="option" data-flag="🇻🇨" data-code="VC" data-name="Saint Vincent and the Grenadines"><span className="flag-emoji">🇻🇨</span>Saint Vincent and the Grenadines</li>
-                              <li className="country-option" role="option" data-flag="🇼🇸" data-code="WS" data-name="Samoa"><span className="flag-emoji">🇼🇸</span>Samoa</li>
-                              <li className="country-option" role="option" data-flag="🇸🇲" data-code="SM" data-name="San Marino"><span className="flag-emoji">🇸🇲</span>San Marino</li>
-                              <li className="country-option" role="option" data-flag="🇸🇹" data-code="ST" data-name="Sao Tome and Principe"><span className="flag-emoji">🇸🇹</span>Sao Tome and Principe</li>
-                              <li className="country-option" role="option" data-flag="🇸🇦" data-code="SA" data-name="Saudi Arabia"><span className="flag-emoji">🇸🇦</span>Saudi Arabia</li>
-                              <li className="country-option" role="option" data-flag="🇸🇳" data-code="SN" data-name="Senegal"><span className="flag-emoji">🇸🇳</span>Senegal</li>
-                              <li className="country-option" role="option" data-flag="🇷🇸" data-code="RS" data-name="Serbia"><span className="flag-emoji">🇷🇸</span>Serbia</li>
-                              <li className="country-option" role="option" data-flag="🇸🇨" data-code="SC" data-name="Seychelles"><span className="flag-emoji">🇸🇨</span>Seychelles</li>
-                              <li className="country-option" role="option" data-flag="🇸🇱" data-code="SL" data-name="Sierra Leone"><span className="flag-emoji">🇸🇱</span>Sierra Leone</li>
-                              <li className="country-option" role="option" data-flag="🇸🇬" data-code="SG" data-name="Singapore"><span className="flag-emoji">🇸🇬</span>Singapore</li>
-                              <li className="country-option" role="option" data-flag="🇸🇰" data-code="SK" data-name="Slovakia"><span className="flag-emoji">🇸🇰</span>Slovakia</li>
-                              <li className="country-option" role="option" data-flag="🇸🇮" data-code="SI" data-name="Slovenia"><span className="flag-emoji">🇸🇮</span>Slovenia</li>
-                              <li className="country-option" role="option" data-flag="🇸🇧" data-code="SB" data-name="Solomon Islands"><span className="flag-emoji">🇸🇧</span>Solomon Islands</li>
-                              <li className="country-option" role="option" data-flag="🇿🇦" data-code="ZA" data-name="South Africa"><span className="flag-emoji">🇿🇦</span>South Africa</li>
-                              <li className="country-option" role="option" data-flag="🇪🇸" data-code="ES" data-name="Spain"><span className="flag-emoji">🇪🇸</span>Spain</li>
-                              <li className="country-option" role="option" data-flag="🇱🇰" data-code="LK" data-name="Sri Lanka"><span className="flag-emoji">🇱🇰</span>Sri Lanka</li>
-                              <li className="country-option" role="option" data-flag="🇸🇷" data-code="SR" data-name="Suriname"><span className="flag-emoji">🇸🇷</span>Suriname</li>
-                              <li className="country-option" role="option" data-flag="🇸🇪" data-code="SE" data-name="Sweden"><span className="flag-emoji">🇸🇪</span>Sweden</li>
-                              <li className="country-option" role="option" data-flag="🇨🇭" data-code="CH" data-name="Switzerland"><span className="flag-emoji">🇨🇭</span>Switzerland</li>
-                              <li className="country-option" role="option" data-flag="🇹🇼" data-code="TW" data-name="Taiwan"><span className="flag-emoji">🇹🇼</span>Taiwan</li>
-                              <li className="country-option" role="option" data-flag="🇹🇯" data-code="TJ" data-name="Tajikistan"><span className="flag-emoji">🇹🇯</span>Tajikistan</li>
-                              <li className="country-option" role="option" data-flag="🇹🇿" data-code="TZ" data-name="Tanzania"><span className="flag-emoji">🇹🇿</span>Tanzania</li>
-                              <li className="country-option" role="option" data-flag="🇹🇭" data-code="TH" data-name="Thailand"><span className="flag-emoji">🇹🇭</span>Thailand</li>
-                              <li className="country-option" role="option" data-flag="🇹🇱" data-code="TL" data-name="Timor-Leste"><span className="flag-emoji">🇹🇱</span>Timor-Leste</li>
-                              <li className="country-option" role="option" data-flag="🇹🇬" data-code="TG" data-name="Togo"><span className="flag-emoji">🇹🇬</span>Togo</li>
-                              <li className="country-option" role="option" data-flag="🇹🇴" data-code="TO" data-name="Tonga"><span className="flag-emoji">🇹🇴</span>Tonga</li>
-                              <li className="country-option" role="option" data-flag="🇹🇹" data-code="TT" data-name="Trinidad and Tobago"><span className="flag-emoji">🇹🇹</span>Trinidad and Tobago</li>
-                              <li className="country-option" role="option" data-flag="🇹🇷" data-code="TR" data-name="Turkey"><span className="flag-emoji">🇹🇷</span>Turkey</li>
-                              <li className="country-option" role="option" data-flag="🇹🇻" data-code="TV" data-name="Tuvalu"><span className="flag-emoji">🇹🇻</span>Tuvalu</li>
-                              <li className="country-option" role="option" data-flag="🇺🇬" data-code="UG" data-name="Uganda"><span className="flag-emoji">🇺🇬</span>Uganda</li>
-                              <li className="country-option" role="option" data-flag="🇺🇦" data-code="UA" data-name="Ukraine"><span className="flag-emoji">🇺🇦</span>Ukraine</li>
-                              <li className="country-option" role="option" data-flag="🇦🇪" data-code="AE" data-name="United Arab Emirates"><span className="flag-emoji">🇦🇪</span>United Arab Emirates</li>
-                              <li className="country-option" role="option" data-flag="🇬🇧" data-code="GB" data-name="United Kingdom"><span className="flag-emoji">🇬🇧</span>United Kingdom</li>
-                              <li className="country-option" role="option" data-flag="🇺🇸" data-code="US" data-name="United States"><span className="flag-emoji">🇺🇸</span>United States</li>
-                              <li className="country-option" role="option" data-flag="🇺🇿" data-code="UZ" data-name="Uzbekistan"><span className="flag-emoji">🇺🇿</span>Uzbekistan</li>
-                              <li className="country-option" role="option" data-flag="🇻🇳" data-code="VN" data-name="Vietnam"><span className="flag-emoji">🇻🇳</span>Vietnam</li>
-                              <li className="country-option" role="option" data-flag="🇿🇲" data-code="ZM" data-name="Zambia"><span className="flag-emoji">🇿🇲</span>Zambia</li>
+                                                            <li className="country-option" role="option" data-flag="🇦🇱" ><img src="https://flagcdn.com/w20/al.png" width="20" height="15" alt="" className="flag-emoji" />Albania</li>
+                              <li className="country-option" role="option" data-flag="🇩🇿" ><img src="https://flagcdn.com/w20/dz.png" width="20" height="15" alt="" className="flag-emoji" />Algeria</li>
+                              <li className="country-option" role="option" data-flag="🇦🇩" ><img src="https://flagcdn.com/w20/ad.png" width="20" height="15" alt="" className="flag-emoji" />Andorra</li>
+                              <li className="country-option" role="option" data-flag="🇦🇴" ><img src="https://flagcdn.com/w20/ao.png" width="20" height="15" alt="" className="flag-emoji" />Angola</li>
+                              <li className="country-option" role="option" data-flag="🇦🇬" ><img src="https://flagcdn.com/w20/ag.png" width="20" height="15" alt="" className="flag-emoji" />Antigua and Barbuda</li>
+                              <li className="country-option" role="option" data-flag="🇦🇷" ><img src="https://flagcdn.com/w20/ar.png" width="20" height="15" alt="" className="flag-emoji" />Argentina</li>
+                              <li className="country-option" role="option" data-flag="🇦🇲" ><img src="https://flagcdn.com/w20/am.png" width="20" height="15" alt="" className="flag-emoji" />Armenia</li>
+                              <li className="country-option" role="option" data-flag="🇦🇺" ><img src="https://flagcdn.com/w20/au.png" width="20" height="15" alt="" className="flag-emoji" />Australia</li>
+                              <li className="country-option" role="option" data-flag="🇦🇹" ><img src="https://flagcdn.com/w20/at.png" width="20" height="15" alt="" className="flag-emoji" />Austria</li>
+                              <li className="country-option" role="option" data-flag="🇦🇿" ><img src="https://flagcdn.com/w20/az.png" width="20" height="15" alt="" className="flag-emoji" />Azerbaijan</li>
+                              <li className="country-option" role="option" data-flag="🇧🇸" ><img src="https://flagcdn.com/w20/bs.png" width="20" height="15" alt="" className="flag-emoji" />Bahamas</li>
+                              <li className="country-option" role="option" data-flag="🇧🇭" ><img src="https://flagcdn.com/w20/bh.png" width="20" height="15" alt="" className="flag-emoji" />Bahrain</li>
+                              <li className="country-option" role="option" data-flag="🇧🇩" ><img src="https://flagcdn.com/w20/bd.png" width="20" height="15" alt="" className="flag-emoji" />Bangladesh</li>
+                              <li className="country-option" role="option" data-flag="🇧🇧" ><img src="https://flagcdn.com/w20/bb.png" width="20" height="15" alt="" className="flag-emoji" />Barbados</li>
+                              <li className="country-option" role="option" data-flag="🇧🇪" ><img src="https://flagcdn.com/w20/be.png" width="20" height="15" alt="" className="flag-emoji" />Belgium</li>
+                              <li className="country-option" role="option" data-flag="🇧🇿" ><img src="https://flagcdn.com/w20/bz.png" width="20" height="15" alt="" className="flag-emoji" />Belize</li>
+                              <li className="country-option" role="option" data-flag="🇧🇯" ><img src="https://flagcdn.com/w20/bj.png" width="20" height="15" alt="" className="flag-emoji" />Benin</li>
+                              <li className="country-option" role="option" data-flag="🇧🇹" ><img src="https://flagcdn.com/w20/bt.png" width="20" height="15" alt="" className="flag-emoji" />Bhutan</li>
+                              <li className="country-option" role="option" data-flag="🇧🇴" ><img src="https://flagcdn.com/w20/bo.png" width="20" height="15" alt="" className="flag-emoji" />Bolivia</li>
+                              <li className="country-option" role="option" data-flag="🇧🇦" ><img src="https://flagcdn.com/w20/ba.png" width="20" height="15" alt="" className="flag-emoji" />Bosnia and Herzegovina</li>
+                              <li className="country-option" role="option" data-flag="🇧🇼" ><img src="https://flagcdn.com/w20/bw.png" width="20" height="15" alt="" className="flag-emoji" />Botswana</li>
+                              <li className="country-option" role="option" data-flag="🇧🇷" ><img src="https://flagcdn.com/w20/br.png" width="20" height="15" alt="" className="flag-emoji" />Brazil</li>
+                              <li className="country-option" role="option" data-flag="🇧🇳" ><img src="https://flagcdn.com/w20/bn.png" width="20" height="15" alt="" className="flag-emoji" />Brunei</li>
+                              <li className="country-option" role="option" data-flag="🇧🇬" ><img src="https://flagcdn.com/w20/bg.png" width="20" height="15" alt="" className="flag-emoji" />Bulgaria</li>
+                              <li className="country-option" role="option" data-flag="🇧🇫" ><img src="https://flagcdn.com/w20/bf.png" width="20" height="15" alt="" className="flag-emoji" />Burkina Faso</li>
+                              <li className="country-option" role="option" data-flag="🇧🇮" ><img src="https://flagcdn.com/w20/bi.png" width="20" height="15" alt="" className="flag-emoji" />Burundi</li>
+                              <li className="country-option" role="option" data-flag="🇨🇻" ><img src="https://flagcdn.com/w20/cv.png" width="20" height="15" alt="" className="flag-emoji" />Cabo Verde</li>
+                              <li className="country-option" role="option" data-flag="🇰🇭" ><img src="https://flagcdn.com/w20/kh.png" width="20" height="15" alt="" className="flag-emoji" />Cambodia</li>
+                              <li className="country-option" role="option" data-flag="🇨🇲" ><img src="https://flagcdn.com/w20/cm.png" width="20" height="15" alt="" className="flag-emoji" />Cameroon</li>
+                              <li className="country-option" role="option" data-flag="🇨🇦" ><img src="https://flagcdn.com/w20/ca.png" width="20" height="15" alt="" className="flag-emoji" />Canada</li>
+                              <li className="country-option" role="option" data-flag="🇨🇱" ><img src="https://flagcdn.com/w20/cl.png" width="20" height="15" alt="" className="flag-emoji" />Chile</li>
+                              <li className="country-option" role="option" data-flag="🇨🇳" ><img src="https://flagcdn.com/w20/cn.png" width="20" height="15" alt="" className="flag-emoji" />China</li>
+                              <li className="country-option" role="option" data-flag="🇨🇴" ><img src="https://flagcdn.com/w20/co.png" width="20" height="15" alt="" className="flag-emoji" />Colombia</li>
+                              <li className="country-option" role="option" data-flag="🇰🇲" ><img src="https://flagcdn.com/w20/km.png" width="20" height="15" alt="" className="flag-emoji" />Comoros</li>
+                              <li className="country-option" role="option" data-flag="🇨🇷" ><img src="https://flagcdn.com/w20/cr.png" width="20" height="15" alt="" className="flag-emoji" />Costa Rica</li>
+                              <li className="country-option" role="option" data-flag="🇭🇷" ><img src="https://flagcdn.com/w20/hr.png" width="20" height="15" alt="" className="flag-emoji" />Croatia</li>
+                              <li className="country-option" role="option" data-flag="🇨🇺" ><img src="https://flagcdn.com/w20/cu.png" width="20" height="15" alt="" className="flag-emoji" />Cuba</li>
+                              <li className="country-option" role="option" data-flag="🇨🇾" ><img src="https://flagcdn.com/w20/cy.png" width="20" height="15" alt="" className="flag-emoji" />Cyprus</li>
+                              <li className="country-option" role="option" data-flag="🇨🇿" ><img src="https://flagcdn.com/w20/cz.png" width="20" height="15" alt="" className="flag-emoji" />Czech Republic</li>
+                              <li className="country-option" role="option" data-flag="🇩🇰" ><img src="https://flagcdn.com/w20/dk.png" width="20" height="15" alt="" className="flag-emoji" />Denmark</li>
+                              <li className="country-option" role="option" data-flag="🇩🇯" ><img src="https://flagcdn.com/w20/dj.png" width="20" height="15" alt="" className="flag-emoji" />Djibouti</li>
+                              <li className="country-option" role="option" data-flag="🇩🇲" ><img src="https://flagcdn.com/w20/dm.png" width="20" height="15" alt="" className="flag-emoji" />Dominica</li>
+                              <li className="country-option" role="option" data-flag="🇩🇴" ><img src="https://flagcdn.com/w20/do.png" width="20" height="15" alt="" className="flag-emoji" />Dominican Republic</li>
+                              <li className="country-option" role="option" data-flag="🇪🇨" ><img src="https://flagcdn.com/w20/ec.png" width="20" height="15" alt="" className="flag-emoji" />Ecuador</li>
+                              <li className="country-option" role="option" data-flag="🇪🇬" ><img src="https://flagcdn.com/w20/eg.png" width="20" height="15" alt="" className="flag-emoji" />Egypt</li>
+                              <li className="country-option" role="option" data-flag="🇸🇻" ><img src="https://flagcdn.com/w20/sv.png" width="20" height="15" alt="" className="flag-emoji" />El Salvador</li>
+                              <li className="country-option" role="option" data-flag="🇬🇶" ><img src="https://flagcdn.com/w20/gq.png" width="20" height="15" alt="" className="flag-emoji" />Equatorial Guinea</li>
+                              <li className="country-option" role="option" data-flag="🇪🇷" ><img src="https://flagcdn.com/w20/er.png" width="20" height="15" alt="" className="flag-emoji" />Eritrea</li>
+                              <li className="country-option" role="option" data-flag="🇪🇪" ><img src="https://flagcdn.com/w20/ee.png" width="20" height="15" alt="" className="flag-emoji" />Estonia</li>
+                              <li className="country-option" role="option" data-flag="🇸🇿" ><img src="https://flagcdn.com/w20/sz.png" width="20" height="15" alt="" className="flag-emoji" />Eswatini</li>
+                              <li className="country-option" role="option" data-flag="🇪🇹" ><img src="https://flagcdn.com/w20/et.png" width="20" height="15" alt="" className="flag-emoji" />Ethiopia</li>
+                              <li className="country-option" role="option" data-flag="🇫🇯" ><img src="https://flagcdn.com/w20/fj.png" width="20" height="15" alt="" className="flag-emoji" />Fiji</li>
+                              <li className="country-option" role="option" data-flag="🇫🇮" ><img src="https://flagcdn.com/w20/fi.png" width="20" height="15" alt="" className="flag-emoji" />Finland</li>
+                              <li className="country-option" role="option" data-flag="🇫🇷" ><img src="https://flagcdn.com/w20/fr.png" width="20" height="15" alt="" className="flag-emoji" />France</li>
+                              <li className="country-option" role="option" data-flag="🇬🇦" ><img src="https://flagcdn.com/w20/ga.png" width="20" height="15" alt="" className="flag-emoji" />Gabon</li>
+                              <li className="country-option" role="option" data-flag="🇬🇲" ><img src="https://flagcdn.com/w20/gm.png" width="20" height="15" alt="" className="flag-emoji" />Gambia</li>
+                              <li className="country-option" role="option" data-flag="🇬🇪" ><img src="https://flagcdn.com/w20/ge.png" width="20" height="15" alt="" className="flag-emoji" />Georgia</li>
+                              <li className="country-option" role="option" data-flag="🇩🇪" ><img src="https://flagcdn.com/w20/de.png" width="20" height="15" alt="" className="flag-emoji" />Germany</li>
+                              <li className="country-option" role="option" data-flag="🇬🇭" ><img src="https://flagcdn.com/w20/gh.png" width="20" height="15" alt="" className="flag-emoji" />Ghana</li>
+                              <li className="country-option" role="option" data-flag="🇬🇷" ><img src="https://flagcdn.com/w20/gr.png" width="20" height="15" alt="" className="flag-emoji" />Greece</li>
+                              <li className="country-option" role="option" data-flag="🇬🇩" ><img src="https://flagcdn.com/w20/gd.png" width="20" height="15" alt="" className="flag-emoji" />Grenada</li>
+                              <li className="country-option" role="option" data-flag="🇬🇹" ><img src="https://flagcdn.com/w20/gt.png" width="20" height="15" alt="" className="flag-emoji" />Guatemala</li>
+                              <li className="country-option" role="option" data-flag="🇬🇳" ><img src="https://flagcdn.com/w20/gn.png" width="20" height="15" alt="" className="flag-emoji" />Guinea</li>
+                              <li className="country-option" role="option" data-flag="🇬🇼" ><img src="https://flagcdn.com/w20/gw.png" width="20" height="15" alt="" className="flag-emoji" />Guinea-Bissau</li>
+                              <li className="country-option" role="option" data-flag="🇬🇾" ><img src="https://flagcdn.com/w20/gy.png" width="20" height="15" alt="" className="flag-emoji" />Guyana</li>
+                              <li className="country-option" role="option" data-flag="🇭🇳" ><img src="https://flagcdn.com/w20/hn.png" width="20" height="15" alt="" className="flag-emoji" />Honduras</li>
+                              <li className="country-option" role="option" data-flag="🇭🇺" ><img src="https://flagcdn.com/w20/hu.png" width="20" height="15" alt="" className="flag-emoji" />Hungary</li>
+                              <li className="country-option" role="option" data-flag="🇮🇸" ><img src="https://flagcdn.com/w20/is.png" width="20" height="15" alt="" className="flag-emoji" />Iceland</li>
+                              <li className="country-option" role="option" data-flag="🇮🇳" ><img src="https://flagcdn.com/w20/in.png" width="20" height="15" alt="" className="flag-emoji" />India</li>
+                              <li className="country-option" role="option" data-flag="🇮🇩" ><img src="https://flagcdn.com/w20/id.png" width="20" height="15" alt="" className="flag-emoji" />Indonesia</li>
+                              <li className="country-option" role="option" data-flag="🇮🇪" ><img src="https://flagcdn.com/w20/ie.png" width="20" height="15" alt="" className="flag-emoji" />Ireland</li>
+                              <li className="country-option" role="option" data-flag="🇮🇱" ><img src="https://flagcdn.com/w20/il.png" width="20" height="15" alt="" className="flag-emoji" />Israel</li>
+                              <li className="country-option" role="option" data-flag="🇮🇹" ><img src="https://flagcdn.com/w20/it.png" width="20" height="15" alt="" className="flag-emoji" />Italy</li>
+                              <li className="country-option" role="option" data-flag="🇯🇲" ><img src="https://flagcdn.com/w20/jm.png" width="20" height="15" alt="" className="flag-emoji" />Jamaica</li>
+                              <li className="country-option" role="option" data-flag="🇯🇵" ><img src="https://flagcdn.com/w20/jp.png" width="20" height="15" alt="" className="flag-emoji" />Japan</li>
+                              <li className="country-option" role="option" data-flag="🇯🇴" ><img src="https://flagcdn.com/w20/jo.png" width="20" height="15" alt="" className="flag-emoji" />Jordan</li>
+                              <li className="country-option" role="option" data-flag="🇰🇪" ><img src="https://flagcdn.com/w20/ke.png" width="20" height="15" alt="" className="flag-emoji" />Kenya</li>
+                              <li className="country-option" role="option" data-flag="🇰🇮" ><img src="https://flagcdn.com/w20/ki.png" width="20" height="15" alt="" className="flag-emoji" />Kiribati</li>
+                              <li className="country-option" role="option" data-flag="🇰🇼" ><img src="https://flagcdn.com/w20/kw.png" width="20" height="15" alt="" className="flag-emoji" />Kuwait</li>
+                              <li className="country-option" role="option" data-flag="🇰🇬" ><img src="https://flagcdn.com/w20/kg.png" width="20" height="15" alt="" className="flag-emoji" />Kyrgyzstan</li>
+                              <li className="country-option" role="option" data-flag="🇱🇦" ><img src="https://flagcdn.com/w20/la.png" width="20" height="15" alt="" className="flag-emoji" />Laos</li>
+                              <li className="country-option" role="option" data-flag="🇱🇻" ><img src="https://flagcdn.com/w20/lv.png" width="20" height="15" alt="" className="flag-emoji" />Latvia</li>
+                              <li className="country-option" role="option" data-flag="🇱🇸" ><img src="https://flagcdn.com/w20/ls.png" width="20" height="15" alt="" className="flag-emoji" />Lesotho</li>
+                              <li className="country-option" role="option" data-flag="🇱🇮" ><img src="https://flagcdn.com/w20/li.png" width="20" height="15" alt="" className="flag-emoji" />Liechtenstein</li>
+                              <li className="country-option" role="option" data-flag="🇱🇹" ><img src="https://flagcdn.com/w20/lt.png" width="20" height="15" alt="" className="flag-emoji" />Lithuania</li>
+                              <li className="country-option" role="option" data-flag="🇱🇺" ><img src="https://flagcdn.com/w20/lu.png" width="20" height="15" alt="" className="flag-emoji" />Luxembourg</li>
+                              <li className="country-option" role="option" data-flag="🇲🇬" ><img src="https://flagcdn.com/w20/mg.png" width="20" height="15" alt="" className="flag-emoji" />Madagascar</li>
+                              <li className="country-option" role="option" data-flag="🇲🇼" ><img src="https://flagcdn.com/w20/mw.png" width="20" height="15" alt="" className="flag-emoji" />Malawi</li>
+                              <li className="country-option" role="option" data-flag="🇲🇾" ><img src="https://flagcdn.com/w20/my.png" width="20" height="15" alt="" className="flag-emoji" />Malaysia</li>
+                              <li className="country-option" role="option" data-flag="🇲🇻" ><img src="https://flagcdn.com/w20/mv.png" width="20" height="15" alt="" className="flag-emoji" />Maldives</li>
+                              <li className="country-option" role="option" data-flag="🇲🇹" ><img src="https://flagcdn.com/w20/mt.png" width="20" height="15" alt="" className="flag-emoji" />Malta</li>
+                              <li className="country-option" role="option" data-flag="🇲🇭" ><img src="https://flagcdn.com/w20/mh.png" width="20" height="15" alt="" className="flag-emoji" />Marshall Islands</li>
+                              <li className="country-option" role="option" data-flag="🇲🇷" ><img src="https://flagcdn.com/w20/mr.png" width="20" height="15" alt="" className="flag-emoji" />Mauritania</li>
+                              <li className="country-option" role="option" data-flag="🇲🇺" ><img src="https://flagcdn.com/w20/mu.png" width="20" height="15" alt="" className="flag-emoji" />Mauritius</li>
+                              <li className="country-option" role="option" data-flag="🇲🇽" ><img src="https://flagcdn.com/w20/mx.png" width="20" height="15" alt="" className="flag-emoji" />Mexico</li>
+                              <li className="country-option" role="option" data-flag="🇫🇲" ><img src="https://flagcdn.com/w20/fm.png" width="20" height="15" alt="" className="flag-emoji" />Micronesia</li>
+                              <li className="country-option" role="option" data-flag="🇲🇩" ><img src="https://flagcdn.com/w20/md.png" width="20" height="15" alt="" className="flag-emoji" />Moldova</li>
+                              <li className="country-option" role="option" data-flag="🇲🇨" ><img src="https://flagcdn.com/w20/mc.png" width="20" height="15" alt="" className="flag-emoji" />Monaco</li>
+                              <li className="country-option" role="option" data-flag="🇲🇳" ><img src="https://flagcdn.com/w20/mn.png" width="20" height="15" alt="" className="flag-emoji" />Mongolia</li>
+                              <li className="country-option" role="option" data-flag="🇲🇪" ><img src="https://flagcdn.com/w20/me.png" width="20" height="15" alt="" className="flag-emoji" />Montenegro</li>
+                              <li className="country-option" role="option" data-flag="🇲🇦" ><img src="https://flagcdn.com/w20/ma.png" width="20" height="15" alt="" className="flag-emoji" />Morocco</li>
+                              <li className="country-option" role="option" data-flag="🇲🇿" ><img src="https://flagcdn.com/w20/mz.png" width="20" height="15" alt="" className="flag-emoji" />Mozambique</li>
+                              <li className="country-option" role="option" data-flag="🇳🇦" ><img src="https://flagcdn.com/w20/na.png" width="20" height="15" alt="" className="flag-emoji" />Namibia</li>
+                              <li className="country-option" role="option" data-flag="🇳🇷" ><img src="https://flagcdn.com/w20/nr.png" width="20" height="15" alt="" className="flag-emoji" />Nauru</li>
+                              <li className="country-option" role="option" data-flag="🇳🇵" ><img src="https://flagcdn.com/w20/np.png" width="20" height="15" alt="" className="flag-emoji" />Nepal</li>
+                              <li className="country-option country-option--selected" role="option" data-flag="🇳🇱" ><img src="https://flagcdn.com/w20/nl.png" width="20" height="15" alt="" className="flag-emoji" />Netherlands</li>
+                              <li className="country-option" role="option" data-flag="🇳🇪" ><img src="https://flagcdn.com/w20/ne.png" width="20" height="15" alt="" className="flag-emoji" />Niger</li>
+                              <li className="country-option" role="option" data-flag="🇳🇬" ><img src="https://flagcdn.com/w20/ng.png" width="20" height="15" alt="" className="flag-emoji" />Nigeria</li>
+                              <li className="country-option" role="option" data-flag="🇳🇴" ><img src="https://flagcdn.com/w20/no.png" width="20" height="15" alt="" className="flag-emoji" />Norway</li>
+                              <li className="country-option" role="option" data-flag="🇴🇲" ><img src="https://flagcdn.com/w20/om.png" width="20" height="15" alt="" className="flag-emoji" />Oman</li>
+                              <li className="country-option" role="option" data-flag="🇵🇰" ><img src="https://flagcdn.com/w20/pk.png" width="20" height="15" alt="" className="flag-emoji" />Pakistan</li>
+                              <li className="country-option" role="option" data-flag="🇵🇼" ><img src="https://flagcdn.com/w20/pw.png" width="20" height="15" alt="" className="flag-emoji" />Palau</li>
+                              <li className="country-option" role="option" data-flag="🇵🇦" ><img src="https://flagcdn.com/w20/pa.png" width="20" height="15" alt="" className="flag-emoji" />Panama</li>
+                              <li className="country-option" role="option" data-flag="🇵🇬" ><img src="https://flagcdn.com/w20/pg.png" width="20" height="15" alt="" className="flag-emoji" />Papua New Guinea</li>
+                              <li className="country-option" role="option" data-flag="🇵🇾" ><img src="https://flagcdn.com/w20/py.png" width="20" height="15" alt="" className="flag-emoji" />Paraguay</li>
+                              <li className="country-option" role="option" data-flag="🇵🇪" ><img src="https://flagcdn.com/w20/pe.png" width="20" height="15" alt="" className="flag-emoji" />Peru</li>
+                              <li className="country-option" role="option" data-flag="🇵🇭" ><img src="https://flagcdn.com/w20/ph.png" width="20" height="15" alt="" className="flag-emoji" />Philippines</li>
+                              <li className="country-option" role="option" data-flag="🇵🇱" ><img src="https://flagcdn.com/w20/pl.png" width="20" height="15" alt="" className="flag-emoji" />Poland</li>
+                              <li className="country-option" role="option" data-flag="🇵🇹" ><img src="https://flagcdn.com/w20/pt.png" width="20" height="15" alt="" className="flag-emoji" />Portugal</li>
+                              <li className="country-option" role="option" data-flag="🇶🇦" ><img src="https://flagcdn.com/w20/qa.png" width="20" height="15" alt="" className="flag-emoji" />Qatar</li>
+                              <li className="country-option" role="option" data-flag="🇷🇴" ><img src="https://flagcdn.com/w20/ro.png" width="20" height="15" alt="" className="flag-emoji" />Romania</li>
+                              <li className="country-option" role="option" data-flag="🇷🇼" ><img src="https://flagcdn.com/w20/rw.png" width="20" height="15" alt="" className="flag-emoji" />Rwanda</li>
+                              <li className="country-option" role="option" data-flag="🇰🇳" ><img src="https://flagcdn.com/w20/kn.png" width="20" height="15" alt="" className="flag-emoji" />Saint Kitts and Nevis</li>
+                              <li className="country-option" role="option" data-flag="🇱🇨" ><img src="https://flagcdn.com/w20/lc.png" width="20" height="15" alt="" className="flag-emoji" />Saint Lucia</li>
+                              <li className="country-option" role="option" data-flag="🇻🇨" ><img src="https://flagcdn.com/w20/vc.png" width="20" height="15" alt="" className="flag-emoji" />Saint Vincent and the Grenadines</li>
+                              <li className="country-option" role="option" data-flag="🇼🇸" ><img src="https://flagcdn.com/w20/ws.png" width="20" height="15" alt="" className="flag-emoji" />Samoa</li>
+                              <li className="country-option" role="option" data-flag="🇸🇲" ><img src="https://flagcdn.com/w20/sm.png" width="20" height="15" alt="" className="flag-emoji" />San Marino</li>
+                              <li className="country-option" role="option" data-flag="🇸🇹" ><img src="https://flagcdn.com/w20/st.png" width="20" height="15" alt="" className="flag-emoji" />Sao Tome and Principe</li>
+                              <li className="country-option" role="option" data-flag="🇸🇦" ><img src="https://flagcdn.com/w20/sa.png" width="20" height="15" alt="" className="flag-emoji" />Saudi Arabia</li>
+                              <li className="country-option" role="option" data-flag="🇸🇳" ><img src="https://flagcdn.com/w20/sn.png" width="20" height="15" alt="" className="flag-emoji" />Senegal</li>
+                              <li className="country-option" role="option" data-flag="🇷🇸" ><img src="https://flagcdn.com/w20/rs.png" width="20" height="15" alt="" className="flag-emoji" />Serbia</li>
+                              <li className="country-option" role="option" data-flag="🇸🇨" ><img src="https://flagcdn.com/w20/sc.png" width="20" height="15" alt="" className="flag-emoji" />Seychelles</li>
+                              <li className="country-option" role="option" data-flag="🇸🇱" ><img src="https://flagcdn.com/w20/sl.png" width="20" height="15" alt="" className="flag-emoji" />Sierra Leone</li>
+                              <li className="country-option" role="option" data-flag="🇸🇬" ><img src="https://flagcdn.com/w20/sg.png" width="20" height="15" alt="" className="flag-emoji" />Singapore</li>
+                              <li className="country-option" role="option" data-flag="🇸🇰" ><img src="https://flagcdn.com/w20/sk.png" width="20" height="15" alt="" className="flag-emoji" />Slovakia</li>
+                              <li className="country-option" role="option" data-flag="🇸🇮" ><img src="https://flagcdn.com/w20/si.png" width="20" height="15" alt="" className="flag-emoji" />Slovenia</li>
+                              <li className="country-option" role="option" data-flag="🇸🇧" ><img src="https://flagcdn.com/w20/sb.png" width="20" height="15" alt="" className="flag-emoji" />Solomon Islands</li>
+                              <li className="country-option" role="option" data-flag="🇿🇦" ><img src="https://flagcdn.com/w20/za.png" width="20" height="15" alt="" className="flag-emoji" />South Africa</li>
+                              <li className="country-option" role="option" data-flag="🇪🇸" ><img src="https://flagcdn.com/w20/es.png" width="20" height="15" alt="" className="flag-emoji" />Spain</li>
+                              <li className="country-option" role="option" data-flag="🇱🇰" ><img src="https://flagcdn.com/w20/lk.png" width="20" height="15" alt="" className="flag-emoji" />Sri Lanka</li>
+                              <li className="country-option" role="option" data-flag="🇸🇷" ><img src="https://flagcdn.com/w20/sr.png" width="20" height="15" alt="" className="flag-emoji" />Suriname</li>
+                              <li className="country-option" role="option" data-flag="🇸🇪" ><img src="https://flagcdn.com/w20/se.png" width="20" height="15" alt="" className="flag-emoji" />Sweden</li>
+                              <li className="country-option" role="option" data-flag="🇨🇭" ><img src="https://flagcdn.com/w20/ch.png" width="20" height="15" alt="" className="flag-emoji" />Switzerland</li>
+                              <li className="country-option" role="option" data-flag="🇹🇼" ><img src="https://flagcdn.com/w20/tw.png" width="20" height="15" alt="" className="flag-emoji" />Taiwan</li>
+                              <li className="country-option" role="option" data-flag="🇹🇯" ><img src="https://flagcdn.com/w20/tj.png" width="20" height="15" alt="" className="flag-emoji" />Tajikistan</li>
+                              <li className="country-option" role="option" data-flag="🇹🇿" ><img src="https://flagcdn.com/w20/tz.png" width="20" height="15" alt="" className="flag-emoji" />Tanzania</li>
+                              <li className="country-option" role="option" data-flag="🇹🇭" ><img src="https://flagcdn.com/w20/th.png" width="20" height="15" alt="" className="flag-emoji" />Thailand</li>
+                              <li className="country-option" role="option" data-flag="🇹🇱" ><img src="https://flagcdn.com/w20/tl.png" width="20" height="15" alt="" className="flag-emoji" />Timor-Leste</li>
+                              <li className="country-option" role="option" data-flag="🇹🇬" ><img src="https://flagcdn.com/w20/tg.png" width="20" height="15" alt="" className="flag-emoji" />Togo</li>
+                              <li className="country-option" role="option" data-flag="🇹🇴" ><img src="https://flagcdn.com/w20/to.png" width="20" height="15" alt="" className="flag-emoji" />Tonga</li>
+                              <li className="country-option" role="option" data-flag="🇹🇹" ><img src="https://flagcdn.com/w20/tt.png" width="20" height="15" alt="" className="flag-emoji" />Trinidad and Tobago</li>
+                              <li className="country-option" role="option" data-flag="🇹🇷" ><img src="https://flagcdn.com/w20/tr.png" width="20" height="15" alt="" className="flag-emoji" />Turkey</li>
+                              <li className="country-option" role="option" data-flag="🇹🇻" ><img src="https://flagcdn.com/w20/tv.png" width="20" height="15" alt="" className="flag-emoji" />Tuvalu</li>
+                              <li className="country-option" role="option" data-flag="🇺🇬" ><img src="https://flagcdn.com/w20/ug.png" width="20" height="15" alt="" className="flag-emoji" />Uganda</li>
+                              <li className="country-option" role="option" data-flag="🇺🇦" ><img src="https://flagcdn.com/w20/ua.png" width="20" height="15" alt="" className="flag-emoji" />Ukraine</li>
+                              <li className="country-option" role="option" data-flag="🇦🇪" ><img src="https://flagcdn.com/w20/ae.png" width="20" height="15" alt="" className="flag-emoji" />United Arab Emirates</li>
+                              <li className="country-option" role="option" data-flag="🇬🇧" ><img src="https://flagcdn.com/w20/gb.png" width="20" height="15" alt="" className="flag-emoji" />United Kingdom</li>
+                              <li className="country-option" role="option" data-flag="🇺🇸" ><img src="https://flagcdn.com/w20/us.png" width="20" height="15" alt="" className="flag-emoji" />United States</li>
+                              <li className="country-option" role="option" data-flag="🇺🇿" ><img src="https://flagcdn.com/w20/uz.png" width="20" height="15" alt="" className="flag-emoji" />Uzbekistan</li>
+                              <li className="country-option" role="option" data-flag="🇻🇳" ><img src="https://flagcdn.com/w20/vn.png" width="20" height="15" alt="" className="flag-emoji" />Vietnam</li>
+                              <li className="country-option" role="option" data-flag="🇿🇲" ><img src="https://flagcdn.com/w20/zm.png" width="20" height="15" alt="" className="flag-emoji" />Zambia</li>
 </ul>
                             <p className="country-empty" hidden>No countries found.</p>
                           </div>
@@ -332,15 +332,15 @@ export default function HomePage() {
                   </ul>
                   <p className="mobile-nav-panel__section-title">BY COUNTRY</p>
                   <ul className="mobile-nav-panel__sublist">
-                    <li><a href="#"><span className="flag-emoji">🇳🇱</span>Netherlands</a></li>
-                    <li><a href="#"><span className="flag-emoji">🇬🇧</span>United Kingdom</a></li>
-                    <li><a href="#"><span className="flag-emoji">🇩🇪</span>Germany</a></li>
-                    <li><a href="#"><span className="flag-emoji">🇫🇷</span>France</a></li>
-                    <li><a href="#"><span className="flag-emoji">🇨🇦</span>Canada</a></li>
-                    <li><a href="#"><span className="flag-emoji">🇪🇸</span>Spain</a></li>
-                    <li><a href="#"><span className="flag-emoji">🇮🇳</span>India</a></li>
-                    <li><a href="#"><span className="flag-emoji">🇮🇹</span>Italy</a></li>
-                    <li><a href="#"><span className="flag-emoji">🇦🇺</span>Australia</a></li>
+                    <li><a href="#"><img src="https://flagcdn.com/w20/nl.png" width="18" height="14" alt="" className="flag-emoji" />Netherlands</a></li>
+                    <li><a href="#"><img src="https://flagcdn.com/w20/gb.png" width="18" height="14" alt="" className="flag-emoji" />United Kingdom</a></li>
+                    <li><a href="#"><img src="https://flagcdn.com/w20/de.png" width="18" height="14" alt="" className="flag-emoji" />Germany</a></li>
+                    <li><a href="#"><img src="https://flagcdn.com/w20/fr.png" width="18" height="14" alt="" className="flag-emoji" />France</a></li>
+                    <li><a href="#"><img src="https://flagcdn.com/w20/ca.png" width="18" height="14" alt="" className="flag-emoji" />Canada</a></li>
+                    <li><a href="#"><img src="https://flagcdn.com/w20/es.png" width="18" height="14" alt="" className="flag-emoji" />Spain</a></li>
+                    <li><a href="#"><img src="https://flagcdn.com/w20/in.png" width="18" height="14" alt="" className="flag-emoji" />India</a></li>
+                    <li><a href="#"><img src="https://flagcdn.com/w20/it.png" width="18" height="14" alt="" className="flag-emoji" />Italy</a></li>
+                    <li><a href="#"><img src="https://flagcdn.com/w20/au.png" width="18" height="14" alt="" className="flag-emoji" />Australia</a></li>
                   </ul>
                 </div>
               </div>
@@ -413,167 +413,167 @@ export default function HomePage() {
                           <input type="text" id="countrySearch" placeholder="Search country..." autoComplete="off" />
                         </div>
                         <ul className="country-list" id="countryList" role="listbox">
-                                                    <li className="country-option" role="option" data-flag="🇦🇱" data-code="AL" data-name="Albania"><span className="flag-emoji">🇦🇱</span>Albania</li>
-                          <li className="country-option" role="option" data-flag="🇩🇿" data-code="DZ" data-name="Algeria"><span className="flag-emoji">🇩🇿</span>Algeria</li>
-                          <li className="country-option" role="option" data-flag="🇦🇩" data-code="AD" data-name="Andorra"><span className="flag-emoji">🇦🇩</span>Andorra</li>
-                          <li className="country-option" role="option" data-flag="🇦🇴" data-code="AO" data-name="Angola"><span className="flag-emoji">🇦🇴</span>Angola</li>
-                          <li className="country-option" role="option" data-flag="🇦🇬" data-code="AG" data-name="Antigua and Barbuda"><span className="flag-emoji">🇦🇬</span>Antigua and Barbuda</li>
-                          <li className="country-option" role="option" data-flag="🇦🇷" data-code="AR" data-name="Argentina"><span className="flag-emoji">🇦🇷</span>Argentina</li>
-                          <li className="country-option" role="option" data-flag="🇦🇲" data-code="AM" data-name="Armenia"><span className="flag-emoji">🇦🇲</span>Armenia</li>
-                          <li className="country-option" role="option" data-flag="🇦🇺" data-code="AU" data-name="Australia"><span className="flag-emoji">🇦🇺</span>Australia</li>
-                          <li className="country-option" role="option" data-flag="🇦🇹" data-code="AT" data-name="Austria"><span className="flag-emoji">🇦🇹</span>Austria</li>
-                          <li className="country-option" role="option" data-flag="🇦🇿" data-code="AZ" data-name="Azerbaijan"><span className="flag-emoji">🇦🇿</span>Azerbaijan</li>
-                          <li className="country-option" role="option" data-flag="🇧🇸" data-code="BS" data-name="Bahamas"><span className="flag-emoji">🇧🇸</span>Bahamas</li>
-                          <li className="country-option" role="option" data-flag="🇧🇭" data-code="BH" data-name="Bahrain"><span className="flag-emoji">🇧🇭</span>Bahrain</li>
-                          <li className="country-option" role="option" data-flag="🇧🇩" data-code="BD" data-name="Bangladesh"><span className="flag-emoji">🇧🇩</span>Bangladesh</li>
-                          <li className="country-option" role="option" data-flag="🇧🇧" data-code="BB" data-name="Barbados"><span className="flag-emoji">🇧🇧</span>Barbados</li>
-                          <li className="country-option" role="option" data-flag="🇧🇪" data-code="BE" data-name="Belgium"><span className="flag-emoji">🇧🇪</span>Belgium</li>
-                          <li className="country-option" role="option" data-flag="🇧🇿" data-code="BZ" data-name="Belize"><span className="flag-emoji">🇧🇿</span>Belize</li>
-                          <li className="country-option" role="option" data-flag="🇧🇯" data-code="BJ" data-name="Benin"><span className="flag-emoji">🇧🇯</span>Benin</li>
-                          <li className="country-option" role="option" data-flag="🇧🇹" data-code="BT" data-name="Bhutan"><span className="flag-emoji">🇧🇹</span>Bhutan</li>
-                          <li className="country-option" role="option" data-flag="🇧🇴" data-code="BO" data-name="Bolivia"><span className="flag-emoji">🇧🇴</span>Bolivia</li>
-                          <li className="country-option" role="option" data-flag="🇧🇦" data-code="BA" data-name="Bosnia and Herzegovina"><span className="flag-emoji">🇧🇦</span>Bosnia and Herzegovina</li>
-                          <li className="country-option" role="option" data-flag="🇧🇼" data-code="BW" data-name="Botswana"><span className="flag-emoji">🇧🇼</span>Botswana</li>
-                          <li className="country-option" role="option" data-flag="🇧🇷" data-code="BR" data-name="Brazil"><span className="flag-emoji">🇧🇷</span>Brazil</li>
-                          <li className="country-option" role="option" data-flag="🇧🇳" data-code="BN" data-name="Brunei"><span className="flag-emoji">🇧🇳</span>Brunei</li>
-                          <li className="country-option" role="option" data-flag="🇧🇬" data-code="BG" data-name="Bulgaria"><span className="flag-emoji">🇧🇬</span>Bulgaria</li>
-                          <li className="country-option" role="option" data-flag="🇧🇫" data-code="BF" data-name="Burkina Faso"><span className="flag-emoji">🇧🇫</span>Burkina Faso</li>
-                          <li className="country-option" role="option" data-flag="🇧🇮" data-code="BI" data-name="Burundi"><span className="flag-emoji">🇧🇮</span>Burundi</li>
-                          <li className="country-option" role="option" data-flag="🇨🇻" data-code="CV" data-name="Cabo Verde"><span className="flag-emoji">🇨🇻</span>Cabo Verde</li>
-                          <li className="country-option" role="option" data-flag="🇰🇭" data-code="KH" data-name="Cambodia"><span className="flag-emoji">🇰🇭</span>Cambodia</li>
-                          <li className="country-option" role="option" data-flag="🇨🇲" data-code="CM" data-name="Cameroon"><span className="flag-emoji">🇨🇲</span>Cameroon</li>
-                          <li className="country-option" role="option" data-flag="🇨🇦" data-code="CA" data-name="Canada"><span className="flag-emoji">🇨🇦</span>Canada</li>
-                          <li className="country-option" role="option" data-flag="🇨🇱" data-code="CL" data-name="Chile"><span className="flag-emoji">🇨🇱</span>Chile</li>
-                          <li className="country-option" role="option" data-flag="🇨🇳" data-code="CN" data-name="China"><span className="flag-emoji">🇨🇳</span>China</li>
-                          <li className="country-option" role="option" data-flag="🇨🇴" data-code="CO" data-name="Colombia"><span className="flag-emoji">🇨🇴</span>Colombia</li>
-                          <li className="country-option" role="option" data-flag="🇰🇲" data-code="KM" data-name="Comoros"><span className="flag-emoji">🇰🇲</span>Comoros</li>
-                          <li className="country-option" role="option" data-flag="🇨🇷" data-code="CR" data-name="Costa Rica"><span className="flag-emoji">🇨🇷</span>Costa Rica</li>
-                          <li className="country-option" role="option" data-flag="🇭🇷" data-code="HR" data-name="Croatia"><span className="flag-emoji">🇭🇷</span>Croatia</li>
-                          <li className="country-option" role="option" data-flag="🇨🇺" data-code="CU" data-name="Cuba"><span className="flag-emoji">🇨🇺</span>Cuba</li>
-                          <li className="country-option" role="option" data-flag="🇨🇾" data-code="CY" data-name="Cyprus"><span className="flag-emoji">🇨🇾</span>Cyprus</li>
-                          <li className="country-option" role="option" data-flag="🇨🇿" data-code="CZ" data-name="Czech Republic"><span className="flag-emoji">🇨🇿</span>Czech Republic</li>
-                          <li className="country-option" role="option" data-flag="🇩🇰" data-code="DK" data-name="Denmark"><span className="flag-emoji">🇩🇰</span>Denmark</li>
-                          <li className="country-option" role="option" data-flag="🇩🇯" data-code="DJ" data-name="Djibouti"><span className="flag-emoji">🇩🇯</span>Djibouti</li>
-                          <li className="country-option" role="option" data-flag="🇩🇲" data-code="DM" data-name="Dominica"><span className="flag-emoji">🇩🇲</span>Dominica</li>
-                          <li className="country-option" role="option" data-flag="🇩🇴" data-code="DO" data-name="Dominican Republic"><span className="flag-emoji">🇩🇴</span>Dominican Republic</li>
-                          <li className="country-option" role="option" data-flag="🇪🇨" data-code="EC" data-name="Ecuador"><span className="flag-emoji">🇪🇨</span>Ecuador</li>
-                          <li className="country-option" role="option" data-flag="🇪🇬" data-code="EG" data-name="Egypt"><span className="flag-emoji">🇪🇬</span>Egypt</li>
-                          <li className="country-option" role="option" data-flag="🇸🇻" data-code="SV" data-name="El Salvador"><span className="flag-emoji">🇸🇻</span>El Salvador</li>
-                          <li className="country-option" role="option" data-flag="🇬🇶" data-code="GQ" data-name="Equatorial Guinea"><span className="flag-emoji">🇬🇶</span>Equatorial Guinea</li>
-                          <li className="country-option" role="option" data-flag="🇪🇷" data-code="ER" data-name="Eritrea"><span className="flag-emoji">🇪🇷</span>Eritrea</li>
-                          <li className="country-option" role="option" data-flag="🇪🇪" data-code="EE" data-name="Estonia"><span className="flag-emoji">🇪🇪</span>Estonia</li>
-                          <li className="country-option" role="option" data-flag="🇸🇿" data-code="SZ" data-name="Eswatini"><span className="flag-emoji">🇸🇿</span>Eswatini</li>
-                          <li className="country-option" role="option" data-flag="🇪🇹" data-code="ET" data-name="Ethiopia"><span className="flag-emoji">🇪🇹</span>Ethiopia</li>
-                          <li className="country-option" role="option" data-flag="🇫🇯" data-code="FJ" data-name="Fiji"><span className="flag-emoji">🇫🇯</span>Fiji</li>
-                          <li className="country-option" role="option" data-flag="🇫🇮" data-code="FI" data-name="Finland"><span className="flag-emoji">🇫🇮</span>Finland</li>
-                          <li className="country-option" role="option" data-flag="🇫🇷" data-code="FR" data-name="France"><span className="flag-emoji">🇫🇷</span>France</li>
-                          <li className="country-option" role="option" data-flag="🇬🇦" data-code="GA" data-name="Gabon"><span className="flag-emoji">🇬🇦</span>Gabon</li>
-                          <li className="country-option" role="option" data-flag="🇬🇲" data-code="GM" data-name="Gambia"><span className="flag-emoji">🇬🇲</span>Gambia</li>
-                          <li className="country-option" role="option" data-flag="🇬🇪" data-code="GE" data-name="Georgia"><span className="flag-emoji">🇬🇪</span>Georgia</li>
-                          <li className="country-option" role="option" data-flag="🇩🇪" data-code="DE" data-name="Germany"><span className="flag-emoji">🇩🇪</span>Germany</li>
-                          <li className="country-option" role="option" data-flag="🇬🇭" data-code="GH" data-name="Ghana"><span className="flag-emoji">🇬🇭</span>Ghana</li>
-                          <li className="country-option" role="option" data-flag="🇬🇷" data-code="GR" data-name="Greece"><span className="flag-emoji">🇬🇷</span>Greece</li>
-                          <li className="country-option" role="option" data-flag="🇬🇩" data-code="GD" data-name="Grenada"><span className="flag-emoji">🇬🇩</span>Grenada</li>
-                          <li className="country-option" role="option" data-flag="🇬🇹" data-code="GT" data-name="Guatemala"><span className="flag-emoji">🇬🇹</span>Guatemala</li>
-                          <li className="country-option" role="option" data-flag="🇬🇳" data-code="GN" data-name="Guinea"><span className="flag-emoji">🇬🇳</span>Guinea</li>
-                          <li className="country-option" role="option" data-flag="🇬🇼" data-code="GW" data-name="Guinea-Bissau"><span className="flag-emoji">🇬🇼</span>Guinea-Bissau</li>
-                          <li className="country-option" role="option" data-flag="🇬🇾" data-code="GY" data-name="Guyana"><span className="flag-emoji">🇬🇾</span>Guyana</li>
-                          <li className="country-option" role="option" data-flag="🇭🇳" data-code="HN" data-name="Honduras"><span className="flag-emoji">🇭🇳</span>Honduras</li>
-                          <li className="country-option" role="option" data-flag="🇭🇺" data-code="HU" data-name="Hungary"><span className="flag-emoji">🇭🇺</span>Hungary</li>
-                          <li className="country-option" role="option" data-flag="🇮🇸" data-code="IS" data-name="Iceland"><span className="flag-emoji">🇮🇸</span>Iceland</li>
-                          <li className="country-option" role="option" data-flag="🇮🇳" data-code="IN" data-name="India"><span className="flag-emoji">🇮🇳</span>India</li>
-                          <li className="country-option" role="option" data-flag="🇮🇩" data-code="ID" data-name="Indonesia"><span className="flag-emoji">🇮🇩</span>Indonesia</li>
-                          <li className="country-option" role="option" data-flag="🇮🇪" data-code="IE" data-name="Ireland"><span className="flag-emoji">🇮🇪</span>Ireland</li>
-                          <li className="country-option" role="option" data-flag="🇮🇱" data-code="IL" data-name="Israel"><span className="flag-emoji">🇮🇱</span>Israel</li>
-                          <li className="country-option" role="option" data-flag="🇮🇹" data-code="IT" data-name="Italy"><span className="flag-emoji">🇮🇹</span>Italy</li>
-                          <li className="country-option" role="option" data-flag="🇯🇲" data-code="JM" data-name="Jamaica"><span className="flag-emoji">🇯🇲</span>Jamaica</li>
-                          <li className="country-option" role="option" data-flag="🇯🇵" data-code="JP" data-name="Japan"><span className="flag-emoji">🇯🇵</span>Japan</li>
-                          <li className="country-option" role="option" data-flag="🇯🇴" data-code="JO" data-name="Jordan"><span className="flag-emoji">🇯🇴</span>Jordan</li>
-                          <li className="country-option" role="option" data-flag="🇰🇪" data-code="KE" data-name="Kenya"><span className="flag-emoji">🇰🇪</span>Kenya</li>
-                          <li className="country-option" role="option" data-flag="🇰🇮" data-code="KI" data-name="Kiribati"><span className="flag-emoji">🇰🇮</span>Kiribati</li>
-                          <li className="country-option" role="option" data-flag="🇰🇼" data-code="KW" data-name="Kuwait"><span className="flag-emoji">🇰🇼</span>Kuwait</li>
-                          <li className="country-option" role="option" data-flag="🇰🇬" data-code="KG" data-name="Kyrgyzstan"><span className="flag-emoji">🇰🇬</span>Kyrgyzstan</li>
-                          <li className="country-option" role="option" data-flag="🇱🇦" data-code="LA" data-name="Laos"><span className="flag-emoji">🇱🇦</span>Laos</li>
-                          <li className="country-option" role="option" data-flag="🇱🇻" data-code="LV" data-name="Latvia"><span className="flag-emoji">🇱🇻</span>Latvia</li>
-                          <li className="country-option" role="option" data-flag="🇱🇸" data-code="LS" data-name="Lesotho"><span className="flag-emoji">🇱🇸</span>Lesotho</li>
-                          <li className="country-option" role="option" data-flag="🇱🇮" data-code="LI" data-name="Liechtenstein"><span className="flag-emoji">🇱🇮</span>Liechtenstein</li>
-                          <li className="country-option" role="option" data-flag="🇱🇹" data-code="LT" data-name="Lithuania"><span className="flag-emoji">🇱🇹</span>Lithuania</li>
-                          <li className="country-option" role="option" data-flag="🇱🇺" data-code="LU" data-name="Luxembourg"><span className="flag-emoji">🇱🇺</span>Luxembourg</li>
-                          <li className="country-option" role="option" data-flag="🇲🇬" data-code="MG" data-name="Madagascar"><span className="flag-emoji">🇲🇬</span>Madagascar</li>
-                          <li className="country-option" role="option" data-flag="🇲🇼" data-code="MW" data-name="Malawi"><span className="flag-emoji">🇲🇼</span>Malawi</li>
-                          <li className="country-option" role="option" data-flag="🇲🇾" data-code="MY" data-name="Malaysia"><span className="flag-emoji">🇲🇾</span>Malaysia</li>
-                          <li className="country-option" role="option" data-flag="🇲🇻" data-code="MV" data-name="Maldives"><span className="flag-emoji">🇲🇻</span>Maldives</li>
-                          <li className="country-option" role="option" data-flag="🇲🇹" data-code="MT" data-name="Malta"><span className="flag-emoji">🇲🇹</span>Malta</li>
-                          <li className="country-option" role="option" data-flag="🇲🇭" data-code="MH" data-name="Marshall Islands"><span className="flag-emoji">🇲🇭</span>Marshall Islands</li>
-                          <li className="country-option" role="option" data-flag="🇲🇷" data-code="MR" data-name="Mauritania"><span className="flag-emoji">🇲🇷</span>Mauritania</li>
-                          <li className="country-option" role="option" data-flag="🇲🇺" data-code="MU" data-name="Mauritius"><span className="flag-emoji">🇲🇺</span>Mauritius</li>
-                          <li className="country-option" role="option" data-flag="🇲🇽" data-code="MX" data-name="Mexico"><span className="flag-emoji">🇲🇽</span>Mexico</li>
-                          <li className="country-option" role="option" data-flag="🇫🇲" data-code="FM" data-name="Micronesia"><span className="flag-emoji">🇫🇲</span>Micronesia</li>
-                          <li className="country-option" role="option" data-flag="🇲🇩" data-code="MD" data-name="Moldova"><span className="flag-emoji">🇲🇩</span>Moldova</li>
-                          <li className="country-option" role="option" data-flag="🇲🇨" data-code="MC" data-name="Monaco"><span className="flag-emoji">🇲🇨</span>Monaco</li>
-                          <li className="country-option" role="option" data-flag="🇲🇳" data-code="MN" data-name="Mongolia"><span className="flag-emoji">🇲🇳</span>Mongolia</li>
-                          <li className="country-option" role="option" data-flag="🇲🇪" data-code="ME" data-name="Montenegro"><span className="flag-emoji">🇲🇪</span>Montenegro</li>
-                          <li className="country-option" role="option" data-flag="🇲🇦" data-code="MA" data-name="Morocco"><span className="flag-emoji">🇲🇦</span>Morocco</li>
-                          <li className="country-option" role="option" data-flag="🇲🇿" data-code="MZ" data-name="Mozambique"><span className="flag-emoji">🇲🇿</span>Mozambique</li>
-                          <li className="country-option" role="option" data-flag="🇳🇦" data-code="NA" data-name="Namibia"><span className="flag-emoji">🇳🇦</span>Namibia</li>
-                          <li className="country-option" role="option" data-flag="🇳🇷" data-code="NR" data-name="Nauru"><span className="flag-emoji">🇳🇷</span>Nauru</li>
-                          <li className="country-option" role="option" data-flag="🇳🇵" data-code="NP" data-name="Nepal"><span className="flag-emoji">🇳🇵</span>Nepal</li>
-                          <li className="country-option country-option--selected" role="option" data-flag="🇳🇱" data-code="NL" data-name="Netherlands"><span className="flag-emoji">🇳🇱</span>Netherlands</li>
-                          <li className="country-option" role="option" data-flag="🇳🇪" data-code="NE" data-name="Niger"><span className="flag-emoji">🇳🇪</span>Niger</li>
-                          <li className="country-option" role="option" data-flag="🇳🇬" data-code="NG" data-name="Nigeria"><span className="flag-emoji">🇳🇬</span>Nigeria</li>
-                          <li className="country-option" role="option" data-flag="🇳🇴" data-code="NO" data-name="Norway"><span className="flag-emoji">🇳🇴</span>Norway</li>
-                          <li className="country-option" role="option" data-flag="🇴🇲" data-code="OM" data-name="Oman"><span className="flag-emoji">🇴🇲</span>Oman</li>
-                          <li className="country-option" role="option" data-flag="🇵🇰" data-code="PK" data-name="Pakistan"><span className="flag-emoji">🇵🇰</span>Pakistan</li>
-                          <li className="country-option" role="option" data-flag="🇵🇼" data-code="PW" data-name="Palau"><span className="flag-emoji">🇵🇼</span>Palau</li>
-                          <li className="country-option" role="option" data-flag="🇵🇦" data-code="PA" data-name="Panama"><span className="flag-emoji">🇵🇦</span>Panama</li>
-                          <li className="country-option" role="option" data-flag="🇵🇬" data-code="PG" data-name="Papua New Guinea"><span className="flag-emoji">🇵🇬</span>Papua New Guinea</li>
-                          <li className="country-option" role="option" data-flag="🇵🇾" data-code="PY" data-name="Paraguay"><span className="flag-emoji">🇵🇾</span>Paraguay</li>
-                          <li className="country-option" role="option" data-flag="🇵🇪" data-code="PE" data-name="Peru"><span className="flag-emoji">🇵🇪</span>Peru</li>
-                          <li className="country-option" role="option" data-flag="🇵🇭" data-code="PH" data-name="Philippines"><span className="flag-emoji">🇵🇭</span>Philippines</li>
-                          <li className="country-option" role="option" data-flag="🇵🇱" data-code="PL" data-name="Poland"><span className="flag-emoji">🇵🇱</span>Poland</li>
-                          <li className="country-option" role="option" data-flag="🇵🇹" data-code="PT" data-name="Portugal"><span className="flag-emoji">🇵🇹</span>Portugal</li>
-                          <li className="country-option" role="option" data-flag="🇶🇦" data-code="QA" data-name="Qatar"><span className="flag-emoji">🇶🇦</span>Qatar</li>
-                          <li className="country-option" role="option" data-flag="🇷🇴" data-code="RO" data-name="Romania"><span className="flag-emoji">🇷🇴</span>Romania</li>
-                          <li className="country-option" role="option" data-flag="🇷🇼" data-code="RW" data-name="Rwanda"><span className="flag-emoji">🇷🇼</span>Rwanda</li>
-                          <li className="country-option" role="option" data-flag="🇰🇳" data-code="KN" data-name="Saint Kitts and Nevis"><span className="flag-emoji">🇰🇳</span>Saint Kitts and Nevis</li>
-                          <li className="country-option" role="option" data-flag="🇱🇨" data-code="LC" data-name="Saint Lucia"><span className="flag-emoji">🇱🇨</span>Saint Lucia</li>
-                          <li className="country-option" role="option" data-flag="🇻🇨" data-code="VC" data-name="Saint Vincent and the Grenadines"><span className="flag-emoji">🇻🇨</span>Saint Vincent and the Grenadines</li>
-                          <li className="country-option" role="option" data-flag="🇼🇸" data-code="WS" data-name="Samoa"><span className="flag-emoji">🇼🇸</span>Samoa</li>
-                          <li className="country-option" role="option" data-flag="🇸🇲" data-code="SM" data-name="San Marino"><span className="flag-emoji">🇸🇲</span>San Marino</li>
-                          <li className="country-option" role="option" data-flag="🇸🇹" data-code="ST" data-name="Sao Tome and Principe"><span className="flag-emoji">🇸🇹</span>Sao Tome and Principe</li>
-                          <li className="country-option" role="option" data-flag="🇸🇦" data-code="SA" data-name="Saudi Arabia"><span className="flag-emoji">🇸🇦</span>Saudi Arabia</li>
-                          <li className="country-option" role="option" data-flag="🇸🇳" data-code="SN" data-name="Senegal"><span className="flag-emoji">🇸🇳</span>Senegal</li>
-                          <li className="country-option" role="option" data-flag="🇷🇸" data-code="RS" data-name="Serbia"><span className="flag-emoji">🇷🇸</span>Serbia</li>
-                          <li className="country-option" role="option" data-flag="🇸🇨" data-code="SC" data-name="Seychelles"><span className="flag-emoji">🇸🇨</span>Seychelles</li>
-                          <li className="country-option" role="option" data-flag="🇸🇱" data-code="SL" data-name="Sierra Leone"><span className="flag-emoji">🇸🇱</span>Sierra Leone</li>
-                          <li className="country-option" role="option" data-flag="🇸🇬" data-code="SG" data-name="Singapore"><span className="flag-emoji">🇸🇬</span>Singapore</li>
-                          <li className="country-option" role="option" data-flag="🇸🇰" data-code="SK" data-name="Slovakia"><span className="flag-emoji">🇸🇰</span>Slovakia</li>
-                          <li className="country-option" role="option" data-flag="🇸🇮" data-code="SI" data-name="Slovenia"><span className="flag-emoji">🇸🇮</span>Slovenia</li>
-                          <li className="country-option" role="option" data-flag="🇸🇧" data-code="SB" data-name="Solomon Islands"><span className="flag-emoji">🇸🇧</span>Solomon Islands</li>
-                          <li className="country-option" role="option" data-flag="🇿🇦" data-code="ZA" data-name="South Africa"><span className="flag-emoji">🇿🇦</span>South Africa</li>
-                          <li className="country-option" role="option" data-flag="🇪🇸" data-code="ES" data-name="Spain"><span className="flag-emoji">🇪🇸</span>Spain</li>
-                          <li className="country-option" role="option" data-flag="🇱🇰" data-code="LK" data-name="Sri Lanka"><span className="flag-emoji">🇱🇰</span>Sri Lanka</li>
-                          <li className="country-option" role="option" data-flag="🇸🇷" data-code="SR" data-name="Suriname"><span className="flag-emoji">🇸🇷</span>Suriname</li>
-                          <li className="country-option" role="option" data-flag="🇸🇪" data-code="SE" data-name="Sweden"><span className="flag-emoji">🇸🇪</span>Sweden</li>
-                          <li className="country-option" role="option" data-flag="🇨🇭" data-code="CH" data-name="Switzerland"><span className="flag-emoji">🇨🇭</span>Switzerland</li>
-                          <li className="country-option" role="option" data-flag="🇹🇼" data-code="TW" data-name="Taiwan"><span className="flag-emoji">🇹🇼</span>Taiwan</li>
-                          <li className="country-option" role="option" data-flag="🇹🇯" data-code="TJ" data-name="Tajikistan"><span className="flag-emoji">🇹🇯</span>Tajikistan</li>
-                          <li className="country-option" role="option" data-flag="🇹🇿" data-code="TZ" data-name="Tanzania"><span className="flag-emoji">🇹🇿</span>Tanzania</li>
-                          <li className="country-option" role="option" data-flag="🇹🇭" data-code="TH" data-name="Thailand"><span className="flag-emoji">🇹🇭</span>Thailand</li>
-                          <li className="country-option" role="option" data-flag="🇹🇱" data-code="TL" data-name="Timor-Leste"><span className="flag-emoji">🇹🇱</span>Timor-Leste</li>
-                          <li className="country-option" role="option" data-flag="🇹🇬" data-code="TG" data-name="Togo"><span className="flag-emoji">🇹🇬</span>Togo</li>
-                          <li className="country-option" role="option" data-flag="🇹🇴" data-code="TO" data-name="Tonga"><span className="flag-emoji">🇹🇴</span>Tonga</li>
-                          <li className="country-option" role="option" data-flag="🇹🇹" data-code="TT" data-name="Trinidad and Tobago"><span className="flag-emoji">🇹🇹</span>Trinidad and Tobago</li>
-                          <li className="country-option" role="option" data-flag="🇹🇷" data-code="TR" data-name="Turkey"><span className="flag-emoji">🇹🇷</span>Turkey</li>
-                          <li className="country-option" role="option" data-flag="🇹🇻" data-code="TV" data-name="Tuvalu"><span className="flag-emoji">🇹🇻</span>Tuvalu</li>
-                          <li className="country-option" role="option" data-flag="🇺🇬" data-code="UG" data-name="Uganda"><span className="flag-emoji">🇺🇬</span>Uganda</li>
-                          <li className="country-option" role="option" data-flag="🇺🇦" data-code="UA" data-name="Ukraine"><span className="flag-emoji">🇺🇦</span>Ukraine</li>
-                          <li className="country-option" role="option" data-flag="🇦🇪" data-code="AE" data-name="United Arab Emirates"><span className="flag-emoji">🇦🇪</span>United Arab Emirates</li>
-                          <li className="country-option" role="option" data-flag="🇬🇧" data-code="GB" data-name="United Kingdom"><span className="flag-emoji">🇬🇧</span>United Kingdom</li>
-                          <li className="country-option" role="option" data-flag="🇺🇸" data-code="US" data-name="United States"><span className="flag-emoji">🇺🇸</span>United States</li>
-                          <li className="country-option" role="option" data-flag="🇺🇿" data-code="UZ" data-name="Uzbekistan"><span className="flag-emoji">🇺🇿</span>Uzbekistan</li>
-                          <li className="country-option" role="option" data-flag="🇻🇳" data-code="VN" data-name="Vietnam"><span className="flag-emoji">🇻🇳</span>Vietnam</li>
-                          <li className="country-option" role="option" data-flag="🇿🇲" data-code="ZM" data-name="Zambia"><span className="flag-emoji">🇿🇲</span>Zambia</li>
+                                                    <li className="country-option" role="option" data-flag="🇦🇱" ><img src="https://flagcdn.com/w20/al.png" width="20" height="15" alt="" className="flag-emoji" />Albania</li>
+                          <li className="country-option" role="option" data-flag="🇩🇿" ><img src="https://flagcdn.com/w20/dz.png" width="20" height="15" alt="" className="flag-emoji" />Algeria</li>
+                          <li className="country-option" role="option" data-flag="🇦🇩" ><img src="https://flagcdn.com/w20/ad.png" width="20" height="15" alt="" className="flag-emoji" />Andorra</li>
+                          <li className="country-option" role="option" data-flag="🇦🇴" ><img src="https://flagcdn.com/w20/ao.png" width="20" height="15" alt="" className="flag-emoji" />Angola</li>
+                          <li className="country-option" role="option" data-flag="🇦🇬" ><img src="https://flagcdn.com/w20/ag.png" width="20" height="15" alt="" className="flag-emoji" />Antigua and Barbuda</li>
+                          <li className="country-option" role="option" data-flag="🇦🇷" ><img src="https://flagcdn.com/w20/ar.png" width="20" height="15" alt="" className="flag-emoji" />Argentina</li>
+                          <li className="country-option" role="option" data-flag="🇦🇲" ><img src="https://flagcdn.com/w20/am.png" width="20" height="15" alt="" className="flag-emoji" />Armenia</li>
+                          <li className="country-option" role="option" data-flag="🇦🇺" ><img src="https://flagcdn.com/w20/au.png" width="20" height="15" alt="" className="flag-emoji" />Australia</li>
+                          <li className="country-option" role="option" data-flag="🇦🇹" ><img src="https://flagcdn.com/w20/at.png" width="20" height="15" alt="" className="flag-emoji" />Austria</li>
+                          <li className="country-option" role="option" data-flag="🇦🇿" ><img src="https://flagcdn.com/w20/az.png" width="20" height="15" alt="" className="flag-emoji" />Azerbaijan</li>
+                          <li className="country-option" role="option" data-flag="🇧🇸" ><img src="https://flagcdn.com/w20/bs.png" width="20" height="15" alt="" className="flag-emoji" />Bahamas</li>
+                          <li className="country-option" role="option" data-flag="🇧🇭" ><img src="https://flagcdn.com/w20/bh.png" width="20" height="15" alt="" className="flag-emoji" />Bahrain</li>
+                          <li className="country-option" role="option" data-flag="🇧🇩" ><img src="https://flagcdn.com/w20/bd.png" width="20" height="15" alt="" className="flag-emoji" />Bangladesh</li>
+                          <li className="country-option" role="option" data-flag="🇧🇧" ><img src="https://flagcdn.com/w20/bb.png" width="20" height="15" alt="" className="flag-emoji" />Barbados</li>
+                          <li className="country-option" role="option" data-flag="🇧🇪" ><img src="https://flagcdn.com/w20/be.png" width="20" height="15" alt="" className="flag-emoji" />Belgium</li>
+                          <li className="country-option" role="option" data-flag="🇧🇿" ><img src="https://flagcdn.com/w20/bz.png" width="20" height="15" alt="" className="flag-emoji" />Belize</li>
+                          <li className="country-option" role="option" data-flag="🇧🇯" ><img src="https://flagcdn.com/w20/bj.png" width="20" height="15" alt="" className="flag-emoji" />Benin</li>
+                          <li className="country-option" role="option" data-flag="🇧🇹" ><img src="https://flagcdn.com/w20/bt.png" width="20" height="15" alt="" className="flag-emoji" />Bhutan</li>
+                          <li className="country-option" role="option" data-flag="🇧🇴" ><img src="https://flagcdn.com/w20/bo.png" width="20" height="15" alt="" className="flag-emoji" />Bolivia</li>
+                          <li className="country-option" role="option" data-flag="🇧🇦" ><img src="https://flagcdn.com/w20/ba.png" width="20" height="15" alt="" className="flag-emoji" />Bosnia and Herzegovina</li>
+                          <li className="country-option" role="option" data-flag="🇧🇼" ><img src="https://flagcdn.com/w20/bw.png" width="20" height="15" alt="" className="flag-emoji" />Botswana</li>
+                          <li className="country-option" role="option" data-flag="🇧🇷" ><img src="https://flagcdn.com/w20/br.png" width="20" height="15" alt="" className="flag-emoji" />Brazil</li>
+                          <li className="country-option" role="option" data-flag="🇧🇳" ><img src="https://flagcdn.com/w20/bn.png" width="20" height="15" alt="" className="flag-emoji" />Brunei</li>
+                          <li className="country-option" role="option" data-flag="🇧🇬" ><img src="https://flagcdn.com/w20/bg.png" width="20" height="15" alt="" className="flag-emoji" />Bulgaria</li>
+                          <li className="country-option" role="option" data-flag="🇧🇫" ><img src="https://flagcdn.com/w20/bf.png" width="20" height="15" alt="" className="flag-emoji" />Burkina Faso</li>
+                          <li className="country-option" role="option" data-flag="🇧🇮" ><img src="https://flagcdn.com/w20/bi.png" width="20" height="15" alt="" className="flag-emoji" />Burundi</li>
+                          <li className="country-option" role="option" data-flag="🇨🇻" ><img src="https://flagcdn.com/w20/cv.png" width="20" height="15" alt="" className="flag-emoji" />Cabo Verde</li>
+                          <li className="country-option" role="option" data-flag="🇰🇭" ><img src="https://flagcdn.com/w20/kh.png" width="20" height="15" alt="" className="flag-emoji" />Cambodia</li>
+                          <li className="country-option" role="option" data-flag="🇨🇲" ><img src="https://flagcdn.com/w20/cm.png" width="20" height="15" alt="" className="flag-emoji" />Cameroon</li>
+                          <li className="country-option" role="option" data-flag="🇨🇦" ><img src="https://flagcdn.com/w20/ca.png" width="20" height="15" alt="" className="flag-emoji" />Canada</li>
+                          <li className="country-option" role="option" data-flag="🇨🇱" ><img src="https://flagcdn.com/w20/cl.png" width="20" height="15" alt="" className="flag-emoji" />Chile</li>
+                          <li className="country-option" role="option" data-flag="🇨🇳" ><img src="https://flagcdn.com/w20/cn.png" width="20" height="15" alt="" className="flag-emoji" />China</li>
+                          <li className="country-option" role="option" data-flag="🇨🇴" ><img src="https://flagcdn.com/w20/co.png" width="20" height="15" alt="" className="flag-emoji" />Colombia</li>
+                          <li className="country-option" role="option" data-flag="🇰🇲" ><img src="https://flagcdn.com/w20/km.png" width="20" height="15" alt="" className="flag-emoji" />Comoros</li>
+                          <li className="country-option" role="option" data-flag="🇨🇷" ><img src="https://flagcdn.com/w20/cr.png" width="20" height="15" alt="" className="flag-emoji" />Costa Rica</li>
+                          <li className="country-option" role="option" data-flag="🇭🇷" ><img src="https://flagcdn.com/w20/hr.png" width="20" height="15" alt="" className="flag-emoji" />Croatia</li>
+                          <li className="country-option" role="option" data-flag="🇨🇺" ><img src="https://flagcdn.com/w20/cu.png" width="20" height="15" alt="" className="flag-emoji" />Cuba</li>
+                          <li className="country-option" role="option" data-flag="🇨🇾" ><img src="https://flagcdn.com/w20/cy.png" width="20" height="15" alt="" className="flag-emoji" />Cyprus</li>
+                          <li className="country-option" role="option" data-flag="🇨🇿" ><img src="https://flagcdn.com/w20/cz.png" width="20" height="15" alt="" className="flag-emoji" />Czech Republic</li>
+                          <li className="country-option" role="option" data-flag="🇩🇰" ><img src="https://flagcdn.com/w20/dk.png" width="20" height="15" alt="" className="flag-emoji" />Denmark</li>
+                          <li className="country-option" role="option" data-flag="🇩🇯" ><img src="https://flagcdn.com/w20/dj.png" width="20" height="15" alt="" className="flag-emoji" />Djibouti</li>
+                          <li className="country-option" role="option" data-flag="🇩🇲" ><img src="https://flagcdn.com/w20/dm.png" width="20" height="15" alt="" className="flag-emoji" />Dominica</li>
+                          <li className="country-option" role="option" data-flag="🇩🇴" ><img src="https://flagcdn.com/w20/do.png" width="20" height="15" alt="" className="flag-emoji" />Dominican Republic</li>
+                          <li className="country-option" role="option" data-flag="🇪🇨" ><img src="https://flagcdn.com/w20/ec.png" width="20" height="15" alt="" className="flag-emoji" />Ecuador</li>
+                          <li className="country-option" role="option" data-flag="🇪🇬" ><img src="https://flagcdn.com/w20/eg.png" width="20" height="15" alt="" className="flag-emoji" />Egypt</li>
+                          <li className="country-option" role="option" data-flag="🇸🇻" ><img src="https://flagcdn.com/w20/sv.png" width="20" height="15" alt="" className="flag-emoji" />El Salvador</li>
+                          <li className="country-option" role="option" data-flag="🇬🇶" ><img src="https://flagcdn.com/w20/gq.png" width="20" height="15" alt="" className="flag-emoji" />Equatorial Guinea</li>
+                          <li className="country-option" role="option" data-flag="🇪🇷" ><img src="https://flagcdn.com/w20/er.png" width="20" height="15" alt="" className="flag-emoji" />Eritrea</li>
+                          <li className="country-option" role="option" data-flag="🇪🇪" ><img src="https://flagcdn.com/w20/ee.png" width="20" height="15" alt="" className="flag-emoji" />Estonia</li>
+                          <li className="country-option" role="option" data-flag="🇸🇿" ><img src="https://flagcdn.com/w20/sz.png" width="20" height="15" alt="" className="flag-emoji" />Eswatini</li>
+                          <li className="country-option" role="option" data-flag="🇪🇹" ><img src="https://flagcdn.com/w20/et.png" width="20" height="15" alt="" className="flag-emoji" />Ethiopia</li>
+                          <li className="country-option" role="option" data-flag="🇫🇯" ><img src="https://flagcdn.com/w20/fj.png" width="20" height="15" alt="" className="flag-emoji" />Fiji</li>
+                          <li className="country-option" role="option" data-flag="🇫🇮" ><img src="https://flagcdn.com/w20/fi.png" width="20" height="15" alt="" className="flag-emoji" />Finland</li>
+                          <li className="country-option" role="option" data-flag="🇫🇷" ><img src="https://flagcdn.com/w20/fr.png" width="20" height="15" alt="" className="flag-emoji" />France</li>
+                          <li className="country-option" role="option" data-flag="🇬🇦" ><img src="https://flagcdn.com/w20/ga.png" width="20" height="15" alt="" className="flag-emoji" />Gabon</li>
+                          <li className="country-option" role="option" data-flag="🇬🇲" ><img src="https://flagcdn.com/w20/gm.png" width="20" height="15" alt="" className="flag-emoji" />Gambia</li>
+                          <li className="country-option" role="option" data-flag="🇬🇪" ><img src="https://flagcdn.com/w20/ge.png" width="20" height="15" alt="" className="flag-emoji" />Georgia</li>
+                          <li className="country-option" role="option" data-flag="🇩🇪" ><img src="https://flagcdn.com/w20/de.png" width="20" height="15" alt="" className="flag-emoji" />Germany</li>
+                          <li className="country-option" role="option" data-flag="🇬🇭" ><img src="https://flagcdn.com/w20/gh.png" width="20" height="15" alt="" className="flag-emoji" />Ghana</li>
+                          <li className="country-option" role="option" data-flag="🇬🇷" ><img src="https://flagcdn.com/w20/gr.png" width="20" height="15" alt="" className="flag-emoji" />Greece</li>
+                          <li className="country-option" role="option" data-flag="🇬🇩" ><img src="https://flagcdn.com/w20/gd.png" width="20" height="15" alt="" className="flag-emoji" />Grenada</li>
+                          <li className="country-option" role="option" data-flag="🇬🇹" ><img src="https://flagcdn.com/w20/gt.png" width="20" height="15" alt="" className="flag-emoji" />Guatemala</li>
+                          <li className="country-option" role="option" data-flag="🇬🇳" ><img src="https://flagcdn.com/w20/gn.png" width="20" height="15" alt="" className="flag-emoji" />Guinea</li>
+                          <li className="country-option" role="option" data-flag="🇬🇼" ><img src="https://flagcdn.com/w20/gw.png" width="20" height="15" alt="" className="flag-emoji" />Guinea-Bissau</li>
+                          <li className="country-option" role="option" data-flag="🇬🇾" ><img src="https://flagcdn.com/w20/gy.png" width="20" height="15" alt="" className="flag-emoji" />Guyana</li>
+                          <li className="country-option" role="option" data-flag="🇭🇳" ><img src="https://flagcdn.com/w20/hn.png" width="20" height="15" alt="" className="flag-emoji" />Honduras</li>
+                          <li className="country-option" role="option" data-flag="🇭🇺" ><img src="https://flagcdn.com/w20/hu.png" width="20" height="15" alt="" className="flag-emoji" />Hungary</li>
+                          <li className="country-option" role="option" data-flag="🇮🇸" ><img src="https://flagcdn.com/w20/is.png" width="20" height="15" alt="" className="flag-emoji" />Iceland</li>
+                          <li className="country-option" role="option" data-flag="🇮🇳" ><img src="https://flagcdn.com/w20/in.png" width="20" height="15" alt="" className="flag-emoji" />India</li>
+                          <li className="country-option" role="option" data-flag="🇮🇩" ><img src="https://flagcdn.com/w20/id.png" width="20" height="15" alt="" className="flag-emoji" />Indonesia</li>
+                          <li className="country-option" role="option" data-flag="🇮🇪" ><img src="https://flagcdn.com/w20/ie.png" width="20" height="15" alt="" className="flag-emoji" />Ireland</li>
+                          <li className="country-option" role="option" data-flag="🇮🇱" ><img src="https://flagcdn.com/w20/il.png" width="20" height="15" alt="" className="flag-emoji" />Israel</li>
+                          <li className="country-option" role="option" data-flag="🇮🇹" ><img src="https://flagcdn.com/w20/it.png" width="20" height="15" alt="" className="flag-emoji" />Italy</li>
+                          <li className="country-option" role="option" data-flag="🇯🇲" ><img src="https://flagcdn.com/w20/jm.png" width="20" height="15" alt="" className="flag-emoji" />Jamaica</li>
+                          <li className="country-option" role="option" data-flag="🇯🇵" ><img src="https://flagcdn.com/w20/jp.png" width="20" height="15" alt="" className="flag-emoji" />Japan</li>
+                          <li className="country-option" role="option" data-flag="🇯🇴" ><img src="https://flagcdn.com/w20/jo.png" width="20" height="15" alt="" className="flag-emoji" />Jordan</li>
+                          <li className="country-option" role="option" data-flag="🇰🇪" ><img src="https://flagcdn.com/w20/ke.png" width="20" height="15" alt="" className="flag-emoji" />Kenya</li>
+                          <li className="country-option" role="option" data-flag="🇰🇮" ><img src="https://flagcdn.com/w20/ki.png" width="20" height="15" alt="" className="flag-emoji" />Kiribati</li>
+                          <li className="country-option" role="option" data-flag="🇰🇼" ><img src="https://flagcdn.com/w20/kw.png" width="20" height="15" alt="" className="flag-emoji" />Kuwait</li>
+                          <li className="country-option" role="option" data-flag="🇰🇬" ><img src="https://flagcdn.com/w20/kg.png" width="20" height="15" alt="" className="flag-emoji" />Kyrgyzstan</li>
+                          <li className="country-option" role="option" data-flag="🇱🇦" ><img src="https://flagcdn.com/w20/la.png" width="20" height="15" alt="" className="flag-emoji" />Laos</li>
+                          <li className="country-option" role="option" data-flag="🇱🇻" ><img src="https://flagcdn.com/w20/lv.png" width="20" height="15" alt="" className="flag-emoji" />Latvia</li>
+                          <li className="country-option" role="option" data-flag="🇱🇸" ><img src="https://flagcdn.com/w20/ls.png" width="20" height="15" alt="" className="flag-emoji" />Lesotho</li>
+                          <li className="country-option" role="option" data-flag="🇱🇮" ><img src="https://flagcdn.com/w20/li.png" width="20" height="15" alt="" className="flag-emoji" />Liechtenstein</li>
+                          <li className="country-option" role="option" data-flag="🇱🇹" ><img src="https://flagcdn.com/w20/lt.png" width="20" height="15" alt="" className="flag-emoji" />Lithuania</li>
+                          <li className="country-option" role="option" data-flag="🇱🇺" ><img src="https://flagcdn.com/w20/lu.png" width="20" height="15" alt="" className="flag-emoji" />Luxembourg</li>
+                          <li className="country-option" role="option" data-flag="🇲🇬" ><img src="https://flagcdn.com/w20/mg.png" width="20" height="15" alt="" className="flag-emoji" />Madagascar</li>
+                          <li className="country-option" role="option" data-flag="🇲🇼" ><img src="https://flagcdn.com/w20/mw.png" width="20" height="15" alt="" className="flag-emoji" />Malawi</li>
+                          <li className="country-option" role="option" data-flag="🇲🇾" ><img src="https://flagcdn.com/w20/my.png" width="20" height="15" alt="" className="flag-emoji" />Malaysia</li>
+                          <li className="country-option" role="option" data-flag="🇲🇻" ><img src="https://flagcdn.com/w20/mv.png" width="20" height="15" alt="" className="flag-emoji" />Maldives</li>
+                          <li className="country-option" role="option" data-flag="🇲🇹" ><img src="https://flagcdn.com/w20/mt.png" width="20" height="15" alt="" className="flag-emoji" />Malta</li>
+                          <li className="country-option" role="option" data-flag="🇲🇭" ><img src="https://flagcdn.com/w20/mh.png" width="20" height="15" alt="" className="flag-emoji" />Marshall Islands</li>
+                          <li className="country-option" role="option" data-flag="🇲🇷" ><img src="https://flagcdn.com/w20/mr.png" width="20" height="15" alt="" className="flag-emoji" />Mauritania</li>
+                          <li className="country-option" role="option" data-flag="🇲🇺" ><img src="https://flagcdn.com/w20/mu.png" width="20" height="15" alt="" className="flag-emoji" />Mauritius</li>
+                          <li className="country-option" role="option" data-flag="🇲🇽" ><img src="https://flagcdn.com/w20/mx.png" width="20" height="15" alt="" className="flag-emoji" />Mexico</li>
+                          <li className="country-option" role="option" data-flag="🇫🇲" ><img src="https://flagcdn.com/w20/fm.png" width="20" height="15" alt="" className="flag-emoji" />Micronesia</li>
+                          <li className="country-option" role="option" data-flag="🇲🇩" ><img src="https://flagcdn.com/w20/md.png" width="20" height="15" alt="" className="flag-emoji" />Moldova</li>
+                          <li className="country-option" role="option" data-flag="🇲🇨" ><img src="https://flagcdn.com/w20/mc.png" width="20" height="15" alt="" className="flag-emoji" />Monaco</li>
+                          <li className="country-option" role="option" data-flag="🇲🇳" ><img src="https://flagcdn.com/w20/mn.png" width="20" height="15" alt="" className="flag-emoji" />Mongolia</li>
+                          <li className="country-option" role="option" data-flag="🇲🇪" ><img src="https://flagcdn.com/w20/me.png" width="20" height="15" alt="" className="flag-emoji" />Montenegro</li>
+                          <li className="country-option" role="option" data-flag="🇲🇦" ><img src="https://flagcdn.com/w20/ma.png" width="20" height="15" alt="" className="flag-emoji" />Morocco</li>
+                          <li className="country-option" role="option" data-flag="🇲🇿" ><img src="https://flagcdn.com/w20/mz.png" width="20" height="15" alt="" className="flag-emoji" />Mozambique</li>
+                          <li className="country-option" role="option" data-flag="🇳🇦" ><img src="https://flagcdn.com/w20/na.png" width="20" height="15" alt="" className="flag-emoji" />Namibia</li>
+                          <li className="country-option" role="option" data-flag="🇳🇷" ><img src="https://flagcdn.com/w20/nr.png" width="20" height="15" alt="" className="flag-emoji" />Nauru</li>
+                          <li className="country-option" role="option" data-flag="🇳🇵" ><img src="https://flagcdn.com/w20/np.png" width="20" height="15" alt="" className="flag-emoji" />Nepal</li>
+                          <li className="country-option country-option--selected" role="option" data-flag="🇳🇱" ><img src="https://flagcdn.com/w20/nl.png" width="20" height="15" alt="" className="flag-emoji" />Netherlands</li>
+                          <li className="country-option" role="option" data-flag="🇳🇪" ><img src="https://flagcdn.com/w20/ne.png" width="20" height="15" alt="" className="flag-emoji" />Niger</li>
+                          <li className="country-option" role="option" data-flag="🇳🇬" ><img src="https://flagcdn.com/w20/ng.png" width="20" height="15" alt="" className="flag-emoji" />Nigeria</li>
+                          <li className="country-option" role="option" data-flag="🇳🇴" ><img src="https://flagcdn.com/w20/no.png" width="20" height="15" alt="" className="flag-emoji" />Norway</li>
+                          <li className="country-option" role="option" data-flag="🇴🇲" ><img src="https://flagcdn.com/w20/om.png" width="20" height="15" alt="" className="flag-emoji" />Oman</li>
+                          <li className="country-option" role="option" data-flag="🇵🇰" ><img src="https://flagcdn.com/w20/pk.png" width="20" height="15" alt="" className="flag-emoji" />Pakistan</li>
+                          <li className="country-option" role="option" data-flag="🇵🇼" ><img src="https://flagcdn.com/w20/pw.png" width="20" height="15" alt="" className="flag-emoji" />Palau</li>
+                          <li className="country-option" role="option" data-flag="🇵🇦" ><img src="https://flagcdn.com/w20/pa.png" width="20" height="15" alt="" className="flag-emoji" />Panama</li>
+                          <li className="country-option" role="option" data-flag="🇵🇬" ><img src="https://flagcdn.com/w20/pg.png" width="20" height="15" alt="" className="flag-emoji" />Papua New Guinea</li>
+                          <li className="country-option" role="option" data-flag="🇵🇾" ><img src="https://flagcdn.com/w20/py.png" width="20" height="15" alt="" className="flag-emoji" />Paraguay</li>
+                          <li className="country-option" role="option" data-flag="🇵🇪" ><img src="https://flagcdn.com/w20/pe.png" width="20" height="15" alt="" className="flag-emoji" />Peru</li>
+                          <li className="country-option" role="option" data-flag="🇵🇭" ><img src="https://flagcdn.com/w20/ph.png" width="20" height="15" alt="" className="flag-emoji" />Philippines</li>
+                          <li className="country-option" role="option" data-flag="🇵🇱" ><img src="https://flagcdn.com/w20/pl.png" width="20" height="15" alt="" className="flag-emoji" />Poland</li>
+                          <li className="country-option" role="option" data-flag="🇵🇹" ><img src="https://flagcdn.com/w20/pt.png" width="20" height="15" alt="" className="flag-emoji" />Portugal</li>
+                          <li className="country-option" role="option" data-flag="🇶🇦" ><img src="https://flagcdn.com/w20/qa.png" width="20" height="15" alt="" className="flag-emoji" />Qatar</li>
+                          <li className="country-option" role="option" data-flag="🇷🇴" ><img src="https://flagcdn.com/w20/ro.png" width="20" height="15" alt="" className="flag-emoji" />Romania</li>
+                          <li className="country-option" role="option" data-flag="🇷🇼" ><img src="https://flagcdn.com/w20/rw.png" width="20" height="15" alt="" className="flag-emoji" />Rwanda</li>
+                          <li className="country-option" role="option" data-flag="🇰🇳" ><img src="https://flagcdn.com/w20/kn.png" width="20" height="15" alt="" className="flag-emoji" />Saint Kitts and Nevis</li>
+                          <li className="country-option" role="option" data-flag="🇱🇨" ><img src="https://flagcdn.com/w20/lc.png" width="20" height="15" alt="" className="flag-emoji" />Saint Lucia</li>
+                          <li className="country-option" role="option" data-flag="🇻🇨" ><img src="https://flagcdn.com/w20/vc.png" width="20" height="15" alt="" className="flag-emoji" />Saint Vincent and the Grenadines</li>
+                          <li className="country-option" role="option" data-flag="🇼🇸" ><img src="https://flagcdn.com/w20/ws.png" width="20" height="15" alt="" className="flag-emoji" />Samoa</li>
+                          <li className="country-option" role="option" data-flag="🇸🇲" ><img src="https://flagcdn.com/w20/sm.png" width="20" height="15" alt="" className="flag-emoji" />San Marino</li>
+                          <li className="country-option" role="option" data-flag="🇸🇹" ><img src="https://flagcdn.com/w20/st.png" width="20" height="15" alt="" className="flag-emoji" />Sao Tome and Principe</li>
+                          <li className="country-option" role="option" data-flag="🇸🇦" ><img src="https://flagcdn.com/w20/sa.png" width="20" height="15" alt="" className="flag-emoji" />Saudi Arabia</li>
+                          <li className="country-option" role="option" data-flag="🇸🇳" ><img src="https://flagcdn.com/w20/sn.png" width="20" height="15" alt="" className="flag-emoji" />Senegal</li>
+                          <li className="country-option" role="option" data-flag="🇷🇸" ><img src="https://flagcdn.com/w20/rs.png" width="20" height="15" alt="" className="flag-emoji" />Serbia</li>
+                          <li className="country-option" role="option" data-flag="🇸🇨" ><img src="https://flagcdn.com/w20/sc.png" width="20" height="15" alt="" className="flag-emoji" />Seychelles</li>
+                          <li className="country-option" role="option" data-flag="🇸🇱" ><img src="https://flagcdn.com/w20/sl.png" width="20" height="15" alt="" className="flag-emoji" />Sierra Leone</li>
+                          <li className="country-option" role="option" data-flag="🇸🇬" ><img src="https://flagcdn.com/w20/sg.png" width="20" height="15" alt="" className="flag-emoji" />Singapore</li>
+                          <li className="country-option" role="option" data-flag="🇸🇰" ><img src="https://flagcdn.com/w20/sk.png" width="20" height="15" alt="" className="flag-emoji" />Slovakia</li>
+                          <li className="country-option" role="option" data-flag="🇸🇮" ><img src="https://flagcdn.com/w20/si.png" width="20" height="15" alt="" className="flag-emoji" />Slovenia</li>
+                          <li className="country-option" role="option" data-flag="🇸🇧" ><img src="https://flagcdn.com/w20/sb.png" width="20" height="15" alt="" className="flag-emoji" />Solomon Islands</li>
+                          <li className="country-option" role="option" data-flag="🇿🇦" ><img src="https://flagcdn.com/w20/za.png" width="20" height="15" alt="" className="flag-emoji" />South Africa</li>
+                          <li className="country-option" role="option" data-flag="🇪🇸" ><img src="https://flagcdn.com/w20/es.png" width="20" height="15" alt="" className="flag-emoji" />Spain</li>
+                          <li className="country-option" role="option" data-flag="🇱🇰" ><img src="https://flagcdn.com/w20/lk.png" width="20" height="15" alt="" className="flag-emoji" />Sri Lanka</li>
+                          <li className="country-option" role="option" data-flag="🇸🇷" ><img src="https://flagcdn.com/w20/sr.png" width="20" height="15" alt="" className="flag-emoji" />Suriname</li>
+                          <li className="country-option" role="option" data-flag="🇸🇪" ><img src="https://flagcdn.com/w20/se.png" width="20" height="15" alt="" className="flag-emoji" />Sweden</li>
+                          <li className="country-option" role="option" data-flag="🇨🇭" ><img src="https://flagcdn.com/w20/ch.png" width="20" height="15" alt="" className="flag-emoji" />Switzerland</li>
+                          <li className="country-option" role="option" data-flag="🇹🇼" ><img src="https://flagcdn.com/w20/tw.png" width="20" height="15" alt="" className="flag-emoji" />Taiwan</li>
+                          <li className="country-option" role="option" data-flag="🇹🇯" ><img src="https://flagcdn.com/w20/tj.png" width="20" height="15" alt="" className="flag-emoji" />Tajikistan</li>
+                          <li className="country-option" role="option" data-flag="🇹🇿" ><img src="https://flagcdn.com/w20/tz.png" width="20" height="15" alt="" className="flag-emoji" />Tanzania</li>
+                          <li className="country-option" role="option" data-flag="🇹🇭" ><img src="https://flagcdn.com/w20/th.png" width="20" height="15" alt="" className="flag-emoji" />Thailand</li>
+                          <li className="country-option" role="option" data-flag="🇹🇱" ><img src="https://flagcdn.com/w20/tl.png" width="20" height="15" alt="" className="flag-emoji" />Timor-Leste</li>
+                          <li className="country-option" role="option" data-flag="🇹🇬" ><img src="https://flagcdn.com/w20/tg.png" width="20" height="15" alt="" className="flag-emoji" />Togo</li>
+                          <li className="country-option" role="option" data-flag="🇹🇴" ><img src="https://flagcdn.com/w20/to.png" width="20" height="15" alt="" className="flag-emoji" />Tonga</li>
+                          <li className="country-option" role="option" data-flag="🇹🇹" ><img src="https://flagcdn.com/w20/tt.png" width="20" height="15" alt="" className="flag-emoji" />Trinidad and Tobago</li>
+                          <li className="country-option" role="option" data-flag="🇹🇷" ><img src="https://flagcdn.com/w20/tr.png" width="20" height="15" alt="" className="flag-emoji" />Turkey</li>
+                          <li className="country-option" role="option" data-flag="🇹🇻" ><img src="https://flagcdn.com/w20/tv.png" width="20" height="15" alt="" className="flag-emoji" />Tuvalu</li>
+                          <li className="country-option" role="option" data-flag="🇺🇬" ><img src="https://flagcdn.com/w20/ug.png" width="20" height="15" alt="" className="flag-emoji" />Uganda</li>
+                          <li className="country-option" role="option" data-flag="🇺🇦" ><img src="https://flagcdn.com/w20/ua.png" width="20" height="15" alt="" className="flag-emoji" />Ukraine</li>
+                          <li className="country-option" role="option" data-flag="🇦🇪" ><img src="https://flagcdn.com/w20/ae.png" width="20" height="15" alt="" className="flag-emoji" />United Arab Emirates</li>
+                          <li className="country-option" role="option" data-flag="🇬🇧" ><img src="https://flagcdn.com/w20/gb.png" width="20" height="15" alt="" className="flag-emoji" />United Kingdom</li>
+                          <li className="country-option" role="option" data-flag="🇺🇸" ><img src="https://flagcdn.com/w20/us.png" width="20" height="15" alt="" className="flag-emoji" />United States</li>
+                          <li className="country-option" role="option" data-flag="🇺🇿" ><img src="https://flagcdn.com/w20/uz.png" width="20" height="15" alt="" className="flag-emoji" />Uzbekistan</li>
+                          <li className="country-option" role="option" data-flag="🇻🇳" ><img src="https://flagcdn.com/w20/vn.png" width="20" height="15" alt="" className="flag-emoji" />Vietnam</li>
+                          <li className="country-option" role="option" data-flag="🇿🇲" ><img src="https://flagcdn.com/w20/zm.png" width="20" height="15" alt="" className="flag-emoji" />Zambia</li>
 </ul>
                         <p className="country-empty" id="countryEmpty" hidden>No countries found.</p>
                       </div>

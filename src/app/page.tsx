@@ -1,97 +1,6 @@
-import { getBrokers, type Broker } from '@/lib/api'
+import BrokerCarousel from '@/components/BrokerCarousel'
 
-function shortenPlatform(p: string): string {
-  return p
-    .replace(/MetaTrader\s*4/i, 'MT4')
-    .replace(/MetaTrader\s*5/i, 'MT5')
-    .replace(/MetaTrader/i, 'MT')
-}
-
-function BrokerCard({ broker }: { broker: Broker }) {
-  const logoUrl = broker.logos?.square_light || broker.logos?.square_dark || null
-  const brokerUrl = broker.affiliate_link || '#'
-  const reviewUrl = `/broker/${broker.slug}`
-  const minDeposit = broker.min_deposit != null ? `$${broker.min_deposit}` : '—'
-  const minSpread = broker.min_spread != null ? `${broker.min_spread} pips` : '—'
-  const rating = broker.total_rating != null
-    ? Math.round(broker.total_rating * 10) / 10
-    : null
-  const usersCount = broker.users_count
-    ? broker.users_count.toLocaleString('en-US') + ' users'
-    : null
-  const promotion = broker.promotion ?? null
-
-  return (
-    <article className="broker-card">
-      <div className="broker-card__head">
-        {logoUrl
-          ? <img src={logoUrl} alt={broker.name} className="broker-logo" />
-          : <span className="broker-logo-placeholder">{broker.name.charAt(0)}</span>
-        }
-        <div>
-          <p className="broker-name">{broker.name}</p>
-          {rating && (
-            <span className="rating-badge">
-              <img src="/assets/images/icon-star.svg" alt="" />{rating}/5
-            </span>
-          )}
-        </div>
-      </div>
-
-      <div className="availability-badge">
-        <img src="/assets/images/icon-check-circle.svg" alt="" />Available in your country
-      </div>
-
-      <ul className="broker-facts">
-        {usersCount && (
-          <li>
-            <img src="/assets/images/icon-users.svg" alt="" />{usersCount}
-          </li>
-        )}
-        <li>
-          <img src="/assets/images/icon-swap.svg" alt="" />
-          <span>Min. spread</span>
-          <strong>{minSpread}</strong>
-        </li>
-        <li>
-          <img src="/assets/images/icon-card.svg" alt="" />
-          <span>Min. deposit</span>
-          <strong>{minDeposit}</strong>
-        </li>
-        {broker.platforms && broker.platforms.length > 0 && (
-          <li className="broker-facts__platform">
-            <span><img src="/assets/images/icon-pc-check.svg" alt="" />Platform</span>
-            <div className="tag-row">
-              {broker.platforms.map((p) => (
-                <span key={p} className="tag">{shortenPlatform(p)}</span>
-              ))}
-            </div>
-          </li>
-        )}
-        {promotion?.bonus_type && (
-          <li>
-            <img src="/assets/images/icon-gift-light.svg" alt="" />
-            <span>Bonus</span>
-            <strong>{promotion.bonus_type}</strong>
-          </li>
-        )}
-      </ul>
-
-      <div className="broker-card__ctas">
-        <a href={brokerUrl} className="btn btn--primary btn--block" target="_blank" rel="noopener noreferrer">Visit Broker</a>
-        <a href={reviewUrl} className="btn btn--text btn--text--px btn--center">Read Review <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
-      </div>
-    </article>
-  )
-}
-
-export default async function HomePage() {
-  let brokers: Broker[] = []
-  try {
-    brokers = await getBrokers()
-  } catch (e) {
-    console.error('BMS API error:', e)
-  }
+export default function HomePage() {
   return (
     <>
       <main>
@@ -472,9 +381,7 @@ export default async function HomePage() {
                 <a href="#" className="btn btn--text btn--text--px">View All Brokers <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
               </div>
             </div>
-            <div className="broker-cards" id="brokerCarousel">
-              {brokers.map((broker) => <BrokerCard key={broker.id} broker={broker} />)}
-            </div>
+            <BrokerCarousel />
             <a href="#" className="btn btn--text btn--text--px btn--center broker-cards__view-all">View All Brokers <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
           </div>
 

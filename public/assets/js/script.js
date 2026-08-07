@@ -295,8 +295,11 @@ function initHoverPinWidget({ widget, toggle, panel, onOpen, onClose }) {
         panel.style.right = '';
       } else {
         const rect = toggle.getBoundingClientRect();
-        panel.style.top = rect.bottom + 12 + 'px';
-        panel.style.right = window.innerWidth - rect.right + 'px';
+        // body.style.zoom is applied for screens wider than 1440px; fixed-position
+        // elements inherit that zoom, so CSS pixel values must be divided by it.
+        const zoom = parseFloat(document.body.style.zoom) || 1;
+        panel.style.top = (rect.bottom + 12) / zoom + 'px';
+        panel.style.right = (window.innerWidth - rect.right) / zoom + 'px';
       }
     },
     onClose: () => {

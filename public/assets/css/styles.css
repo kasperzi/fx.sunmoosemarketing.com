@@ -695,7 +695,9 @@ h2 {
 }
 
 .lang-panel {
-  position: fixed;
+  position: absolute;
+  top: calc(100% + 40px);
+  right: 0;
   width: 448.44px;
   background: var(--white);
   border-radius: 24px;

@@ -255,10 +255,6 @@ function initHoverPinWidget({ widget, toggle, panel, onOpen, onClose }) {
   const panel = document.getElementById('langPanel');
   const icon = toggle.querySelector('img');
 
-  // Move the panel to be a direct child of <body> so its z-index competes at
-  // the root stacking context instead of being trapped inside the nav's.
-  document.body.appendChild(panel);
-
   function isMobile() {
     return window.matchMedia('(max-width: 700px)').matches;
   }
@@ -290,25 +286,21 @@ function initHoverPinWidget({ widget, toggle, panel, onOpen, onClose }) {
       if (icon) icon.src = 'assets/images/icon-globe-active.svg';
       backdrop.hidden = false;
       if (isMobile()) {
+        // On mobile: move panel to body so its z-index beats the backdrop.
+        document.body.appendChild(panel);
         document.body.style.overflow = 'hidden';
-        panel.style.top = '';
-        panel.style.right = '';
-      } else {
-        const toggleRect = toggle.getBoundingClientRect();
-        // Use the nav bar's bottom as the anchor (same as mega menu does with CSS),
-        // then add a small gap. Divide by body zoom so fixed-position CSS coords
-        // match viewport coords on screens wider than 1440px.
-        const navEl = toggle.closest('.nav') || toggle.closest('.nav-wrap');
-        const navBottom = navEl ? navEl.getBoundingClientRect().bottom : toggleRect.bottom;
-        const zoom = parseFloat(document.body.style.zoom) || 1;
-        panel.style.top = (navBottom + 8) / zoom + 'px';
-        panel.style.right = (window.innerWidth - toggleRect.right) / zoom + 'px';
       }
+      // On desktop: panel stays inside .lang-widget and is positioned via CSS
+      // (position: absolute; top: calc(100% + 40px); right: 0) — no JS needed.
     },
     onClose: () => {
       if (icon) icon.src = 'assets/images/icon-globe.svg';
       backdrop.hidden = true;
       document.body.style.overflow = '';
+      if (isMobile() && panel.parentElement === document.body) {
+        // Move panel back inside lang-widget so CSS positions it correctly on desktop.
+        widget.appendChild(panel);
+      }
     },
   });
 

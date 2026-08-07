@@ -749,10 +749,9 @@ h2 {
 
 .lang-panel__confirm { align-self: flex-start; font-size: 15px; padding: 12px 24px; }
 
-.pill-row { display: flex; gap: 4px; width: 100%; }
+.pill-row { display: flex; flex-wrap: wrap; gap: 4px; }
 .pill {
-  flex: 1 0 0;
-  min-width: 0;
+  flex: 0 0 auto;
   background: var(--white);
   border: 0.893px solid var(--gray);
   border-radius: var(--radius-sm);

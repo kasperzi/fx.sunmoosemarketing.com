@@ -102,10 +102,14 @@ initCountrySelect(document.getElementById('filterCountrySelect'));
 initCountrySelect(document.getElementById('wizardCountrySelect'));
 initCountrySelect(document.getElementById('reviewCountrySelect'));
 
-// Initialize country selects from localStorage or IP detection
+// Initialize country selects from saved preference or IP detection
+// localStorage = user manually confirmed preference (persists)
+// sessionStorage = IP-detected this session only (clears on browser close)
 (function initCountryFromStorage() {
   var saved = null;
-  try { saved = localStorage.getItem('fx_country'); } catch(e) {}
+  try {
+    saved = localStorage.getItem('fx_country') || sessionStorage.getItem('fx_country');
+  } catch(e) {}
 
   function applyCode(code) {
     if (!code || code.length !== 2 || !/^[A-Z]{2}$/.test(code)) return;
@@ -116,13 +120,15 @@ initCountrySelect(document.getElementById('reviewCountrySelect'));
   if (saved) {
     applyCode(saved.toUpperCase());
   } else {
-    // No saved country — detect via IP
+    // No saved country — detect via IP, store in sessionStorage only
     fetch('https://ipapi.co/country/')
       .then(function(r) { return r.text(); })
       .then(function(code) {
         code = (code || '').trim().toUpperCase();
-        try { localStorage.setItem('fx_country', code); } catch(e) {}
-        applyCode(code);
+        if (code && code.length === 2 && /^[A-Z]{2}$/.test(code)) {
+          try { sessionStorage.setItem('fx_country', code); } catch(e) {}
+          applyCode(code);
+        }
       })
       .catch(function() {});
   }

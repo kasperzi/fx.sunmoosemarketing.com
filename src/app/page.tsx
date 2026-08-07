@@ -118,21 +118,21 @@ export default function HomePage() {
                               <input type="text" placeholder="Search country..." autoComplete="off" />
                             </div>
                             <ul className="country-list" role="listbox">
-                              <li className="country-option country-option--selected" role="option" data-flag="🇳🇱" data-name="Netherlands"><span className="flag-emoji">🇳🇱</span>Netherlands</li>
-                              <li className="country-option" role="option" data-flag="🇬🇧" data-name="United Kingdom"><span className="flag-emoji">🇬🇧</span>United Kingdom</li>
-                              <li className="country-option" role="option" data-flag="🇩🇪" data-name="Germany"><span className="flag-emoji">🇩🇪</span>Germany</li>
-                              <li className="country-option" role="option" data-flag="🇫🇷" data-name="France"><span className="flag-emoji">🇫🇷</span>France</li>
-                              <li className="country-option" role="option" data-flag="🇨🇦" data-name="Canada"><span className="flag-emoji">🇨🇦</span>Canada</li>
-                              <li className="country-option" role="option" data-flag="🇺🇸" data-name="United States"><span className="flag-emoji">🇺🇸</span>United States</li>
-                              <li className="country-option" role="option" data-flag="🇭🇷" data-name="Croatia"><span className="flag-emoji">🇭🇷</span>Croatia</li>
-                              <li className="country-option" role="option" data-flag="🇪🇸" data-name="Spain"><span className="flag-emoji">🇪🇸</span>Spain</li>
-                              <li className="country-option" role="option" data-flag="🇮🇹" data-name="Italy"><span className="flag-emoji">🇮🇹</span>Italy</li>
-                              <li className="country-option" role="option" data-flag="🇦🇹" data-name="Austria"><span className="flag-emoji">🇦🇹</span>Austria</li>
-                              <li className="country-option" role="option" data-flag="🇨🇭" data-name="Switzerland"><span className="flag-emoji">🇨🇭</span>Switzerland</li>
-                              <li className="country-option" role="option" data-flag="🇧🇪" data-name="Belgium"><span className="flag-emoji">🇧🇪</span>Belgium</li>
-                              <li className="country-option" role="option" data-flag="🇵🇱" data-name="Poland"><span className="flag-emoji">🇵🇱</span>Poland</li>
-                              <li className="country-option" role="option" data-flag="🇸🇪" data-name="Sweden"><span className="flag-emoji">🇸🇪</span>Sweden</li>
-                              <li className="country-option" role="option" data-flag="🇦🇺" data-name="Australia"><span className="flag-emoji">🇦🇺</span>Australia</li>
+                              <li className="country-option country-option--selected" role="option" data-flag="🇳🇱" data-code="NL" data-name="Netherlands"><span className="flag-emoji">🇳🇱</span>Netherlands</li>
+                              <li className="country-option" role="option" data-flag="🇬🇧" data-code="GB" data-name="United Kingdom"><span className="flag-emoji">🇬🇧</span>United Kingdom</li>
+                              <li className="country-option" role="option" data-flag="🇩🇪" data-code="DE" data-name="Germany"><span className="flag-emoji">🇩🇪</span>Germany</li>
+                              <li className="country-option" role="option" data-flag="🇫🇷" data-code="FR" data-name="France"><span className="flag-emoji">🇫🇷</span>France</li>
+                              <li className="country-option" role="option" data-flag="🇨🇦" data-code="CA" data-name="Canada"><span className="flag-emoji">🇨🇦</span>Canada</li>
+                              <li className="country-option" role="option" data-flag="🇺🇸" data-code="US" data-name="United States"><span className="flag-emoji">🇺🇸</span>United States</li>
+                              <li className="country-option" role="option" data-flag="🇭🇷" data-code="HR" data-name="Croatia"><span className="flag-emoji">🇭🇷</span>Croatia</li>
+                              <li className="country-option" role="option" data-flag="🇪🇸" data-code="ES" data-name="Spain"><span className="flag-emoji">🇪🇸</span>Spain</li>
+                              <li className="country-option" role="option" data-flag="🇮🇹" data-code="IT" data-name="Italy"><span className="flag-emoji">🇮🇹</span>Italy</li>
+                              <li className="country-option" role="option" data-flag="🇦🇹" data-code="AT" data-name="Austria"><span className="flag-emoji">🇦🇹</span>Austria</li>
+                              <li className="country-option" role="option" data-flag="🇨🇭" data-code="CH" data-name="Switzerland"><span className="flag-emoji">🇨🇭</span>Switzerland</li>
+                              <li className="country-option" role="option" data-flag="🇧🇪" data-code="BE" data-name="Belgium"><span className="flag-emoji">🇧🇪</span>Belgium</li>
+                              <li className="country-option" role="option" data-flag="🇵🇱" data-code="PL" data-name="Poland"><span className="flag-emoji">🇵🇱</span>Poland</li>
+                              <li className="country-option" role="option" data-flag="🇸🇪" data-code="SE" data-name="Sweden"><span className="flag-emoji">🇸🇪</span>Sweden</li>
+                              <li className="country-option" role="option" data-flag="🇦🇺" data-code="AU" data-name="Australia"><span className="flag-emoji">🇦🇺</span>Australia</li>
                             </ul>
                             <p className="country-empty" hidden>No countries found.</p>
                           </div>
@@ -267,21 +267,21 @@ export default function HomePage() {
                           <input type="text" id="countrySearch" placeholder="Search country..." autoComplete="off" />
                         </div>
                         <ul className="country-list" id="countryList" role="listbox">
-                          <li className="country-option country-option--selected" role="option" data-flag="🇳🇱" data-name="Netherlands"><span className="flag-emoji">🇳🇱</span>Netherlands</li>
-                          <li className="country-option" role="option" data-flag="🇬🇧" data-name="United Kingdom"><span className="flag-emoji">🇬🇧</span>United Kingdom</li>
-                          <li className="country-option" role="option" data-flag="🇩🇪" data-name="Germany"><span className="flag-emoji">🇩🇪</span>Germany</li>
-                          <li className="country-option" role="option" data-flag="🇫🇷" data-name="France"><span className="flag-emoji">🇫🇷</span>France</li>
-                          <li className="country-option" role="option" data-flag="🇨🇦" data-name="Canada"><span className="flag-emoji">🇨🇦</span>Canada</li>
-                          <li className="country-option" role="option" data-flag="🇺🇸" data-name="United States"><span className="flag-emoji">🇺🇸</span>United States</li>
-                          <li className="country-option" role="option" data-flag="🇭🇷" data-name="Croatia"><span className="flag-emoji">🇭🇷</span>Croatia</li>
-                          <li className="country-option" role="option" data-flag="🇪🇸" data-name="Spain"><span className="flag-emoji">🇪🇸</span>Spain</li>
-                          <li className="country-option" role="option" data-flag="🇮🇹" data-name="Italy"><span className="flag-emoji">🇮🇹</span>Italy</li>
-                          <li className="country-option" role="option" data-flag="🇦🇹" data-name="Austria"><span className="flag-emoji">🇦🇹</span>Austria</li>
-                          <li className="country-option" role="option" data-flag="🇨🇭" data-name="Switzerland"><span className="flag-emoji">🇨🇭</span>Switzerland</li>
-                          <li className="country-option" role="option" data-flag="🇧🇪" data-name="Belgium"><span className="flag-emoji">🇧🇪</span>Belgium</li>
-                          <li className="country-option" role="option" data-flag="🇵🇱" data-name="Poland"><span className="flag-emoji">🇵🇱</span>Poland</li>
-                          <li className="country-option" role="option" data-flag="🇸🇪" data-name="Sweden"><span className="flag-emoji">🇸🇪</span>Sweden</li>
-                          <li className="country-option" role="option" data-flag="🇦🇺" data-name="Australia"><span className="flag-emoji">🇦🇺</span>Australia</li>
+                          <li className="country-option country-option--selected" role="option" data-flag="🇳🇱" data-code="NL" data-name="Netherlands"><span className="flag-emoji">🇳🇱</span>Netherlands</li>
+                          <li className="country-option" role="option" data-flag="🇬🇧" data-code="GB" data-name="United Kingdom"><span className="flag-emoji">🇬🇧</span>United Kingdom</li>
+                          <li className="country-option" role="option" data-flag="🇩🇪" data-code="DE" data-name="Germany"><span className="flag-emoji">🇩🇪</span>Germany</li>
+                          <li className="country-option" role="option" data-flag="🇫🇷" data-code="FR" data-name="France"><span className="flag-emoji">🇫🇷</span>France</li>
+                          <li className="country-option" role="option" data-flag="🇨🇦" data-code="CA" data-name="Canada"><span className="flag-emoji">🇨🇦</span>Canada</li>
+                          <li className="country-option" role="option" data-flag="🇺🇸" data-code="US" data-name="United States"><span className="flag-emoji">🇺🇸</span>United States</li>
+                          <li className="country-option" role="option" data-flag="🇭🇷" data-code="HR" data-name="Croatia"><span className="flag-emoji">🇭🇷</span>Croatia</li>
+                          <li className="country-option" role="option" data-flag="🇪🇸" data-code="ES" data-name="Spain"><span className="flag-emoji">🇪🇸</span>Spain</li>
+                          <li className="country-option" role="option" data-flag="🇮🇹" data-code="IT" data-name="Italy"><span className="flag-emoji">🇮🇹</span>Italy</li>
+                          <li className="country-option" role="option" data-flag="🇦🇹" data-code="AT" data-name="Austria"><span className="flag-emoji">🇦🇹</span>Austria</li>
+                          <li className="country-option" role="option" data-flag="🇨🇭" data-code="CH" data-name="Switzerland"><span className="flag-emoji">🇨🇭</span>Switzerland</li>
+                          <li className="country-option" role="option" data-flag="🇧🇪" data-code="BE" data-name="Belgium"><span className="flag-emoji">🇧🇪</span>Belgium</li>
+                          <li className="country-option" role="option" data-flag="🇵🇱" data-code="PL" data-name="Poland"><span className="flag-emoji">🇵🇱</span>Poland</li>
+                          <li className="country-option" role="option" data-flag="🇸🇪" data-code="SE" data-name="Sweden"><span className="flag-emoji">🇸🇪</span>Sweden</li>
+                          <li className="country-option" role="option" data-flag="🇦🇺" data-code="AU" data-name="Australia"><span className="flag-emoji">🇦🇺</span>Australia</li>
                         </ul>
                         <p className="country-empty" id="countryEmpty" hidden>No countries found.</p>
                       </div>

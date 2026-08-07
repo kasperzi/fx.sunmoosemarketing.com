@@ -1,6 +1,6 @@
 function initCountrySelect(root, opts) {
   opts = opts || {};
-  if (!root) return;
+  if (!root) return null;
 
   const toggle = root.querySelector('.country-toggle');
   const dropdown = root.querySelector('.country-dropdown');
@@ -86,14 +86,51 @@ function initCountrySelect(root, opts) {
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && isOpen()) close();
   });
+
+  return {
+    selectByCode: function(code) {
+      var opt = options.find(function(o) { return o.dataset.code === code; });
+      if (opt) selectOption(opt);
+    },
+    getSelectedCode: function() {
+      var sel = options.find(function(o) { return o.classList.contains('country-option--selected'); });
+      return sel ? sel.dataset.code : null;
+    }
+  };
 }
 
-initCountrySelect(document.getElementById('countrySelect'));
+var countrySelectCtrl = initCountrySelect(document.getElementById('countrySelect'));
 initCountrySelect(document.getElementById('languageSelect'));
-initCountrySelect(document.getElementById('panelCountrySelect'));
+var panelCountryCtrl = initCountrySelect(document.getElementById('panelCountrySelect'));
 initCountrySelect(document.getElementById('filterCountrySelect'));
 initCountrySelect(document.getElementById('wizardCountrySelect'));
 initCountrySelect(document.getElementById('reviewCountrySelect'));
+
+// Initialize country selects from localStorage or IP detection
+(function initCountryFromStorage() {
+  var saved = null;
+  try { saved = localStorage.getItem('fx_country'); } catch(e) {}
+
+  function applyCode(code) {
+    if (!code || code.length !== 2 || !/^[A-Z]{2}$/.test(code)) return;
+    if (panelCountryCtrl) panelCountryCtrl.selectByCode(code);
+    if (countrySelectCtrl) countrySelectCtrl.selectByCode(code);
+  }
+
+  if (saved) {
+    applyCode(saved.toUpperCase());
+  } else {
+    // No saved country — detect via IP
+    fetch('https://ipapi.co/country/')
+      .then(function(r) { return r.text(); })
+      .then(function(code) {
+        code = (code || '').trim().toUpperCase();
+        try { localStorage.setItem('fx_country', code); } catch(e) {}
+        applyCode(code);
+      })
+      .catch(function() {});
+  }
+})();
 
 function initBrokerSelect(root) {
   if (!root) return;
@@ -307,7 +344,18 @@ function initHoverPinWidget({ widget, toggle, panel, onOpen, onClose }) {
   closeBtn.addEventListener('click', controls.hide);
 
   const confirmBtn = panel.querySelector('.lang-panel__confirm');
-  if (confirmBtn && controls) confirmBtn.addEventListener('click', controls.hide);
+  if (confirmBtn && controls) {
+    confirmBtn.addEventListener('click', function() {
+      var code = panelCountryCtrl ? panelCountryCtrl.getSelectedCode() : null;
+      if (code) {
+        try { localStorage.setItem('fx_country', code); } catch(e) {}
+        window.dispatchEvent(new CustomEvent('fx:countryChange', { detail: code }));
+        // Also sync the hero form country select
+        if (countrySelectCtrl) countrySelectCtrl.selectByCode(code);
+      }
+      controls.hide();
+    });
+  }
 })();
 
 (function initNavMega() {

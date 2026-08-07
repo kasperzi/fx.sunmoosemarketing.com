@@ -103,18 +103,15 @@ initCountrySelect(document.getElementById('wizardCountrySelect'));
 initCountrySelect(document.getElementById('reviewCountrySelect'));
 
 // Initialize country selects from saved preference or IP detection
-// localStorage.fx_country_pref = user explicitly confirmed via "Confirm changes" (permanent)
-// sessionStorage.fx_country    = IP-detected this session (clears on browser close)
-// Migration: remove old fx_country key that was incorrectly used for IP detection
+// localStorage.fx_country_pref = user explicitly confirmed (permanent)
+// sessionStorage.fx_country    = IP-detected this session
+// window.__fxCountry           = Promise started in <head> script before page renders
 (function initCountryFromStorage() {
-  try { localStorage.removeItem('fx_country'); } catch(e) {}
+  try { localStorage.removeItem('fx_country'); } catch(e) {} // remove old stale key
 
-  var pref = null;
-  var session = null;
+  var pref = null, session = null;
   try { pref = localStorage.getItem('fx_country_pref'); } catch(e) {}
   try { session = sessionStorage.getItem('fx_country'); } catch(e) {}
-
-  var saved = pref || session;
 
   function applyCode(code) {
     if (!code || code.length !== 2 || !/^[A-Z]{2}$/.test(code)) return;
@@ -122,20 +119,17 @@ initCountrySelect(document.getElementById('reviewCountrySelect'));
     if (countrySelectCtrl) countrySelectCtrl.selectByCode(code);
   }
 
-  if (saved) {
-    applyCode(saved.toUpperCase());
+  if (pref || session) {
+    applyCode((pref || session).toUpperCase());
   } else {
-    // No saved country — detect via IP, store in sessionStorage only
-    fetch('https://ipapi.co/country/')
-      .then(function(r) { return r.text(); })
-      .then(function(code) {
-        code = (code || '').trim().toUpperCase();
-        if (code && code.length === 2 && /^[A-Z]{2}$/.test(code)) {
-          try { sessionStorage.setItem('fx_country', code); } catch(e) {}
-          applyCode(code);
-        }
-      })
-      .catch(function() {});
+    // Use the fetch that was already started in <head>, or start a new one
+    var promise = window.__fxCountry || fetch('/api/country').then(function(r) { return r.json(); }).then(function(d) { return (d.country || '').toUpperCase(); });
+    promise.then(function(code) {
+      if (code && code.length === 2 && /^[A-Z]{2}$/.test(code)) {
+        try { sessionStorage.setItem('fx_country', code); } catch(e) {}
+        applyCode(code);
+      }
+    }).catch(function() {});
   }
 })();
 

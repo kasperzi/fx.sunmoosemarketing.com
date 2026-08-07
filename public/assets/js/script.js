@@ -48,12 +48,15 @@ function initCountrySelect(root, opts) {
     valueEl.textContent = opt.dataset.name;
 
     const flagEl = root.querySelector('.flag');
-    if (flagEl && opt.dataset.flag) {
-      const span = document.createElement('span');
-      span.className = 'flag flag--emoji';
-      if (flagEl.id) span.id = flagEl.id;
-      span.textContent = opt.dataset.flag;
-      flagEl.replaceWith(span);
+    if (flagEl && opt.dataset.code) {
+      const img = document.createElement('img');
+      img.src = 'https://flagcdn.com/w20/' + opt.dataset.code.toLowerCase() + '.png';
+      img.width = 20;
+      img.height = 15;
+      img.alt = '';
+      img.className = 'flag';
+      if (flagEl.id) img.id = flagEl.id;
+      flagEl.replaceWith(img);
     }
 
     close();

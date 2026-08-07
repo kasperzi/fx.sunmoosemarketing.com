@@ -20,7 +20,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         {children}
-        <Script src="/assets/js/script.js?v=199" strategy="afterInteractive" />
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var c=localStorage.getItem('fx_country');if(!c||c==='NL')return;c=c.toUpperCase();['panelCountrySelect','countrySelect'].forEach(function(id){var r=document.getElementById(id);if(!r)return;var opt=Array.from(r.querySelectorAll('[data-code]')).find(function(o){return o.dataset.code===c;});if(!opt)return;r.querySelectorAll('.country-option--selected').forEach(function(o){o.classList.remove('country-option--selected');});opt.classList.add('country-option--selected');var v=r.querySelector('.select-value');if(v)v.textContent=opt.dataset.name;var f=r.querySelector('.flag');if(f){var img=document.createElement('img');img.src='https://flagcdn.com/w20/'+c.toLowerCase()+'.png';img.width=20;img.height=15;img.alt='';img.className='flag';if(f.id)img.id=f.id;f.replaceWith(img);}});} catch(e){}})();` }} />
+        <Script src="/assets/js/script.js?v=200" strategy="afterInteractive" />
       </body>
     </html>
   )

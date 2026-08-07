@@ -45,8 +45,7 @@ function BrokerCard({ broker }: { broker: Broker }) {
       <ul className="broker-facts">
         {usersCount && (
           <li>
-            <img src="/assets/images/icon-user.svg" alt="" />
-            <span>{usersCount}</span>
+            <img src="/assets/images/icon-users.svg" alt="" />{usersCount}
           </li>
         )}
         <li>
@@ -71,7 +70,7 @@ function BrokerCard({ broker }: { broker: Broker }) {
         )}
         {promotion?.bonus_type && (
           <li>
-            <img src="/assets/images/icon-gift.svg" alt="" />
+            <img src="/assets/images/icon-gift-light.svg" alt="" />
             <span>Bonus</span>
             <strong>{promotion.bonus_type}</strong>
           </li>

@@ -1,4 +1,60 @@
-export default function HomePage() {
+import { getBrokers, type Broker } from '@/lib/api'
+
+function BrokerCard({ broker }: { broker: Broker }) {
+  const brokerUrl = broker.affiliate_url || broker.website_url || '#'
+  const reviewUrl = broker.slug ? `/broker/${broker.slug}` : '#'
+  const minDeposit = broker.min_deposit != null ? `$${broker.min_deposit}` : '—'
+  const minSpread = broker.min_spread != null ? `${broker.min_spread} pips` : '—'
+  const rating = broker.total_rating != null
+    ? Math.round(broker.total_rating * 10) / 10
+    : null
+
+  return (
+    <article className="broker-card">
+      <div className="broker-card__head">
+        {broker.logo_url
+          ? <img src={broker.logo_url} alt={broker.name} className="broker-logo" />
+          : <span className="broker-logo-placeholder">{broker.name.charAt(0)}</span>
+        }
+        <div>
+          <p className="broker-name">{broker.name}</p>
+          {rating && (
+            <span className="rating-badge">
+              <img src="/assets/images/icon-star.svg" alt="" />{rating}/5
+            </span>
+          )}
+        </div>
+      </div>
+      <div className="availability-badge">
+        <img src="/assets/images/icon-check-circle.svg" alt="" />Available in your country
+      </div>
+      <ul className="broker-facts">
+        <li><img src="/assets/images/icon-swap.svg" alt="" /><span>Min. spread</span><strong>{minSpread}</strong></li>
+        <li><img src="/assets/images/icon-card.svg" alt="" /><span>Min. deposit</span><strong>{minDeposit}</strong></li>
+        {broker.platforms && broker.platforms.length > 0 && (
+          <li className="broker-facts__platform">
+            <span><img src="/assets/images/icon-pc-check.svg" alt="" />Platform</span>
+            <div className="tag-row">
+              {broker.platforms.map((p) => <span key={p} className="tag">{p}</span>)}
+            </div>
+          </li>
+        )}
+      </ul>
+      <div className="broker-card__ctas">
+        <a href={brokerUrl} className="btn btn--primary btn--block" target="_blank" rel="noopener noreferrer">Visit Broker</a>
+        <a href={reviewUrl} className="btn btn--text btn--text--px btn--center">Read Review <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
+      </div>
+    </article>
+  )
+}
+
+export default async function HomePage() {
+  let brokers: Broker[] = []
+  try {
+    brokers = await getBrokers()
+  } catch (e) {
+    console.error('BMS API error:', e)
+  }
   return (
     <>
       <main>
@@ -380,7 +436,7 @@ export default function HomePage() {
               </div>
             </div>
             <div className="broker-cards" id="brokerCarousel">
-              {/* Broker cards — connected to API */}
+              {brokers.map((broker) => <BrokerCard key={broker.id} broker={broker} />)}
             </div>
             <a href="#" className="btn btn--text btn--text--px btn--center broker-cards__view-all">View All Brokers <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
           </div>

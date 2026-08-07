@@ -1,8 +1,8 @@
-import { getBrokers } from '@/lib/api'
+import { getBrokers, type Broker } from '@/lib/api'
 import BrokerCard from '@/components/BrokerCard'
 
 export default async function HomePage() {
-  let brokers = []
+  let brokers: Broker[] = []
   let error = ''
   try {
     brokers = await getBrokers()

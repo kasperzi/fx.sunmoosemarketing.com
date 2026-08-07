@@ -9,6 +9,9 @@ export interface Broker {
   min_spread: number | null
   total_rating: number | null
   platforms: string[]
+  users_count?: number | null
+  bonus_type?: string | null   // e.g. "No deposit bonus", "Deposit bonus"
+  bonus_url?: string | null
 }
 
 export interface BrokerListResponse {
@@ -24,10 +27,9 @@ export interface BrokerListResponse {
 export async function getBrokers(): Promise<Broker[]> {
   const BMS_API_URL = process.env.BMS_API_URL
   const BMS_API_KEY = process.env.BMS_API_KEY
-  console.log('[BMS] URL:', BMS_API_URL)
   const res = await fetch(`${BMS_API_URL}/api/v1/brokers`, {
     headers: { 'X-Api-Key': BMS_API_KEY! },
-    next: { revalidate: 60 }, // revalidate svake minute
+    next: { revalidate: 60 },
   })
 
   if (!res.ok) throw new Error(`BMS API error: ${res.status}`)

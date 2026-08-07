@@ -1,0 +1,11 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="vaadin:money-deposit" clip-path="url(#clip0_0_19)">
+<path id="Vector" d="M12 24L9 19.5H10.5V16.5H13.5V19.5H15L12 24ZM22.5 1.5V13.5H1.5V1.5H22.5ZM24 0H0V15H24V0Z" fill="#6F5FF4"/>
+<path id="Vector_2" d="M12 3C13.1935 3 14.3381 3.47411 15.182 4.31802C16.0259 5.16193 16.5 6.30653 16.5 7.5C16.5 8.69347 16.0259 9.83807 15.182 10.682C14.3381 11.5259 13.1935 12 12 12H19.5V10.5H21V4.5H19.5V3H12ZM7.5 7.5C7.5 6.30653 7.97411 5.16193 8.81802 4.31802C9.66193 3.47411 10.8065 3 12 3H4.5V4.5H3V10.5H4.5V12H12C10.8065 12 9.66193 11.5259 8.81802 10.682C7.97411 9.83807 7.5 8.69347 7.5 7.5Z" fill="#6F5FF4"/>
+</g>
+<defs>
+<clipPath id="clip0_0_19">
+<rect width="24" height="24" fill="white"/>
+</clipPath>
+</defs>
+</svg>

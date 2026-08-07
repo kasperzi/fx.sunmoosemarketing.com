@@ -983,8 +983,6 @@ h2 {
 }
 
 .broker-card__ctas { display: flex; flex-direction: column; gap: 12px; }
-.broker-bonus-link { color: var(--primary); font-weight: 600; text-decoration: none; }
-.broker-bonus-link:hover { text-decoration: underline; }
 
 /* How it works */
 .how-it-works { display: flex; gap: 40px; align-items: center; }

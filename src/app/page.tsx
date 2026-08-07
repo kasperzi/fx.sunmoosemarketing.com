@@ -1,5 +1,12 @@
 import { getBrokers, type Broker } from '@/lib/api'
 
+function shortenPlatform(p: string): string {
+  return p
+    .replace(/MetaTrader\s*4/i, 'MT4')
+    .replace(/MetaTrader\s*5/i, 'MT5')
+    .replace(/MetaTrader/i, 'MT')
+}
+
 function BrokerCard({ broker }: { broker: Broker }) {
   const brokerUrl = broker.affiliate_url || broker.website_url || '#'
   const reviewUrl = broker.slug ? `/broker/${broker.slug}` : '#'
@@ -8,6 +15,11 @@ function BrokerCard({ broker }: { broker: Broker }) {
   const rating = broker.total_rating != null
     ? Math.round(broker.total_rating * 10) / 10
     : null
+  const usersCount = broker.users_count
+    ? broker.users_count.toLocaleString('en-US') + ' users'
+    : null
+  const bonusType = broker.bonus_type ?? null
+  const bonusUrl = broker.bonus_url ?? null
 
   return (
     <article className="broker-card">
@@ -25,21 +37,50 @@ function BrokerCard({ broker }: { broker: Broker }) {
           )}
         </div>
       </div>
+
       <div className="availability-badge">
         <img src="/assets/images/icon-check-circle.svg" alt="" />Available in your country
       </div>
+
       <ul className="broker-facts">
-        <li><img src="/assets/images/icon-swap.svg" alt="" /><span>Min. spread</span><strong>{minSpread}</strong></li>
-        <li><img src="/assets/images/icon-card.svg" alt="" /><span>Min. deposit</span><strong>{minDeposit}</strong></li>
+        {usersCount && (
+          <li>
+            <img src="/assets/images/icon-user.svg" alt="" />
+            <span>{usersCount}</span>
+          </li>
+        )}
+        <li>
+          <img src="/assets/images/icon-swap.svg" alt="" />
+          <span>Min. spread</span>
+          <strong>{minSpread}</strong>
+        </li>
+        <li>
+          <img src="/assets/images/icon-card.svg" alt="" />
+          <span>Min. deposit</span>
+          <strong>{minDeposit}</strong>
+        </li>
         {broker.platforms && broker.platforms.length > 0 && (
           <li className="broker-facts__platform">
             <span><img src="/assets/images/icon-pc-check.svg" alt="" />Platform</span>
             <div className="tag-row">
-              {broker.platforms.map((p) => <span key={p} className="tag">{p}</span>)}
+              {broker.platforms.map((p) => (
+                <span key={p} className="tag">{shortenPlatform(p)}</span>
+              ))}
             </div>
           </li>
         )}
+        {bonusType && (
+          <li>
+            <img src="/assets/images/icon-gift.svg" alt="" />
+            <span>Bonus</span>
+            {bonusUrl
+              ? <a href={bonusUrl} className="broker-bonus-link" target="_blank" rel="noopener noreferrer"><strong>{bonusType}</strong></a>
+              : <strong>{bonusType}</strong>
+            }
+          </li>
+        )}
       </ul>
+
       <div className="broker-card__ctas">
         <a href={brokerUrl} className="btn btn--primary btn--block" target="_blank" rel="noopener noreferrer">Visit Broker</a>
         <a href={reviewUrl} className="btn btn--text btn--text--px btn--center">Read Review <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>

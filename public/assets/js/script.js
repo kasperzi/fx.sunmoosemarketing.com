@@ -294,12 +294,15 @@ function initHoverPinWidget({ widget, toggle, panel, onOpen, onClose }) {
         panel.style.top = '';
         panel.style.right = '';
       } else {
-        const rect = toggle.getBoundingClientRect();
-        // body.style.zoom is applied for screens wider than 1440px; fixed-position
-        // elements inherit that zoom, so CSS pixel values must be divided by it.
+        const toggleRect = toggle.getBoundingClientRect();
+        // Use the nav bar's bottom as the anchor (same as mega menu does with CSS),
+        // then add a small gap. Divide by body zoom so fixed-position CSS coords
+        // match viewport coords on screens wider than 1440px.
+        const navEl = toggle.closest('.nav') || toggle.closest('.nav-wrap');
+        const navBottom = navEl ? navEl.getBoundingClientRect().bottom : toggleRect.bottom;
         const zoom = parseFloat(document.body.style.zoom) || 1;
-        panel.style.top = (rect.bottom + 12) / zoom + 'px';
-        panel.style.right = (window.innerWidth - rect.right) / zoom + 'px';
+        panel.style.top = (navBottom + 8) / zoom + 'px';
+        panel.style.right = (window.innerWidth - toggleRect.right) / zoom + 'px';
       }
     },
     onClose: () => {

@@ -910,6 +910,22 @@ h2 {
 
 .broker-card__head { display: flex; align-items: center; gap: 19px; }
 .broker-logo { width: 85px; height: 85px; border-radius: var(--radius-md); object-fit: cover; }
+.broker-logo-placeholder {
+  flex-shrink: 0;
+  width: 85px;
+  height: 85px;
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  user-select: none;
+}
 .broker-logo--contain { object-fit: contain; background: var(--white); }
 .broker-name { font-weight: 600; font-size: 20px; margin-bottom: 8px; }
 
@@ -957,7 +973,7 @@ h2 {
 
 .broker-facts__platform { flex-direction: column; align-items: flex-start !important; gap: 4px !important; }
 .broker-facts__platform > span { display: flex; align-items: center; gap: 4px; width: 100%; }
-.tag-row { display: flex; gap: 4px; padding-left: 24px; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 4px; padding-left: 24px; }
 .tag {
   background: var(--light-blue);
   border-radius: 8px;

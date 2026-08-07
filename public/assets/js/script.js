@@ -103,13 +103,18 @@ initCountrySelect(document.getElementById('wizardCountrySelect'));
 initCountrySelect(document.getElementById('reviewCountrySelect'));
 
 // Initialize country selects from saved preference or IP detection
-// localStorage = user manually confirmed preference (persists)
-// sessionStorage = IP-detected this session only (clears on browser close)
+// localStorage.fx_country_pref = user explicitly confirmed via "Confirm changes" (permanent)
+// sessionStorage.fx_country    = IP-detected this session (clears on browser close)
+// Migration: remove old fx_country key that was incorrectly used for IP detection
 (function initCountryFromStorage() {
-  var saved = null;
-  try {
-    saved = localStorage.getItem('fx_country') || sessionStorage.getItem('fx_country');
-  } catch(e) {}
+  try { localStorage.removeItem('fx_country'); } catch(e) {}
+
+  var pref = null;
+  var session = null;
+  try { pref = localStorage.getItem('fx_country_pref'); } catch(e) {}
+  try { session = sessionStorage.getItem('fx_country'); } catch(e) {}
+
+  var saved = pref || session;
 
   function applyCode(code) {
     if (!code || code.length !== 2 || !/^[A-Z]{2}$/.test(code)) return;
@@ -350,7 +355,8 @@ function initHoverPinWidget({ widget, toggle, panel, onOpen, onClose }) {
     confirmBtn.addEventListener('click', function() {
       var code = panelCountryCtrl ? panelCountryCtrl.getSelectedCode() : null;
       if (code) {
-        try { localStorage.setItem('fx_country', code); } catch(e) {}
+        try { localStorage.setItem('fx_country_pref', code); } catch(e) {}
+        try { sessionStorage.setItem('fx_country', code); } catch(e) {}
         window.dispatchEvent(new CustomEvent('fx:countryChange', { detail: code }));
         // Also sync the hero form country select
         if (countrySelectCtrl) countrySelectCtrl.selectByCode(code);

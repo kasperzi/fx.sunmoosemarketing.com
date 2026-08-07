@@ -49,18 +49,11 @@ function initCountrySelect(root, opts) {
 
     const flagEl = root.querySelector('.flag');
     if (flagEl && opt.dataset.flag) {
-      if (opt.dataset.name === 'Netherlands') {
-        const img = document.createElement('img');
-        img.src = 'assets/images/flag-netherlands.png';
-        img.alt = '';
-        img.className = 'flag';
-        flagEl.replaceWith(img);
-      } else {
-        const span = document.createElement('span');
-        span.className = 'flag flag--emoji';
-        span.textContent = opt.dataset.flag;
-        flagEl.replaceWith(span);
-      }
+      const span = document.createElement('span');
+      span.className = 'flag flag--emoji';
+      if (flagEl.id) span.id = flagEl.id;
+      span.textContent = opt.dataset.flag;
+      flagEl.replaceWith(span);
     }
 
     close();

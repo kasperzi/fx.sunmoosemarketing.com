@@ -13,9 +13,9 @@ export async function GET(req: NextRequest) {
     ? forwarded.split(',')[0].trim()
     : req.headers.get('x-real-ip') ?? ''
 
-  // Skip loopback (dev environment)
-  if (!ip || ip === '127.0.0.1' || ip === '::1' || ip.startsWith('192.168.')) {
-    return NextResponse.json({ country: 'NL' })
+  // Skip loopback / private IPs — signal client to do its own detection
+  if (!ip || ip === '127.0.0.1' || ip === '::1' || ip.startsWith('192.168.') || ip.startsWith('10.')) {
+    return NextResponse.json({ country: null })
   }
 
   // 3. Server-side ipapi.co lookup (server IP, no CORS, no rate limit per user)
@@ -32,5 +32,6 @@ export async function GET(req: NextRequest) {
     }
   } catch (_) {}
 
-  return NextResponse.json({ country: 'NL' })
+  // Signal client to detect on its own
+  return NextResponse.json({ country: null })
 }

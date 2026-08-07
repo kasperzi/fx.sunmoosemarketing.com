@@ -104,7 +104,7 @@ initCountrySelect(document.getElementById('reviewCountrySelect'));
 
 // Initialize country selects from saved preference or IP detection
 // localStorage.fx_country_pref = user explicitly confirmed (permanent)
-// sessionStorage.fx_country    = IP-detected this session
+// sessionStorage.fx_country    = IP-detected this session (only saved if real detection succeeded)
 // window.__fxCountry           = Promise started in <head> script before page renders
 (function initCountryFromStorage() {
   try { localStorage.removeItem('fx_country'); } catch(e) {} // remove old stale key
@@ -113,23 +113,52 @@ initCountrySelect(document.getElementById('reviewCountrySelect'));
   try { pref = localStorage.getItem('fx_country_pref'); } catch(e) {}
   try { session = sessionStorage.getItem('fx_country'); } catch(e) {}
 
+  function isValidCode(code) {
+    return code && code.length === 2 && /^[A-Z]{2}$/.test(code);
+  }
+
   function applyCode(code) {
-    if (!code || code.length !== 2 || !/^[A-Z]{2}$/.test(code)) return;
+    if (!isValidCode(code)) return;
     if (panelCountryCtrl) panelCountryCtrl.selectByCode(code);
     if (countrySelectCtrl) countrySelectCtrl.selectByCode(code);
   }
 
-  if (pref || session) {
-    applyCode((pref || session).toUpperCase());
+  function saveAndApply(code) {
+    if (!isValidCode(code)) return;
+    try { sessionStorage.setItem('fx_country', code); } catch(e) {}
+    applyCode(code);
+  }
+
+  // Client-side fallback: ask ipapi.co directly (works even when server can't see real IP)
+  function detectClientSide() {
+    fetch('https://ipapi.co/country/')
+      .then(function(r) { return r.text(); })
+      .then(function(text) {
+        var code = text.trim().toUpperCase();
+        if (isValidCode(code)) saveAndApply(code);
+      })
+      .catch(function() {});
+  }
+
+  if (pref) {
+    // User explicitly chose a country — always honour it
+    applyCode(pref.toUpperCase());
+  } else if (session) {
+    // IP-detected this session — apply without re-detecting
+    applyCode(session.toUpperCase());
   } else {
-    // Use the fetch that was already started in <head>, or start a new one
-    var promise = window.__fxCountry || fetch('/api/country').then(function(r) { return r.json(); }).then(function(d) { return (d.country || '').toUpperCase(); });
+    // No preference and no session — detect via server, fall back to client-side
+    var promise = window.__fxCountry || fetch('/api/country').then(function(r) { return r.json(); }).then(function(d) { return d.country ? d.country.toUpperCase() : null; });
     promise.then(function(code) {
-      if (code && code.length === 2 && /^[A-Z]{2}$/.test(code)) {
-        try { sessionStorage.setItem('fx_country', code); } catch(e) {}
-        applyCode(code);
+      if (isValidCode(code)) {
+        saveAndApply(code);
+      } else {
+        // Server couldn't detect (private IP behind proxy) — try directly from browser
+        detectClientSide();
       }
-    }).catch(function() {});
+    }).catch(function() {
+      detectClientSide();
+    });
   }
 })();
 

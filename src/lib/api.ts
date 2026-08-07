@@ -1,17 +1,30 @@
+export interface BrokerLogos {
+  square_light: string | null
+  square_dark: string | null
+  rectangle_light: string | null
+  rectangle_dark: string | null
+}
+
+export interface BrokerPromotion {
+  bonus_type: string | null
+  bonus_amount: string | null
+  description: string | null
+}
+
 export interface Broker {
   id: number
   name: string
   slug: string
-  logo_url: string | null
-  affiliate_url: string | null
-  website_url: string | null
+  logos: BrokerLogos
+  affiliate_link: string | null
+  website_url?: string | null
   min_deposit: number | null
   min_spread: number | null
   total_rating: number | null
+  users_count: number | null
   platforms: string[]
-  users_count?: number | null
-  bonus_type?: string | null   // e.g. "No deposit bonus", "Deposit bonus"
-  bonus_url?: string | null
+  promotion: BrokerPromotion | null
+  brand_color?: string | null
 }
 
 export interface BrokerListResponse {

@@ -8,8 +8,9 @@ function shortenPlatform(p: string): string {
 }
 
 function BrokerCard({ broker }: { broker: Broker }) {
-  const brokerUrl = broker.affiliate_url || broker.website_url || '#'
-  const reviewUrl = broker.slug ? `/broker/${broker.slug}` : '#'
+  const logoUrl = broker.logos?.square_light || broker.logos?.square_dark || null
+  const brokerUrl = broker.affiliate_link || '#'
+  const reviewUrl = `/broker/${broker.slug}`
   const minDeposit = broker.min_deposit != null ? `$${broker.min_deposit}` : '—'
   const minSpread = broker.min_spread != null ? `${broker.min_spread} pips` : '—'
   const rating = broker.total_rating != null
@@ -18,14 +19,13 @@ function BrokerCard({ broker }: { broker: Broker }) {
   const usersCount = broker.users_count
     ? broker.users_count.toLocaleString('en-US') + ' users'
     : null
-  const bonusType = broker.bonus_type ?? null
-  const bonusUrl = broker.bonus_url ?? null
+  const promotion = broker.promotion ?? null
 
   return (
     <article className="broker-card">
       <div className="broker-card__head">
-        {broker.logo_url
-          ? <img src={broker.logo_url} alt={broker.name} className="broker-logo" />
+        {logoUrl
+          ? <img src={logoUrl} alt={broker.name} className="broker-logo" />
           : <span className="broker-logo-placeholder">{broker.name.charAt(0)}</span>
         }
         <div>
@@ -69,14 +69,11 @@ function BrokerCard({ broker }: { broker: Broker }) {
             </div>
           </li>
         )}
-        {bonusType && (
+        {promotion?.bonus_type && (
           <li>
             <img src="/assets/images/icon-gift.svg" alt="" />
             <span>Bonus</span>
-            {bonusUrl
-              ? <a href={bonusUrl} className="broker-bonus-link" target="_blank" rel="noopener noreferrer"><strong>{bonusType}</strong></a>
-              : <strong>{bonusType}</strong>
-            }
+            <strong>{promotion.bonus_type}</strong>
           </li>
         )}
       </ul>

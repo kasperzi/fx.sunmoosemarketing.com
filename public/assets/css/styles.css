@@ -969,7 +969,7 @@ h2 {
 }
 .broker-facts li:last-child { border-bottom: none; padding-bottom: 4px; }
 .broker-facts li img { width: 24px; height: 24px; }
-.broker-facts li span { flex: 1; }
+.broker-facts li > span { flex: 1; }
 .broker-facts li strong { color: var(--text); font-weight: 600; }
 
 .broker-facts__platform { flex-direction: column; align-items: flex-start !important; gap: 4px !important; }

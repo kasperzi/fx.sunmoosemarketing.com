@@ -50,7 +50,7 @@ function initCountrySelect(root, opts) {
     const flagEl = root.querySelector('.flag');
     if (flagEl && opt.dataset.code) {
       const img = document.createElement('img');
-      img.src = 'https://flagcdn.com/w20/' + opt.dataset.code.toLowerCase() + '.png';
+      img.src = 'https://flagcdn.com/w40/' + opt.dataset.code.toLowerCase() + '.png';
       img.width = 20;
       img.height = 15;
       img.alt = '';

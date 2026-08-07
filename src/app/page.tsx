@@ -108,7 +108,7 @@ export default function HomePage() {
                         <p className="lang-panel__hint">Country is detected automatically, but you can change it anytime.</p>
                         <div className="country-select" id="panelCountrySelect">
                           <button type="button" className="select-row country-toggle">
-                            <img src="https://flagcdn.com/w20/nl.png" width="20" height="15" alt="" className="flag" />
+                            <img src="https://flagcdn.com/w40/nl.png" width="20" height="15" alt="" className="flag" />
                             <span className="select-value">Netherlands</span>
                             <img src="/assets/images/icon-chevron-down.svg" alt="" className="icon-24 select-chevron" />
                           </button>
@@ -403,7 +403,7 @@ export default function HomePage() {
                     <label>1. Where do you live?</label>
                     <div className="country-select" id="countrySelect">
                       <button type="button" className="select-row country-toggle" id="countryToggle" aria-haspopup="listbox" aria-expanded="false">
-                        <img src="https://flagcdn.com/w20/nl.png" width="20" height="15" alt="" className="flag" id="countryFlag" />
+                        <img src="https://flagcdn.com/w40/nl.png" width="20" height="15" alt="" className="flag" id="countryFlag" />
                         <span className="select-value" id="countryValue">Netherlands</span>
                         <img src="/assets/images/icon-chevron-down.svg" alt="" className="icon-24 select-chevron" />
                       </button>

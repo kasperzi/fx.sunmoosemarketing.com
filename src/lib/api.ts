@@ -27,7 +27,7 @@ export async function getBrokers(): Promise<Broker[]> {
   console.log('[BMS] URL:', BMS_API_URL)
   const res = await fetch(`${BMS_API_URL}/api/v1/brokers`, {
     headers: { 'X-Api-Key': BMS_API_KEY! },
-    next: { revalidate: 3600 }, // cache 1h
+    next: { revalidate: 60 }, // revalidate svake minute
   })
 
   if (!res.ok) throw new Error(`BMS API error: ${res.status}`)

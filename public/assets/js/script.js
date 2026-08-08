@@ -98,7 +98,7 @@ function initCountrySelect(root, opts) {
 var countrySelectCtrl = initCountrySelect(document.getElementById('countrySelect'));
 initCountrySelect(document.getElementById('languageSelect'));
 var panelCountryCtrl = initCountrySelect(document.getElementById('panelCountrySelect'));
-initCountrySelect(document.getElementById('filterCountrySelect'));
+var filterCountryCtrl = initCountrySelect(document.getElementById('filterCountrySelect'));
 initCountrySelect(document.getElementById('wizardCountrySelect'));
 initCountrySelect(document.getElementById('reviewCountrySelect'));
 
@@ -121,6 +121,7 @@ initCountrySelect(document.getElementById('reviewCountrySelect'));
     if (!isValidCode(code)) return;
     if (panelCountryCtrl) panelCountryCtrl.selectByCode(code);
     if (countrySelectCtrl) countrySelectCtrl.selectByCode(code);
+    if (filterCountryCtrl) filterCountryCtrl.selectByCode(code);
   }
 
   function saveAndApply(code) {
@@ -381,8 +382,9 @@ function initHoverPinWidget({ widget, toggle, panel, onOpen, onClose }) {
         try { localStorage.setItem('fx_country_pref', code); } catch(e) {}
         try { sessionStorage.setItem('fx_country', code); } catch(e) {}
         window.dispatchEvent(new CustomEvent('fx:countryChange', { detail: code }));
-        // Also sync the hero form country select
+        // Also sync the hero form and filter sidebar country selects
         if (countrySelectCtrl) countrySelectCtrl.selectByCode(code);
+        if (filterCountryCtrl) filterCountryCtrl.selectByCode(code);
       }
       controls.hide();
     });

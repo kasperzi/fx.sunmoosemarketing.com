@@ -180,8 +180,7 @@ h2 {
   top: 0;
   left: 0;
   right: 0;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding: 12px 88px;
   z-index: 30;
 }
 /* Placeholder keeps layout space when nav is fixed */

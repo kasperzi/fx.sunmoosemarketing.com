@@ -712,12 +712,12 @@ export default function HomePage() {
 
             <div className="stats-row">
               <div className="stat">
-                <p className="stat__number">100+</p>
+                <p className="stat__number" data-count-to="100" data-suffix="+">100+</p>
                 <p className="stat__label">Trusted brokers compared worldwide.</p>
                 <a href="#" className="btn btn--text btn--center">Compare Brokers <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
               </div>
               <div className="stat">
-                <p className="stat__number">25+</p>
+                <p className="stat__number" data-count-to="25" data-suffix="+">25+</p>
                 <p className="stat__label">Countries and markets supported.</p>
                 <a href="#" className="btn btn--text btn--center">Explore Markets <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
               </div>
@@ -727,7 +727,7 @@ export default function HomePage() {
                 <a href="#" className="btn btn--text btn--center">View brokers <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
               </div>
               <div className="stat stat--last">
-                <p className="stat__number">4.3/5</p>
+                <p className="stat__number" data-count-to="4.3" data-suffix="/5" data-decimals="1">4.3/5</p>
                 <p className="stat__label">Average user satisfaction rating.</p>
                 <a href="#" className="btn btn--text btn--center">View Top Rated <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
               </div>

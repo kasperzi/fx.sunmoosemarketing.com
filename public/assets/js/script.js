@@ -916,3 +916,39 @@ initCardCarousel(document.getElementById('relatedCarousel'), '.rv-related-card')
     });
   });
 })();
+
+(function initStatCounters() {
+  var els = document.querySelectorAll('.stat__number[data-count-to]');
+  if (!els.length) return;
+
+  function animateCounter(el) {
+    var target = parseFloat(el.dataset.countTo);
+    var suffix = el.dataset.suffix || '';
+    var decimals = parseInt(el.dataset.decimals || '0', 10);
+    var duration = 1200;
+    var start = null;
+
+    function step(ts) {
+      if (!start) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      // ease-out cubic
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = eased * target;
+      el.textContent = current.toFixed(decimals) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  els.forEach(function(el) { observer.observe(el); });
+})();

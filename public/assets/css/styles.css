@@ -517,6 +517,7 @@ h2 {
 
 .hero--flush { padding: 0; max-width: none; margin: 0; }
 .hero__border--flush { border-radius: 0; }
+.hero--flush .hero__border { border-radius: 0; }
 .hero__border--blog-gradient { background: linear-gradient(205.74deg, #c3baf6 40.619%, #ffffff 87.109%); }
 .hero__bg--faint img { opacity: 0.2; }
 

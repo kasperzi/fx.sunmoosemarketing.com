@@ -91,9 +91,9 @@ export default function SearchBrokersPage() {
                   <li className="filters-item is-open">
                     <button type="button" className="filters-row">Instruments<img src="/assets/images/icon-chevron-down.svg" alt="" className="icon-18 filters-chevron" /></button>
                     <div className="filters-content">
-                      <label className="filters-checkbox"><input type="checkbox" defaultChecked /><span className="filters-checkbox__box"></span>General Brokers</label>
+                      <label className="filters-checkbox"><input type="checkbox" /><span className="filters-checkbox__box"></span>General Brokers</label>
                       <label className="filters-checkbox"><input type="checkbox" /><span className="filters-checkbox__box"></span>Forex</label>
-                      <label className="filters-checkbox"><input type="checkbox" defaultChecked /><span className="filters-checkbox__box"></span>CFDs</label>
+                      <label className="filters-checkbox"><input type="checkbox" /><span className="filters-checkbox__box"></span>CFDs</label>
                       <label className="filters-checkbox"><input type="checkbox" /><span className="filters-checkbox__box"></span>Stocks</label>
                       <label className="filters-checkbox"><input type="checkbox" /><span className="filters-checkbox__box"></span>Crypto</label>
                       <label className="filters-checkbox"><input type="checkbox" /><span className="filters-checkbox__box"></span>Options</label>
@@ -102,9 +102,9 @@ export default function SearchBrokersPage() {
                   <li className="filters-item is-open">
                     <button type="button" className="filters-row">Platforms<img src="/assets/images/icon-chevron-down.svg" alt="" className="icon-18 filters-chevron" /></button>
                     <div className="filters-content">
-                      <label className="filters-checkbox"><input type="checkbox" defaultChecked /><span className="filters-checkbox__box"></span>MT4</label>
+                      <label className="filters-checkbox"><input type="checkbox" /><span className="filters-checkbox__box"></span>MT4</label>
                       <label className="filters-checkbox"><input type="checkbox" /><span className="filters-checkbox__box"></span>MT5</label>
-                      <label className="filters-checkbox"><input type="checkbox" defaultChecked /><span className="filters-checkbox__box"></span>cTrader</label>
+                      <label className="filters-checkbox"><input type="checkbox" /><span className="filters-checkbox__box"></span>cTrader</label>
                       <label className="filters-checkbox"><input type="checkbox" /><span className="filters-checkbox__box"></span>TradingView</label>
                     </div>
                   </li>

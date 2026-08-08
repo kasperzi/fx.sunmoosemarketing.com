@@ -907,37 +907,6 @@ initCardCarousel(document.getElementById('relatedCarousel'), '.rv-related-card')
   });
 })();
 
-(function initStickyNav() {
-  var nav = document.querySelector('.nav-wrap');
-  if (!nav) return;
-
-  // Placeholder preserves the layout space when nav goes fixed
-  var placeholder = nav.cloneNode(true);
-  placeholder.classList.add('nav-wrap--placeholder');
-  placeholder.classList.remove('nav-wrap--sticky');
-  nav.parentNode.insertBefore(placeholder, nav);
-
-  var threshold = nav.getBoundingClientRect().bottom + window.scrollY;
-
-  function update() {
-    var sticky = window.scrollY > threshold;
-    nav.classList.toggle('nav-wrap--sticky', sticky);
-    placeholder.style.display = sticky ? '' : 'none';
-  }
-
-  // Sync placeholder height in case of resize
-  function syncHeight() {
-    placeholder.style.height = nav.offsetHeight + 'px';
-    threshold = placeholder.getBoundingClientRect().top + window.scrollY + placeholder.offsetHeight;
-    update();
-  }
-
-  placeholder.style.display = 'none';
-  window.addEventListener('scroll', update, { passive: true });
-  window.addEventListener('resize', syncHeight);
-  syncHeight();
-})();
-
 (function initFooterAccordion() {
   document.querySelectorAll('.footer__col').forEach((col) => {
     const toggle = col.querySelector('.footer__col-toggle');

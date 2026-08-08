@@ -172,21 +172,9 @@ h2 {
 .nav-wrap {
   padding: 24px 88px;
   background: transparent;
-  position: relative;
-  z-index: 30;
-}
-.nav-wrap--sticky {
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
-  padding: 12px 88px;
   z-index: 30;
-}
-/* Placeholder keeps layout space when nav is fixed */
-.nav-wrap--placeholder {
-  visibility: hidden;
-  pointer-events: none;
 }
 
 .nav {

@@ -907,6 +907,36 @@ initCardCarousel(document.getElementById('relatedCarousel'), '.rv-related-card')
   });
 })();
 
+(function initStickyNav() {
+  var nav = document.querySelector('.nav-wrap');
+  if (!nav) return;
+
+  // Sentinel placed right after nav — when it leaves viewport upward, nav goes fixed
+  var sentinel = document.createElement('div');
+  sentinel.style.cssText = 'height:0;overflow:hidden;pointer-events:none;';
+  nav.after(sentinel);
+
+  // Spacer holds the nav's space in the hero when nav is fixed (prevents jump)
+  var spacer = document.createElement('div');
+  spacer.style.display = 'none';
+  nav.before(spacer);
+
+  var observer = new IntersectionObserver(function(entries) {
+    var entry = entries[0];
+    var scrolledPast = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+    if (scrolledPast) {
+      spacer.style.height = nav.offsetHeight + 'px';
+      spacer.style.display = 'block';
+      nav.classList.add('nav-wrap--fixed');
+    } else {
+      spacer.style.display = 'none';
+      nav.classList.remove('nav-wrap--fixed');
+    }
+  }, { threshold: 0, rootMargin: '0px' });
+
+  observer.observe(sentinel);
+})();
+
 (function initFooterAccordion() {
   document.querySelectorAll('.footer__col').forEach((col) => {
     const toggle = col.querySelector('.footer__col-toggle');

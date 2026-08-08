@@ -3,6 +3,17 @@ import BrokerCarousel from '@/components/BrokerCarousel'
 export default function HomePage() {
   return (
     <>
+      <main>
+
+        {/* HERO */}
+        <section className="hero">
+          <div className="hero__border">
+
+            <div className="hero__bg" aria-hidden="true">
+              <img src="/assets/images/hero-border-bg.png" alt="" />
+              <div className="hero__bg-gradient"></div>
+            </div>
+
             <header className="nav-wrap">
               <nav className="nav">
                 <a href="#" className="nav__logo"><img src="/assets/images/logo-fxlookup.png" alt="FX Look Up" /></a>
@@ -334,16 +345,6 @@ export default function HomePage() {
                 </div>
               </div>
             </header>
-      <main>
-
-        {/* HERO */}
-        <section className="hero">
-          <div className="hero__border">
-
-            <div className="hero__bg" aria-hidden="true">
-              <img src="/assets/images/hero-border-bg.png" alt="" />
-              <div className="hero__bg-gradient"></div>
-            </div>
 
 
             <div className="hero__main">

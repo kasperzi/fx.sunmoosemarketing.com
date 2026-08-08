@@ -172,8 +172,15 @@ h2 {
 .nav-wrap {
   padding: 24px 88px;
   background: transparent;
-  position: sticky;
+  position: relative;
+  z-index: 30;
+}
+.nav-wrap--fixed {
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 88px;
   z-index: 30;
 }
 

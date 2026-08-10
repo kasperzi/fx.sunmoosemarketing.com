@@ -137,6 +137,25 @@ function getBrokerProp(item: CollectionItem, key: string): unknown {
   return (item as unknown as Record<string, unknown>)[key]
 }
 
+/** Renders star images + score from a string like "4.8/5" or "9.6/10" */
+function StarRating({ rating, className }: { rating?: string | null; className?: string }) {
+  if (!rating) return null
+  const num = parseFloat(rating)
+  if (isNaN(num)) return <span>{rating}</span>
+  const outOf5   = rating.includes('/10') ? num / 2 : num
+  const full     = Math.min(5, Math.floor(outOf5))
+  const hasHalf  = outOf5 - full >= 0.3 && full < 5
+  return (
+    <p className={className ?? 'top10-card__rating'}>
+      {Array.from({ length: full }, (_, i) => (
+        <img key={i} src="/assets/images/icon-star.svg" alt="" />
+      ))}
+      {hasHalf && <img src="/assets/images/icon-star-half.svg" alt="" />}
+      {rating}
+    </p>
+  )
+}
+
 function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) {
   const { type, data } = block
 
@@ -191,7 +210,10 @@ function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) 
   }
 
   if (type === 'broker_ranking') {
-    interface RankBroker { broker_id: number; name: string; slug?: string; logo_url?: string | null; best_for?: string; visit_url?: string | null }
+    interface RankBroker {
+      broker_id: number; name: string; slug?: string
+      logo_url?: string | null; best_for?: string; rating?: string; visit_url?: string | null
+    }
     const brokers = (data.brokers as RankBroker[]) ?? []
     if (brokers.length === 0) return null
 
@@ -205,7 +227,7 @@ function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) 
       <section key={block.id} className="bb-top10">
         <div className="section-inner">
 
-          {/* ── Header ───────────────────────────────── */}
+          {/* ── Header ─────────────────────────────────────────── */}
           {(subtitle || blockTitle || description) && (
             <div className="bb-top10__head">
               <div className="bb-top10__head-copy">
@@ -216,7 +238,7 @@ function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) 
             </div>
           )}
 
-          {/* ── Podium (top 3) ───────────────────────── */}
+          {/* ── Podium (top 3) — exact structure from best-broker.html ── */}
           <div className="top10-podium">
             {rTop3.map((b, i) => (
               <div key={b.broker_id} className={`top10-card${i === 0 ? ' top10-card--pick' : ''}`}>
@@ -230,6 +252,7 @@ function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) 
                           TOP PICK
                         </span>
                         <p className="top10-card__name">{b.name}</p>
+                        <StarRating rating={b.rating} className="top10-card__rating" />
                       </div>
                     </div>
                     {b.best_for && (
@@ -240,21 +263,20 @@ function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) 
                   </div>
                 </div>
                 <div className="top10-card__ctas">
+                  {/* #1 → btn--secondary (teal), #2/#3 → btn--primary (purple) */}
                   {b.visit_url
                     ? <a href={b.visit_url} className={`btn ${i === 0 ? 'btn--secondary' : 'btn--primary'}`} target="_blank" rel="noopener noreferrer nofollow">Visit Broker</a>
-                    : <span className={`btn ${i === 0 ? 'btn--secondary' : 'btn--primary'}`} style={{ opacity: 0.4, cursor: 'default' }}>Visit Broker</span>
+                    : <span className={`btn ${i === 0 ? 'btn--secondary' : 'btn--primary'}`}>Visit Broker</span>
                   }
-                  {b.slug && (
-                    <a href={`/broker/${b.slug}`} className="btn btn--text">
-                      Read Review <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" />
-                    </a>
-                  )}
+                  <a href={b.slug ? `/broker/${b.slug}` : '#'} className="btn btn--text">
+                    Read Review <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" />
+                  </a>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* ── Table (#4 onward) ─────────────────────── */}
+          {/* ── Table (#4 onward) — exact structure from best-broker.html ── */}
           {rRest.length > 0 && (
             <div className="top10-table">
               <div className="top10-table__head">
@@ -271,13 +293,16 @@ function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) 
                     <span className="top10-row__name">{b.name}</span>
                   </div>
                   <p className="top10-row__bestfor">{b.best_for || '—'}</p>
-                  <p className="top10-row__rating">—</p>
+                  <StarRating rating={b.rating} className="top10-row__rating" />
                   <div className="top10-row__visit">
-                    {b.visit_url && (
-                      <a href={b.visit_url} className="btn btn--text" target="_blank" rel="noopener noreferrer nofollow">
-                        Visit Broker <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" />
-                      </a>
-                    )}
+                    {b.visit_url
+                      ? <a href={b.visit_url} className="btn btn--text" target="_blank" rel="noopener noreferrer nofollow">
+                          Visit Broker <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" />
+                        </a>
+                      : <button type="button" className="btn btn--text" disabled>
+                          Visit Broker <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" />
+                        </button>
+                    }
                   </div>
                 </div>
               ))}

@@ -515,7 +515,7 @@ h2 {
 
 .hero__border--plain-gradient { background: linear-gradient(180deg, #dcd7f9 0%, #ffffff 95%); }
 
-.hero--flush { padding: 0; max-width: none; margin: 0; }
+.hero--flush { padding: 0; }
 .hero__border--flush { border-radius: 0; }
 .hero--flush .hero__border { border-radius: 0; }
 .hero--flush .hero__bg { border-radius: 0; }

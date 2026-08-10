@@ -678,6 +678,12 @@ function initCardCarousel(track, cardSelector, prevBtn, nextBtn) {
   window.addEventListener('resize', updateButtons);
   updateButtons();
 
+  // Re-check buttons when React dynamically renders cards into the track
+  new MutationObserver(function() {
+    updateButtons();
+    if (isMobile()) { stopAutoplay(); startAutoplay(); }
+  }).observe(track, { childList: true });
+
   // Autoplay: on mobile, auto-advance one card at a time and loop back at the end.
   let autoplayTimer = null;
   function isMobile() {

@@ -163,6 +163,19 @@ initCountrySelect(document.getElementById('reviewCountrySelect'));
   }
 })();
 
+// Sync dropdowns when BrokerCarousel resolves the IP-detected country
+// (only applies when user hasn't made a manual selection)
+window.addEventListener('fx:resolvedCountry', function(e) {
+  var code = e.detail;
+  var pref = null;
+  try { pref = localStorage.getItem('fx_country_pref'); } catch(ex) {}
+  if (!pref) {
+    if (panelCountryCtrl) panelCountryCtrl.selectByCode(code);
+    if (countrySelectCtrl) countrySelectCtrl.selectByCode(code);
+    if (filterCountryCtrl) filterCountryCtrl.selectByCode(code);
+  }
+});
+
 function initBrokerSelect(root) {
   if (!root) return;
 

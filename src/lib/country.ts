@@ -1,6 +1,6 @@
-// fx_country_manual — set only when user explicitly picks a country
-// IP-detected country is never cached, always fresh per session
-const MANUAL_KEY   = 'fx_country_manual'
+// fx_country_pref — set only when user explicitly picks a country (matches script.js)
+// IP-detected country is never cached, always fresh per request
+const MANUAL_KEY   = 'fx_country_pref'
 const STORAGE_LANG_KEY = 'fx_language'
 
 /** Return manual country preference (user picked explicitly), or null */
@@ -31,7 +31,7 @@ export function saveLanguage(lang: string): void {
  */
 export async function detectCountry(): Promise<string | null> {
   try {
-    const res = await fetch('/api/country', { signal: AbortSignal.timeout(4000) })
+    const res = await fetch('/api/country', { cache: 'no-store', signal: AbortSignal.timeout(4000) })
     if (!res.ok) return null
     const data = await res.json()
     return data.country?.toUpperCase() ?? null

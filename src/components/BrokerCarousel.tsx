@@ -101,8 +101,6 @@ export default function BrokerCarousel() {
     async function load() {
       const c = await resolveCountry()
       setCountry(c)
-      // Notify script.js so the country dropdown reflects the resolved country
-      window.dispatchEvent(new CustomEvent('fx:resolvedCountry', { detail: c }))
 
       try {
         const res = await fetch(`/api/brokers?country=${c}&per_page=10`)

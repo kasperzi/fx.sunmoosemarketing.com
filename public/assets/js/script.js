@@ -104,14 +104,13 @@ initCountrySelect(document.getElementById('reviewCountrySelect'));
 
 // Initialize country selects from saved preference or IP detection
 // localStorage.fx_country_pref = user explicitly confirmed (permanent)
-// sessionStorage.fx_country    = IP-detected this session (only saved if real detection succeeded)
-// window.__fxCountry           = Promise started in <head> script before page renders
+// window.__fxCountry           = Promise started in <head> before page renders (always fresh, no session cache)
 (function initCountryFromStorage() {
   try { localStorage.removeItem('fx_country'); } catch(e) {} // remove old stale key
+  try { sessionStorage.removeItem('fx_country'); } catch(e) {} // clear stale session cache
 
-  var pref = null, session = null;
+  var pref = null;
   try { pref = localStorage.getItem('fx_country_pref'); } catch(e) {}
-  try { session = sessionStorage.getItem('fx_country'); } catch(e) {}
 
   function isValidCode(code) {
     return code && code.length === 2 && /^[A-Z]{2}$/.test(code);
@@ -124,57 +123,21 @@ initCountrySelect(document.getElementById('reviewCountrySelect'));
     if (filterCountryCtrl) filterCountryCtrl.selectByCode(code);
   }
 
-  function saveAndApply(code) {
-    if (!isValidCode(code)) return;
-    try { sessionStorage.setItem('fx_country', code); } catch(e) {}
-    applyCode(code);
-  }
-
-  // Client-side fallback: ask ipapi.co directly (works even when server can't see real IP)
-  function detectClientSide() {
-    fetch('https://ipapi.co/country/')
-      .then(function(r) { return r.text(); })
-      .then(function(text) {
-        var code = text.trim().toUpperCase();
-        if (isValidCode(code)) saveAndApply(code);
-      })
-      .catch(function() {});
-  }
-
   if (pref) {
-    // User explicitly chose a country — always honour it
+    // User explicitly chose a country — honour it immediately (head script already applied it)
     applyCode(pref.toUpperCase());
-  } else if (session) {
-    // IP-detected this session — apply without re-detecting
-    applyCode(session.toUpperCase());
   } else {
-    // No preference and no session — detect via server, fall back to client-side
-    var promise = window.__fxCountry || fetch('/api/country').then(function(r) { return r.json(); }).then(function(d) { return d.country ? d.country.toUpperCase() : null; });
+    // No preference — use the pre-fetched promise from <head> (fresh IP, no cache)
+    var promise = window.__fxCountry || fetch('/api/country', { cache: 'no-store' })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { return d.country ? d.country.toUpperCase() : null; })
+      .catch(function() { return null; });
     promise.then(function(code) {
-      if (isValidCode(code)) {
-        saveAndApply(code);
-      } else {
-        // Server couldn't detect (private IP behind proxy) — try directly from browser
-        detectClientSide();
-      }
-    }).catch(function() {
-      detectClientSide();
-    });
+      if (isValidCode(code)) applyCode(code);
+    }).catch(function() {});
   }
 })();
 
-// Sync dropdowns when BrokerCarousel resolves the IP-detected country
-// (only applies when user hasn't made a manual selection)
-window.addEventListener('fx:resolvedCountry', function(e) {
-  var code = e.detail;
-  var pref = null;
-  try { pref = localStorage.getItem('fx_country_pref'); } catch(ex) {}
-  if (!pref) {
-    if (panelCountryCtrl) panelCountryCtrl.selectByCode(code);
-    if (countrySelectCtrl) countrySelectCtrl.selectByCode(code);
-    if (filterCountryCtrl) filterCountryCtrl.selectByCode(code);
-  }
-});
 
 function initBrokerSelect(root) {
   if (!root) return;

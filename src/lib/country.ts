@@ -42,13 +42,23 @@ export async function detectCountry(): Promise<string | null> {
 
 /**
  * Resolve country:
- *  1. Manual user preference (localStorage) — user picked explicitly
- *  2. Server-side IP detection (always fresh, NOT cached)
- *  3. Fallback 'NL'
+ *  1. Manual user preference (localStorage fx_country_pref) — user picked explicitly
+ *  2. window.__fxCountry — pre-fetched promise started in <head> (always fresh, no cache)
+ *  3. detectCountry() fallback
+ *  4. 'NL'
  */
 export async function resolveCountry(): Promise<string> {
   const manual = getManualCountry()
   if (manual) return manual
+
+  // Use the shared promise started in <head> if available — avoids a second fetch
+  if (typeof window !== 'undefined') {
+    const win = window as typeof window & { __fxCountry?: Promise<string | null> }
+    if (win.__fxCountry) {
+      const cached = await win.__fxCountry
+      if (cached) return cached
+    }
+  }
 
   const detected = await detectCountry()
   return detected ?? 'NL'

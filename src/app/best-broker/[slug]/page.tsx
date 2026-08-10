@@ -106,27 +106,31 @@ function bmsUrl(path: string | null | undefined): string | null {
   return `${BMS_BASE}${path.startsWith('/') ? path : '/' + path}`
 }
 
-function BmsImg({ src, alt, className = '' }: { src: string | null | undefined; alt: string; className?: string }) {
-  const url = bmsUrl(src)
-  if (!url) return null
-  return <img src={url} alt={alt} className={className} style={{ maxHeight: 40, objectFit: 'contain' }} />
-}
-
-function BrokerLogoImg({ item, className = '' }: { item: CollectionItem; className?: string }) {
-  return <BmsImg src={item.logos?.rectangle_light ?? item.logos?.square_light} alt={item.name} className={className} />
-}
-
-function RatingStars({ rating }: { rating: number | null | undefined }) {
-  if (!rating) return null
-  const stars = Math.round((rating / 10) * 5)
+/** Logo with initials fallback — applies the given className for sizing/border-radius */
+function BrokerLogo({ name, logoUrl, className }: { name: string; logoUrl?: string | null; className: string }) {
+  const url = bmsUrl(logoUrl ?? null)
+  if (url) {
+    return <img src={url} alt={name} className={className} style={{ objectFit: 'contain' }} />
+  }
+  const initials = name.split(/\s+/).slice(0, 2).map((w) => w[0] ?? '').join('').toUpperCase()
+  const hue = [...name].reduce((acc, c) => acc + c.charCodeAt(0), 0) % 360
   return (
-    <span className="rating-stars" aria-label={`${rating}/10`}>
-      {Array.from({ length: 5 }, (_, i) => (
-        <span key={i} className={i < stars ? 'star star--filled' : 'star'}>★</span>
-      ))}
-      <span className="rating-num ms-1">{rating.toFixed(1)}</span>
+    <span
+      className={className}
+      style={{
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        background: `hsl(${hue}, 55%, 45%)`, color: '#fff',
+        fontWeight: 700, fontSize: '0.65em', flexShrink: 0,
+      }}
+    >
+      {initials}
     </span>
   )
+}
+
+/** Same logo helper but for CollectionItem (uses .logos object) */
+function BrokerLogoImg({ item, className = '' }: { item: CollectionItem; className?: string }) {
+  return <BrokerLogo name={item.name} logoUrl={item.logos?.rectangle_light ?? item.logos?.square_light} className={className} />
 }
 
 function getBrokerProp(item: CollectionItem, key: string): unknown {
@@ -200,84 +204,86 @@ function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) 
     return (
       <section key={block.id} className="bb-top10">
         <div className="section-inner">
-          {/* Header */}
+
+          {/* ── Header ───────────────────────────────── */}
           {(subtitle || blockTitle || description) && (
             <div className="bb-top10__head">
               <div className="bb-top10__head-copy">
                 {subtitle    && <p className="eyebrow">{subtitle}</p>}
                 {blockTitle  && <h2>{blockTitle}</h2>}
-                {description && <p className="bb-top10__desc">{description}</p>}
+                {description && <p className="lead">{description}</p>}
               </div>
             </div>
           )}
 
-          {/* Podium — top 3 */}
+          {/* ── Podium (top 3) ───────────────────────── */}
           <div className="top10-podium">
             {rTop3.map((b, i) => (
-              <div key={b.broker_id} className={`top10-card ${i === 0 ? 'top10-card--pick' : ''}`}>
+              <div key={b.broker_id} className={`top10-card${i === 0 ? ' top10-card--pick' : ''}`}>
                 <div className="top10-card__head">
                   <span className="top10-card__rank">#{i + 1}</span>
-                  {i === 0 && <span className="top10-card__badge">TOP PICK</span>}
+                  <div className="top10-card__body">
+                    <div className="top10-card__logo-row">
+                      <BrokerLogo name={b.name} logoUrl={b.logo_url} className="top10-card__logo" />
+                      <div>
+                        <span className="top10-card__badge" style={i !== 0 ? { visibility: 'hidden' } : undefined}>
+                          TOP PICK
+                        </span>
+                        <p className="top10-card__name">{b.name}</p>
+                      </div>
+                    </div>
+                    {b.best_for && (
+                      <p className="top10-card__bestfor">
+                        <strong>Best for:</strong> {b.best_for}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <div className="top10-card__logo-row">
-                  <BmsImg src={b.logo_url} alt={b.name} className="top10-card__logo" />
+                <div className="top10-card__ctas">
+                  {b.visit_url
+                    ? <a href={b.visit_url} className={`btn ${i === 0 ? 'btn--secondary' : 'btn--primary'}`} target="_blank" rel="noopener noreferrer nofollow">Visit Broker</a>
+                    : <span className={`btn ${i === 0 ? 'btn--secondary' : 'btn--primary'}`} style={{ opacity: 0.4, cursor: 'default' }}>Visit Broker</span>
+                  }
+                  {b.slug && (
+                    <a href={`/broker/${b.slug}`} className="btn btn--text">
+                      Read Review <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" />
+                    </a>
+                  )}
                 </div>
-                <div className="top10-card__name">{b.name}</div>
-                {b.best_for && (
-                  <p className="top10-card__tagline">
-                    <strong>Best for:</strong> {b.best_for}
-                  </p>
-                )}
-                {b.visit_url && (
-                  <a href={b.visit_url} className="btn btn--primary btn--full" target="_blank" rel="noopener noreferrer nofollow">
-                    Visit Broker
-                  </a>
-                )}
-                {b.slug && (
-                  <a href={`/broker/${b.slug}`} className="top10-card__review-link">
-                    Read Review →
-                  </a>
-                )}
               </div>
             ))}
           </div>
 
-          {/* Table — #4 onward */}
+          {/* ── Table (#4 onward) ─────────────────────── */}
           {rRest.length > 0 && (
-            <div className="top10-table-wrap">
-              <table className="bb-table">
-                <thead>
-                  <tr>
-                    <th>Rank</th>
-                    <th>Broker</th>
-                    <th>Best For</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rRest.map((b, i) => (
-                    <tr key={b.broker_id}>
-                      <td className="rank-cell">#{i + 4}</td>
-                      <td>
-                        <div className="broker-name-cell">
-                          <BmsImg src={b.logo_url} alt={b.name} className="broker-table-logo" />
-                          <span>{b.name}</span>
-                        </div>
-                      </td>
-                      <td>{b.best_for || '—'}</td>
-                      <td>
-                        {b.visit_url && (
-                          <a href={b.visit_url} className="btn btn--primary btn--sm" target="_blank" rel="noopener noreferrer nofollow">
-                            Visit Broker →
-                          </a>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="top10-table">
+              <div className="top10-table__head">
+                <span>Rank</span>
+                <span>Broker</span>
+                <span>Best For</span>
+                <span>Rating</span>
+              </div>
+              {rRest.map((b, i) => (
+                <div key={b.broker_id} className="top10-row">
+                  <span className="top10-row__rank">#{i + 4}</span>
+                  <div className="top10-row__broker">
+                    <BrokerLogo name={b.name} logoUrl={b.logo_url} className="top10-row__logo" />
+                    <span className="top10-row__name">{b.name}</span>
+                  </div>
+                  <p className="top10-row__bestfor">{b.best_for || '—'}</p>
+                  <p className="top10-row__rating">—</p>
+                  <div className="top10-row__visit">
+                    {b.visit_url && (
+                      <a href={b.visit_url} className="btn btn--text" target="_blank" rel="noopener noreferrer nofollow">
+                        Visit Broker <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           )}
+
         </div>
       </section>
     )
@@ -312,7 +318,7 @@ function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) 
                     </td>
                     {cols.map((c) => (
                       <td key={c}>
-                        {c === 'total_rating'                    ? <RatingStars rating={getBrokerProp(item, c) as number | null} />
+                        {c === 'total_rating'                    ? String(getBrokerProp(item, c) ?? '—')
                         : c === 'is_regulated'                   ? (item.is_regulated ? '✅' : '—')
                         : c === 'has_negative_balance_protection' ? (item.has_negative_balance_protection ? '✅' : '—')
                         : c === 'min_deposit'                    ? (item.min_deposit != null ? `$${item.min_deposit}` : '—')

@@ -100,7 +100,7 @@ const BROKER_TABLE_COLUMNS: Record<string, string> = {
 
 function BrokerLogoImg({ item, className = '' }: { item: CollectionItem; className?: string }) {
   const src = item.logos?.rectangle_light ?? item.logos?.square_light ?? null
-  if (!src) return <span className={className}>{item.name}</span>
+  if (!src) return null
   return <img src={src} alt={item.name} className={className} style={{ maxHeight: 32, objectFit: 'contain' }} />
 }
 
@@ -169,6 +169,129 @@ function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) 
               style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', borderRadius: 8 }}
             />
           </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (type === 'broker_ranking') {
+    const blockBrokers = (data.brokers as Array<{ broker_id: number; name: string; best_for: string }>) ?? []
+    if (blockBrokers.length === 0) return null
+
+    // Merge block data with full item data (logo, affiliate link etc.)
+    const rankItems = blockBrokers
+      .map((b) => {
+        const item = items.find((it) => it.broker_id === b.broker_id)
+        if (!item) return null
+        return { ...item, tagline: b.best_for || null }
+      })
+      .filter(Boolean) as CollectionItem[]
+
+    if (rankItems.length === 0) return null
+
+    const rTop3 = rankItems.slice(0, 3)
+    const rRest = rankItems.slice(3)
+    const blockTitle = data.title ? String(data.title) : null
+
+    return (
+      <section key={block.id} className="bb-top10">
+        <div className="section-inner">
+          {blockTitle && (
+            <div className="bb-top10__head">
+              <div className="bb-top10__head-copy">
+                <h2>{blockTitle}</h2>
+              </div>
+            </div>
+          )}
+
+          {/* Podium — top 3 */}
+          <div className="top10-podium">
+            {rTop3.map((item, i) => (
+              <div
+                key={item.broker_id}
+                className={`top10-card ${i === 0 ? 'top10-card--pick' : ''}`}
+                style={item.brand_color ? { '--broker-color': item.brand_color } as React.CSSProperties : undefined}
+              >
+                <div className="top10-card__head">
+                  <span className="top10-card__rank">#{i + 1}</span>
+                  <div className="top10-card__body">
+                    <div className="top10-card__logo-row">
+                      <BrokerLogoImg item={item} className="top10-card__logo" />
+                      {i === 0 && <span className="top10-card__badge">TOP PICK</span>}
+                    </div>
+                    {item.tagline && <p className="top10-card__tagline">{item.tagline}</p>}
+                  </div>
+                </div>
+                {item.blurb && <p className="top10-card__blurb">{item.blurb}</p>}
+                <div className="top10-card__meta">
+                  {item.min_deposit != null && (
+                    <div className="top10-card__meta-item">
+                      <span className="label">Min Deposit</span>
+                      <span className="value">${item.min_deposit}</span>
+                    </div>
+                  )}
+                  {item.max_leverage && (
+                    <div className="top10-card__meta-item">
+                      <span className="label">Max Leverage</span>
+                      <span className="value">{item.max_leverage}</span>
+                    </div>
+                  )}
+                  {item.is_regulated && (
+                    <div className="top10-card__meta-item">
+                      <span className="label">Regulated</span>
+                      <span className="value">✅</span>
+                    </div>
+                  )}
+                </div>
+                {item.affiliate_link && (
+                  <a href={item.affiliate_link} className="btn btn--primary btn--full" target="_blank" rel="noopener noreferrer nofollow">
+                    Visit {item.name}
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Remaining rows table */}
+          {rRest.length > 0 && (
+            <div className="top10-table-wrap">
+              <table className="bb-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Broker</th>
+                    <th>Best For</th>
+                    <th>Min Deposit</th>
+                    <th>Max Leverage</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rRest.map((item, i) => (
+                    <tr key={item.broker_id}>
+                      <td>#{i + 4}</td>
+                      <td>
+                        <div className="broker-name-cell">
+                          <BrokerLogoImg item={item} className="broker-table-logo" />
+                          <span>{item.name}</span>
+                        </div>
+                      </td>
+                      <td>{item.tagline ?? '—'}</td>
+                      <td>{item.min_deposit != null ? `$${item.min_deposit}` : '—'}</td>
+                      <td>{item.max_leverage ?? '—'}</td>
+                      <td>
+                        {item.affiliate_link && (
+                          <a href={item.affiliate_link} className="btn btn--primary btn--sm" target="_blank" rel="noopener noreferrer nofollow">
+                            Visit
+                          </a>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </section>
     )
@@ -467,9 +590,9 @@ export default async function BestBrokerPage({ params }: { params: Promise<{ slu
                       <tr>
                         <th>#</th>
                         <th>Broker</th>
+                        <th>Best For</th>
                         <th>Min Deposit</th>
                         <th>Max Leverage</th>
-                        <th>Regulated</th>
                         <th></th>
                       </tr>
                     </thead>
@@ -483,9 +606,9 @@ export default async function BestBrokerPage({ params }: { params: Promise<{ slu
                               <span>{item.name}</span>
                             </div>
                           </td>
+                          <td>{item.tagline ?? '—'}</td>
                           <td>{item.min_deposit != null ? `$${item.min_deposit}` : '—'}</td>
                           <td>{item.max_leverage ?? '—'}</td>
-                          <td>{item.is_regulated ? '✅' : '—'}</td>
                           <td>
                             {item.affiliate_link && (
                               <a href={item.affiliate_link} className="btn btn--primary btn--sm" target="_blank" rel="noopener noreferrer nofollow">

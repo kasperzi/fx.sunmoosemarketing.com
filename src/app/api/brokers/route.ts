@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
   try {
     const res = await fetch(url, {
       headers: { 'X-Api-Key': BMS_API_KEY },
-      next: { revalidate: 60 },
+      cache: 'no-store',
     })
 
     if (!res.ok) {

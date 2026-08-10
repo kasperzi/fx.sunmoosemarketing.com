@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
     if (text.length === 2 && /^[A-Z]{2}$/.test(text)) {
       return NextResponse.json(
         { country: text },
-        { headers: { 'Cache-Control': 'private, max-age=3600' } }
+        { headers: { 'Cache-Control': 'no-store' } }
       )
     }
   } catch (_) {}

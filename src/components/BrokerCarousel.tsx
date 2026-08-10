@@ -103,7 +103,7 @@ export default function BrokerCarousel() {
       setCountry(c)
 
       try {
-        const res = await fetch(`/api/brokers?country=${c}&per_page=10`)
+        const res = await fetch(`/api/brokers?country=${c}&per_page=10`, { cache: 'no-store' })
         if (!res.ok) throw new Error()
         const json = await res.json()
         const data: Broker[] = json.data ?? json
@@ -124,7 +124,7 @@ export default function BrokerCarousel() {
       saveCountry(code)
       setCountry(code)
       setLoading(true)
-      fetch(`/api/brokers?country=${code}&per_page=10`)
+      fetch(`/api/brokers?country=${code}&per_page=10`, { cache: 'no-store' })
         .then(r => r.json())
         .then(json => setBrokers(json.data ?? json))
         .catch(() => {})

@@ -3,6 +3,8 @@ import Script from 'next/script'
 import { cookies } from 'next/headers'
 import { detectServerCountry } from '@/lib/detect-country.server'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'FX Look Up — Find the Best Forex Broker for Your Trading Goals',
   description: 'Compare trusted forex brokers by fees, platforms, regulation, and country availability. Find the best broker for your trading goals with FX Look Up.',

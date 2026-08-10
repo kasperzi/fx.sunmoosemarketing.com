@@ -2719,7 +2719,7 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 .notfound-hero__illustration img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .notfound-hero__copy { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; width: 100%; }
 .notfound-hero__number { font-size: 64px; font-weight: 600; letter-spacing: -3px; line-height: 1; color: var(--text); }
-.notfound-hero__copy h2 { font-size: 32px; font-weight: 600; line-height: 1.2; color: var(--text); width: 672px; max-width: 100%; }
+.notfound-hero__copy h2 { font-size: 32px; font-weight: 600; line-height: 1.2; color: var(--text); width: 672px; max-width: 100%; letter-spacing: 0; }
 .notfound-hero__copy .lead { width: 790px; max-width: 100%; }
 .notfound-hero__ctas { display: flex; gap: 12px; align-items: center; justify-content: center; }
 .notfound-cards { display: flex; flex-direction: column; gap: 40px; align-items: center; width: 100%; }
@@ -2727,7 +2727,8 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 .notfound-cards__row { display: flex; gap: 20px; align-items: flex-start; width: 100%; }
 .notfound-card { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 24px; padding: 24px; background: var(--white); border: 1px solid var(--gray); border-radius: 12px; box-shadow: var(--shadow); box-sizing: border-box; }
 .notfound-card__top { display: flex; flex-direction: column; gap: 12px; padding-bottom: 24px; border-bottom: 1px solid var(--gray); width: 100%; }
-.notfound-card__title { font-size: 24px; font-weight: 600; color: var(--text); }
+.notfound-card__title { font-size: 22px; font-weight: 600; color: var(--text); }
+.notfound-card .lead { font-size: 18px; }
 
 @media (max-width: 900px) {
   .notfound-cards__row { flex-direction: column; }

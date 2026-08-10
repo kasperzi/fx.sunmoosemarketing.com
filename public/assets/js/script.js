@@ -102,39 +102,23 @@ var filterCountryCtrl = initCountrySelect(document.getElementById('filterCountry
 initCountrySelect(document.getElementById('wizardCountrySelect'));
 initCountrySelect(document.getElementById('reviewCountrySelect'));
 
-// Initialize country selects from saved preference or IP detection
-// localStorage.fx_country_pref = user explicitly confirmed (permanent)
-// window.__fxCountry           = Promise started in <head> before page renders (always fresh, no session cache)
+// Initialize country selects from server-rendered data-country attribute.
+// Server reads cf-ipcountry (Cloudflare) and fx_country_pref cookie on every request —
+// so the correct country is already in the HTML, no async fetch needed.
 (function initCountryFromStorage() {
-  try { localStorage.removeItem('fx_country'); } catch(e) {} // remove old stale key
-  try { sessionStorage.removeItem('fx_country'); } catch(e) {} // clear stale session cache
+  try { localStorage.removeItem('fx_country'); } catch(e) {}
+  try { sessionStorage.removeItem('fx_country'); } catch(e) {}
 
-  var pref = null;
-  try { pref = localStorage.getItem('fx_country_pref'); } catch(e) {}
+  var code = document.documentElement.dataset.country;
 
-  function isValidCode(code) {
-    return code && code.length === 2 && /^[A-Z]{2}$/.test(code);
+  function isValidCode(c) {
+    return c && c.length === 2 && /^[A-Z]{2}$/.test(c);
   }
 
-  function applyCode(code) {
-    if (!isValidCode(code)) return;
+  if (isValidCode(code)) {
     if (panelCountryCtrl) panelCountryCtrl.selectByCode(code);
     if (countrySelectCtrl) countrySelectCtrl.selectByCode(code);
     if (filterCountryCtrl) filterCountryCtrl.selectByCode(code);
-  }
-
-  if (pref) {
-    // User explicitly chose a country — honour it immediately (head script already applied it)
-    applyCode(pref.toUpperCase());
-  } else {
-    // No preference — use the pre-fetched promise from <head> (fresh IP, no cache)
-    var promise = window.__fxCountry || fetch('/api/country', { cache: 'no-store' })
-      .then(function(r) { return r.json(); })
-      .then(function(d) { return d.country ? d.country.toUpperCase() : null; })
-      .catch(function() { return null; });
-    promise.then(function(code) {
-      if (isValidCode(code)) applyCode(code);
-    }).catch(function() {});
   }
 })();
 
@@ -356,7 +340,8 @@ function initHoverPinWidget({ widget, toggle, panel, onOpen, onClose }) {
       var code = panelCountryCtrl ? panelCountryCtrl.getSelectedCode() : null;
       if (code) {
         try { localStorage.setItem('fx_country_pref', code); } catch(e) {}
-        try { sessionStorage.setItem('fx_country', code); } catch(e) {}
+        // Cookie so server renders the correct country on next request
+        document.cookie = 'fx_country_pref=' + code + ';max-age=31536000;path=/;SameSite=Lax';
         window.dispatchEvent(new CustomEvent('fx:countryChange', { detail: code }));
         // Also sync the hero form and filter sidebar country selects
         if (countrySelectCtrl) countrySelectCtrl.selectByCode(code);

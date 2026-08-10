@@ -1,6 +1,6 @@
-// fx_country_pref — set only when user explicitly picks a country (matches script.js)
-// IP-detected country is never cached, always fresh per request
-const MANUAL_KEY   = 'fx_country_pref'
+// fx_country_pref — stored in localStorage AND cookie (cookie for server-side reads)
+// IP-detected country: server reads cf-ipcountry header on every request (always fresh)
+const MANUAL_KEY = 'fx_country_pref'
 const STORAGE_LANG_KEY = 'fx_language'
 
 /** Return manual country preference (user picked explicitly), or null */
@@ -9,10 +9,13 @@ export function getManualCountry(): string | null {
   return localStorage.getItem(MANUAL_KEY)
 }
 
-/** Save a manually-chosen country (persists across sessions) */
+/** Save a manually-chosen country — localStorage + cookie so server uses it next request */
 export function saveCountry(code: string): void {
   if (typeof window === 'undefined') return
-  localStorage.setItem(MANUAL_KEY, code.toUpperCase())
+  const upper = code.toUpperCase()
+  localStorage.setItem(MANUAL_KEY, upper)
+  // Cookie allows server to render the correct country on the next request
+  document.cookie = `${MANUAL_KEY}=${upper};max-age=31536000;path=/;SameSite=Lax`
 }
 
 export function getSavedLanguage(): string {
@@ -26,8 +29,33 @@ export function saveLanguage(lang: string): void {
 }
 
 /**
- * Detect country from server-side IP (via /api/country — uses Cloudflare headers).
- * Always fresh — VPN changes are picked up automatically.
+ * Get the country the server already resolved (embedded in <html data-country>).
+ * This is always correct — server reads cf-ipcountry on every request.
+ */
+export function getServerCountry(): string | null {
+  if (typeof document === 'undefined') return null
+  const c = document.documentElement.dataset.country
+  return c && /^[A-Z]{2}$/.test(c) ? c : null
+}
+
+/**
+ * Resolve country (client-side):
+ *  1. Manual preference (localStorage) — user picked explicitly
+ *  2. Server-rendered country (html data-country) — always fresh from Cloudflare IP
+ *  3. Fallback 'NL'
+ */
+export async function resolveCountry(): Promise<string> {
+  const manual = getManualCountry()
+  if (manual) return manual
+
+  const serverCountry = getServerCountry()
+  if (serverCountry) return serverCountry
+
+  return 'NL'
+}
+
+/**
+ * Detect country via API (used as fallback when server country is unavailable).
  */
 export async function detectCountry(): Promise<string | null> {
   try {
@@ -38,28 +66,4 @@ export async function detectCountry(): Promise<string | null> {
   } catch {
     return null
   }
-}
-
-/**
- * Resolve country:
- *  1. Manual user preference (localStorage fx_country_pref) — user picked explicitly
- *  2. window.__fxCountry — pre-fetched promise started in <head> (always fresh, no cache)
- *  3. detectCountry() fallback
- *  4. 'NL'
- */
-export async function resolveCountry(): Promise<string> {
-  const manual = getManualCountry()
-  if (manual) return manual
-
-  // Use the shared promise started in <head> if available — avoids a second fetch
-  if (typeof window !== 'undefined') {
-    const win = window as typeof window & { __fxCountry?: Promise<string | null> }
-    if (win.__fxCountry) {
-      const cached = await win.__fxCountry
-      if (cached) return cached
-    }
-  }
-
-  const detected = await detectCountry()
-  return detected ?? 'NL'
 }

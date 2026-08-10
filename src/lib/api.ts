@@ -37,10 +37,23 @@ export interface BrokerListResponse {
   }
 }
 
-export async function getBrokers(): Promise<Broker[]> {
+export async function getBrokers(params: {
+  country?: string
+  per_page?: number
+  page?: number
+  language?: string
+} = {}): Promise<Broker[]> {
   const BMS_API_URL = process.env.BMS_API_URL
   const BMS_API_KEY = process.env.BMS_API_KEY
-  const res = await fetch(`${BMS_API_URL}/api/v1/brokers`, {
+
+  const qs = new URLSearchParams()
+  if (params.country)  qs.set('country',  params.country)
+  if (params.per_page) qs.set('per_page', String(params.per_page))
+  if (params.page)     qs.set('page',     String(params.page))
+  if (params.language) qs.set('language', params.language)
+
+  const url = `${BMS_API_URL}/api/v1/brokers${qs.toString() ? '?' + qs.toString() : ''}`
+  const res = await fetch(url, {
     headers: { 'X-Api-Key': BMS_API_KEY! },
     next: { revalidate: 60 },
   })

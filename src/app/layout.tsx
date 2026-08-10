@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
-import { headers, cookies } from 'next/headers'
+import { cookies } from 'next/headers'
+import { detectServerCountry } from '@/lib/detect-country.server'
 
 export const metadata: Metadata = {
   title: 'FX Look Up — Find the Best Forex Broker for Your Trading Goals',
@@ -8,15 +9,14 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const headersList = await headers()
   const cookieStore = await cookies()
 
   // Manual user preference (cookie) takes priority over IP detection
   const manualCountry = cookieStore.get('fx_country_pref')?.value?.toUpperCase()
-  const cfCountry = headersList.get('cf-ipcountry')?.toUpperCase()
-  const country = /^[A-Z]{2}$/.test(manualCountry ?? '') ? manualCountry!
-               : /^[A-Z]{2}$/.test(cfCountry ?? '')     ? cfCountry!
-               : 'NL'
+  const detectedCountry = /^[A-Z]{2}$/.test(manualCountry ?? '')
+    ? manualCountry!
+    : await detectServerCountry()
+  const country = detectedCountry ?? 'NL'
 
   return (
     <html lang="en" data-country={country}>

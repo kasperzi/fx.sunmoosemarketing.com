@@ -2550,7 +2550,7 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 .about-hero__photo-frame { position: absolute; left: -22px; top: 80px; width: 653px; height: 472px; border-radius: 24px; overflow: hidden; z-index: 1; }
 .about-hero__photo-frame img { position: absolute; left: -12.01%; top: -13.27%; width: 122.13%; height: 126.54%; max-width: none; }
 
-.about-mission { padding: 56px 112px; display: flex; flex-direction: column; gap: 88px; }
+.about-mission { padding: 56px 112px; display: flex; flex-direction: column; gap: 88px; max-width: 1440px; margin: 0 auto; }
 .about-mission__top { display: flex; gap: 40px; align-items: flex-start; }
 .about-mission__copy { width: 646px; padding-top: 16px; display: flex; flex-direction: column; gap: 24px; }
 .about-mission__list { width: 530px; margin-top: 24px; padding: 24px; display: flex; flex-direction: column; gap: 24px; border: 1px solid var(--gray); border-radius: 12px; box-shadow: var(--shadow-sm); background: var(--white); box-sizing: border-box; }
@@ -2566,11 +2566,11 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 .about-stat__value { font-size: 64px; font-weight: 600; color: var(--primary); letter-spacing: -3px; line-height: 1; text-align: center; }
 .about-stat__label { font-size: 20px; color: var(--text); text-align: center; }
 
-.about-trust { display: flex; gap: 40px; align-items: center; padding: 56px 112px; }
+.about-trust { display: flex; gap: 40px; align-items: center; padding: 56px 112px; max-width: 1440px; margin: 0 auto; }
 .about-trust__image { width: 590px; flex-shrink: 0; border-radius: var(--radius-lg); }
 .about-trust__copy { flex: 1; display: flex; flex-direction: column; gap: 24px; }
 
-.about-form { position: relative; padding: 56px 112px; overflow: hidden; display: flex; gap: 40px; align-items: center; }
+.about-form { position: relative; padding: 56px 112px; overflow: hidden; display: flex; gap: 40px; align-items: center; max-width: 1440px; margin: 0 auto; }
 .about-form__bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
 .about-form__bg img { position: absolute; top: 50%; left: 50%; width: 62%; height: 161.4%; transform: translate(-50%, -50%) rotate(90deg); object-fit: cover; display: block; }
 .about-form__bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0) 50%, #ffffff 100%); }
@@ -2595,7 +2595,7 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 .contact-step__icon img { width: 28.3px; height: 28.3px; }
 .contact-step span { font-size: 20px; color: var(--body-text); }
 
-.contact-services { padding: 56px 112px; display: flex; flex-direction: column; gap: 40px; align-items: center; }
+.contact-services { padding: 56px 112px; display: flex; flex-direction: column; gap: 40px; align-items: center; max-width: 1440px; margin: 0 auto; }
 .contact-services__title { font-size: 48px; font-weight: 600; color: var(--text); text-align: center; letter-spacing: -3px; line-height: 1.2; width: 100%; }
 .contact-services__cards { display: flex; align-items: flex-start; gap: 20px; width: 100%; }
 .contact-service-card { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 24px; padding: 24px; background: var(--white); border: 1px solid var(--gray); border-radius: 12px; box-shadow: var(--shadow-sm); box-sizing: border-box; }
@@ -2603,7 +2603,7 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 .contact-service-card__title { font-size: 24px; font-weight: 600; color: var(--text); }
 
 /* How We Rate Brokers page */
-.rate-cards { padding: 56px 112px; display: flex; }
+.rate-cards { padding: 56px 112px; display: flex; max-width: 1440px; margin: 0 auto; }
 .rate-cards__inner { flex: 1; display: flex; flex-direction: column; gap: 40px; }
 .rate-cards__intro { display: flex; flex-direction: column; gap: 12px; text-align: center; width: 100%; }
 .rate-cards__intro h2 { font-size: 48px; font-weight: 600; letter-spacing: -3px; line-height: 1.2; color: var(--text); }
@@ -2614,7 +2614,7 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 .rate-card__icon img { max-width: 60.75px; max-height: 60.75px; width: auto; height: auto; }
 .rate-card__title { font-size: 24px; font-weight: 600; color: var(--text); }
 
-.rate-stats { position: relative; overflow: hidden; padding: 56px 112px; display: flex; gap: 40px; align-items: flex-start; }
+.rate-stats { position: relative; overflow: hidden; padding: 56px 112px; display: flex; gap: 40px; align-items: flex-start; max-width: 1440px; margin: 0 auto; }
 .rate-stats__bg { position: absolute; inset: 0; pointer-events: none; }
 .rate-stats__bg img { position: absolute; top: 50%; left: 50%; width: 75.1%; height: 219.8%; transform: translate(-50%,-50%) rotate(90deg); object-fit: cover; }
 .rate-stats__bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0) 50%, #ffffff 100%); }
@@ -2629,7 +2629,7 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 .rate-bar__fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--primary); border-radius: 3px; }
 .rate-stats__pct { font-size: 20px; font-weight: 700; color: var(--body-text); white-space: nowrap; }
 
-.rate-country { padding: 56px 112px; display: flex; flex-direction: column; gap: 80px; }
+.rate-country { padding: 56px 112px; display: flex; flex-direction: column; gap: 80px; max-width: 1440px; margin: 0 auto; }
 .rate-country__intro { display: flex; flex-direction: column; gap: 12px; text-align: center; width: 100%; }
 .rate-country__intro h2 { font-size: 48px; font-weight: 600; letter-spacing: -3px; line-height: 1.2; color: var(--text); }
 .rate-country__intro .lead { max-width: 989px; margin: 0 auto; }
@@ -2660,7 +2660,7 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 /* How We Make Money page */
 .hero__border--money-gradient { background: linear-gradient(194.209deg, #c3baf6 40.619%, #ffffff 87.109%); }
 
-.money-section { padding: 56px 112px; background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0) 50%, #ffffff 100%); display: flex; }
+.money-section { padding: 56px 112px; background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0) 50%, #ffffff 100%); display: flex; max-width: 1440px; margin: 0 auto; }
 .money-heading { display: flex; align-items: baseline; gap: 8px; width: 100%; }
 .money-heading__num, .money-heading h2 { font-size: 48px; font-weight: 600; letter-spacing: -3px; line-height: 1.2; color: var(--text); }
 .money-heading__num { flex-shrink: 0; }
@@ -2696,7 +2696,7 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 }
 
 /* Privacy Policy page */
-.privacy-article { padding: 56px 112px; display: flex; align-items: flex-start; gap: 20px; width: 100%; box-sizing: border-box; border-bottom: 1px solid var(--gray); }
+.privacy-article { padding: 56px 112px; display: flex; align-items: flex-start; gap: 20px; width: 100%; box-sizing: border-box; border-bottom: 1px solid var(--gray); max-width: 1440px; margin: 0 auto; }
 .privacy-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 40px; }
 .privacy-block { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 .privacy-block h3 { font-size: 32px; font-weight: 600; line-height: 1.2; color: var(--text); }
@@ -2712,7 +2712,7 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 .notfound-hero { position: relative; overflow: hidden; background: var(--white); }
 .notfound-hero__bg { position: absolute; inset: 0; opacity: 0.5; pointer-events: none; }
 .notfound-hero__bg img { position: absolute; top: 0; left: 0; width: 100%; height: 100.04%; object-fit: cover; }
-.notfound-hero__content { padding: 40px 112px 56px; display: flex; flex-direction: column; align-items: center; gap: 40px; position: relative; z-index: 1; box-sizing: border-box; width: 100%; }
+.notfound-hero__content { padding: 40px 112px 56px; display: flex; flex-direction: column; align-items: center; gap: 40px; position: relative; z-index: 1; box-sizing: border-box; width: 100%; max-width: 1440px; margin: 0 auto; }
 .notfound-hero__illustration { width: 632px; height: 314px; flex-shrink: 0; }
 .notfound-hero__illustration img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .notfound-hero__copy { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; width: 100%; }

@@ -174,9 +174,10 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
   }
 
   if (type === 'text') {
+    const html = String(data.html ?? '').replace(/&nbsp;/g, ' ')
     return (
       <div key={block.id} className="bb-block">
-        <div className="bb-prose" dangerouslySetInnerHTML={{ __html: String(data.html ?? '') }} />
+        <div className="bb-prose" dangerouslySetInnerHTML={{ __html: html }} />
       </div>
     )
   }

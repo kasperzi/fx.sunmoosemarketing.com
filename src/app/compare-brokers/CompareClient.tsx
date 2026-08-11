@@ -128,12 +128,12 @@ async function loadDetail(slug: string): Promise<BrokerDetail | null> {
 
 function Stars({ rating }: { rating: number | null }) {
   if (!rating) return <span>—</span>
-  const nodes: React.ReactNode[] = []
-  for (let i = 1; i <= 5; i++) {
-    if (rating >= i) nodes.push(<img key={i} src="/assets/images/icon-star.svg" alt="" />)
-    else if (rating >= i - 0.5) nodes.push(<img key={i} src="/assets/images/icon-star-half.svg" alt="" />)
-  }
-  return <span className="star-row">{nodes}<span>{parseFloat(rating.toFixed(1))}/5</span></span>
+  return (
+    <span className="star-row">
+      <img src="/assets/images/icon-star.svg" alt="" />
+      <span>{parseFloat(rating.toFixed(1))}/5</span>
+    </span>
+  )
 }
 
 function CheckNode({ val }: { val: boolean }) {
@@ -491,7 +491,7 @@ export function CompareSelectorCard() {
             allBrokers={allBrokers}
             selected={selectedA}
             placeholder={loadingList ? 'Loading brokers…' : 'Search first broker...'}
-            onSelect={b => { setSelectedA(b); updateUrl(b, selectedB) }}
+            onSelect={b => setSelectedA(b)}
             excludeSlug={selectedB?.slug}
           />
         </div>
@@ -501,7 +501,7 @@ export function CompareSelectorCard() {
             allBrokers={allBrokers}
             selected={selectedB}
             placeholder={loadingList ? 'Loading brokers…' : 'Search second broker...'}
-            onSelect={b => { setSelectedB(b); updateUrl(selectedA, b) }}
+            onSelect={b => setSelectedB(b)}
             excludeSlug={selectedA?.slug}
           />
         </div>
@@ -509,7 +509,7 @@ export function CompareSelectorCard() {
       <div className="cmp-selector-card__submit">
         <button type="button" className="btn btn--secondary"
           onClick={() => updateUrl(selectedA, selectedB)}
-          disabled={!selectedA && !selectedB}>
+          disabled={!selectedA || !selectedB}>
           Compare Brokers
         </button>
       </div>

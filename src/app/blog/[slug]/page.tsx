@@ -303,7 +303,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
 
       {/* Article body */}
       <section className="rv-article">
-        <div className="section-inner" style={{ gap: 0, paddingTop: 56 }}>
+        <div className="section-inner">
           <div className="rv-article__layout">
 
             {/* Main content */}
@@ -337,38 +337,38 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
 
             {/* Sidebar */}
             {sidebarBrokers.length > 0 && (
-              <aside className="rv-article__sidebar">
-                <div className="rv-side-card">
-                  <div className="side-broker-card__heading">
-                    <p className="side-broker-card__title">{sidebarTitle}</p>
+              <aside className="bb-article__sidebar">
+                <div className="bb-sidebar-card">
+                  <div className="bb-sidebar-card__head">
+                    <h4>{sidebarTitle}</h4>
                     {sidebarDesc && <p className="lead">{sidebarDesc}</p>}
                   </div>
                   {sidebarBrokers.map((b, idx) => (
-                    <div key={b.broker_id} className={`side-broker-row${idx === 0 ? ' side-broker-row--top' : ''}`}>
-                      <div className="side-broker-row__rank"><span>#{idx + 1}</span></div>
-                      <div className="side-broker-row__info">
+                    <a
+                      key={b.broker_id}
+                      href={b.slug ? `/broker/${b.slug}` : '#'}
+                      className={`match-card${idx === 0 ? ' match-card--active' : ''}`}
+                    >
+                      <div className="match-card__info">
+                        <span className="match-card__rank">#{idx + 1}</span>
                         <BrokerLogo
                           name={b.name}
                           logoUrl={b.logo_url}
-                          className="side-broker-row__logo"
+                          className="match-card__logo"
                         />
-                        <div>
-                          <p className="side-broker-row__name">{b.name}</p>
+                        <div className="match-card__text">
+                          <p className="match-card__name">{b.name}</p>
                           {b.rating && (
-                            <p className="side-broker-row__rating">
-                              <img src="/assets/images/icon-star.svg" alt="" />
-                              <span>{b.rating}</span>
+                            <p className="match-card__rating">
+                              <img src="/assets/images/icon-star.svg" alt="" />{b.rating}
                             </p>
                           )}
                         </div>
                       </div>
-                      <a
-                        href={b.slug ? `/broker/${b.slug}` : '#'}
-                        className="side-broker-row__arrow"
-                      >
+                      <span className="icon-btn match-card__link">
                         <img src="/assets/images/icon-arrow-up-right.svg" alt="" />
-                      </a>
-                    </div>
+                      </span>
+                    </a>
                   ))}
                   <a href="/find-broker" className="btn btn--secondary btn--block">Find Your Broker</a>
                 </div>

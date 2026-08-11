@@ -1841,7 +1841,7 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 }
 .bb-cta__score-row { display: flex; gap: 14px; align-items: center; }
 .bb-cta__score-row img { width: 35.73px; height: 35.73px; }
-.bb-cta__score-value { font-size: 28.6px; }
+.bb-cta__score-value { font-size: 28.6px; font-weight: 700; }
 .bb-cta__score-label { font-size: 14px; color: var(--text); }
 
 .bb-comparison-card {

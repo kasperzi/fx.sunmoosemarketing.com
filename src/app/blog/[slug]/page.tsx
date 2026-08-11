@@ -283,11 +283,10 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
 
   return (
     <>
-      <Nav />
-
       {/* Hero flush — breadcrumb only */}
       <section className="hero hero--flush">
         <div className="hero__border hero__border--flush hero__border--white">
+          <Nav />
           <div className="hero__main" style={{ padding: '40px 112px 56px' }}>
             <div className="breadcrumb">
               <img src="/assets/images/icon-home-outline.svg" alt="" className="icon-24" />

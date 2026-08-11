@@ -254,6 +254,88 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
     return <ComparisonTable key={block.id} brokers={brokers} columns={columns} cells={cells} />
   }
 
+  if (type === 'broker_comparison') {
+    interface BcBroker {
+      broker_id: number; name: string; slug?: string; logo_url?: string | null; rating?: string
+      description?: string; visit_url?: string; compare_url?: string
+      min_deposit?: string; time_open?: string; credit_card?: boolean; spread?: string; demo_account?: boolean
+      mobile_score?: string; inactivity_fee?: string; commission?: string; fractional_shares?: boolean; us_stock_fee?: string
+    }
+    const bcBrokers = (data.brokers as BcBroker[]) ?? []
+    if (bcBrokers.length === 0) return null
+    const checkIcon = '/assets/images/icon-check-mark.svg'
+    const xIcon     = '/assets/images/icon-xcircle.svg'
+    const arrowIcon = '/assets/images/icon-arrow-right-duotone.svg'
+    const boolVal   = (v: boolean | undefined, accent?: boolean) =>
+      <img src={v ? checkIcon : xIcon} alt={v ? 'Yes' : 'No'} style={{ width: 20, height: 20 }} />
+
+    return (
+      <div key={block.id} className="bb-block" style={{ gap: 24 }}>
+        {bcBrokers.map((b, i) => (
+          <div key={b.broker_id} className={`bb-comparison-card${i === 0 ? ' bb-comparison-card--pick' : ''}`}>
+            <div className="bb-comparison-card__top">
+              <div className="bb-comparison-card__info">
+                <span className="bb-comparison-card__rank">#{i + 1}</span>
+                <div className="bb-comparison-card__body">
+                  <div className="bb-comparison-card__head">
+                    <BrokerLogo name={b.name} logoUrl={b.logo_url} className="bb-comparison-card__logo" />
+                    <div>
+                      {i === 0 && <span className="top10-card__badge">TOP PICK</span>}
+                      <p className="bb-comparison-card__name">{b.name}</p>
+                      <StarRating rating={b.rating} className="bb-comparison-card__rating" />
+                    </div>
+                  </div>
+                  {b.description && <p className="bb-comparison-card__desc">{b.description}</p>}
+                </div>
+              </div>
+              <div className="bb-comparison-card__ctas">
+                {b.visit_url
+                  ? <a href={b.visit_url} className={`btn ${i === 0 ? 'btn--secondary' : 'btn--primary'}`} target="_blank" rel="noopener noreferrer nofollow">Visit Broker</a>
+                  : <span className={`btn ${i === 0 ? 'btn--secondary' : 'btn--primary'}`}>Visit Broker</span>
+                }
+                <a href={b.slug ? `/broker/${b.slug}` : '#'} className="btn btn--text">
+                  Read Review <img src={arrowIcon} alt="" />
+                </a>
+              </div>
+            </div>
+
+            <div className="bb-comparison-card__info-grid">
+              <div className="bb-comparison-card__col">
+                <div className="bb-comparison-card__labels">
+                  <p>Minimum deposit</p><p>Time Open Account</p><p>Credit card / Debit Card</p><p>Spread</p><p>Demo Account</p>
+                </div>
+                <div className="bb-comparison-card__values">
+                  <p>{b.min_deposit || '—'}</p>
+                  <p>{b.time_open   || '—'}</p>
+                  <p>{boolVal(b.credit_card)}</p>
+                  <p>{b.spread      || '—'}</p>
+                  <p>{boolVal(b.demo_account)}</p>
+                </div>
+              </div>
+              <div className="bb-comparison-card__divider" />
+              <div className="bb-comparison-card__col">
+                <div className="bb-comparison-card__labels bb-comparison-card__labels--muted">
+                  <p>Mobile Platform Score</p><p>Inactivity fee</p><p>Commission</p><p>Fractional Shares</p><p>US Stock fee</p>
+                </div>
+                <div className="bb-comparison-card__values bb-comparison-card__values--accent">
+                  <p>{b.mobile_score    || '—'}</p>
+                  <p>{b.inactivity_fee  || '—'}</p>
+                  <p>{b.commission      || '—'}</p>
+                  <p>{boolVal(b.fractional_shares)}</p>
+                  <p>{b.us_stock_fee    || '—'}</p>
+                </div>
+              </div>
+            </div>
+
+            <a href={b.compare_url || '/compare-brokers'} className="btn btn--text bb-comparison-card__compare">
+              Compare Broker <img src={arrowIcon} alt="" />
+            </a>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   if (type === 'broker_detail_cards') {
     const attrs = (data.attributes as string[]) ?? ['total_rating', 'min_deposit', 'max_leverage']
     return (

@@ -337,11 +337,21 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
     const btnUrl       = String(data.button_url   ?? '/find-broker')
     const btn2Text     = String(data.button2_text ?? '')
     const btn2Url      = String(data.button2_url  ?? '/compare-brokers')
+    const brokerIdNum  = Number(data.broker_id ?? 0)
+    const brokerName   = String(data.broker_name  ?? '')
     const brokerLogo   = bmsMedia(String(data.broker_logo ?? ''))
     const awardLabel   = String(data.award_label  ?? '')
     const awardYear    = String(data.award_year   ?? '')
-    const scoreValue   = String(data.score_value  ?? '')
     const scoreLabel   = String(data.score_label  ?? '')
+    // Pull live rating from collection items if broker is in there, else fall back to stored value
+    const liveItem     = brokerIdNum ? items.find((it) => it.id === brokerIdNum) : null
+    const rawRating    = liveItem ? liveItem.total_rating : (data.score_value ?? null)
+    const scoreValue   = rawRating ? `${parseFloat(String(rawRating)).toFixed(1)}/5` : ''
+    // Initials helper for badge logo fallback
+    const badgeInitials = brokerName
+      ? brokerName.split(/\s+/).slice(0, 2).map((w) => w[0] ?? '').join('').toUpperCase()
+      : ''
+    const badgeHue = [...brokerName].reduce((acc, c) => acc + c.charCodeAt(0), 0) % 360
     return (
       <div key={block.id} className="bb-cta bb-cta--overlay">
         <div className="bb-cta__content">
@@ -368,9 +378,20 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
         </div>
         <div className="bb-cta__image-wrap">
           <img src="/assets/images/cta2-bg.svg" alt="" className="bb-cta__shape" />
-          {(brokerLogo || awardLabel || awardYear) && (
+          {(brokerLogo || brokerName || awardLabel || awardYear) && (
             <div className="bb-cta__badge">
-              {brokerLogo && <img src={brokerLogo} alt="" className="bb-cta__badge-logo" />}
+              {brokerLogo
+                ? <img src={brokerLogo} alt={brokerName} className="bb-cta__badge-logo" />
+                : brokerName && (
+                  <span className="bb-cta__badge-logo" style={{
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    background: `hsl(${badgeHue}, 55%, 45%)`, color: '#fff',
+                    fontWeight: 700, fontSize: 28,
+                  }}>
+                    {badgeInitials}
+                  </span>
+                )
+              }
               {awardLabel && <span className="bb-cta__award-label">{awardLabel}</span>}
               {(awardLabel || awardYear) && <div className="bb-cta__award-divider" />}
               {awardYear  && <span className="bb-cta__award-year">{awardYear}</span>}

@@ -26,6 +26,7 @@ interface CollectionItem {
   max_leverage:                     string | null
   is_regulated:                     boolean
   has_negative_balance_protection:  boolean
+  total_rating:                     number | null
   affiliate_link:                   string | null
 }
 

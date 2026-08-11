@@ -263,7 +263,7 @@ function renderMainBlock(block: ContentBlock) {
 
 export default async function BlogArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug }  = await params
-  const article   = await fetchArticle(slug)
+  const article = await fetchArticle(slug)
 
   if (!article) notFound()
 
@@ -375,6 +375,78 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
               </aside>
             )}
 
+          </div>
+        </div>
+      </section>
+
+      {/* Latest articles */}
+      <section className="blogs">
+        <div className="section-inner">
+          <div className="section-head section-head--center">
+            <p className="eyebrow">LATEST INSIGHTS</p>
+            <h2>Latest Broker Guides &amp; Forex Insights</h2>
+            <p className="lead">Explore recent broker guides, platform comparisons, and trading insights to help you make better broker decisions.</p>
+          </div>
+          <div className="blog-cards">
+            <article className="blog-card">
+              <div className="blog-card__image blog-card__image--1"><img src="/assets/images/blog-img-1.png" alt="" /></div>
+              <div className="blog-card__body">
+                <div className="blog-card__text">
+                  <div className="blog-meta"><span className="tag">Broker Guides</span><span className="lead">May 10, 2026</span></div>
+                  <p className="blog-title">Top 5 Forex Brokers with the Best Customer Support</p>
+                  <p className="lead">Compare trusted brokers with responsive support, beginner-friendly tools, and reliable service.</p>
+                </div>
+                <a href="#" className="btn btn--text">Read More <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
+              </div>
+            </article>
+            <article className="blog-card">
+              <div className="blog-card__image blog-card__image--2"><img src="/assets/images/blog-img-2.png" alt="" /></div>
+              <div className="blog-card__body">
+                <div className="blog-card__text">
+                  <div className="blog-meta"><span className="tag">Trading Platforms</span><span className="lead">May 12, 2026</span></div>
+                  <p className="blog-title">MT4 vs MT5: Which Platform Should You Choose?</p>
+                  <p className="lead">Learn the key differences between MetaTrader platforms and which brokers support each option.</p>
+                </div>
+                <a href="#" className="btn btn--text">Read More <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
+              </div>
+            </article>
+            <article className="blog-card">
+              <div className="blog-card__image blog-card__image--3"><img src="/assets/images/blog-img-3.png" alt="" /></div>
+              <div className="blog-card__body">
+                <div className="blog-card__text">
+                  <div className="blog-meta"><span className="tag">Broker Comparison</span><span className="lead">May 14, 2026</span></div>
+                  <p className="blog-title">Compare Broker Fees Before Signing Up</p>
+                  <p className="lead">Understand spreads, commissions, deposit fees, and trading costs before choosing a broker.</p>
+                </div>
+                <a href="#" className="btn btn--text">Read More <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter */}
+      <section className="section section--blogs">
+        <div className="section-inner">
+          <div className="cta">
+            <img src="/assets/images/cta-bg.png" alt="" className="cta__bg" />
+            <div className="cta__content">
+              <p className="eyebrow">STAY UPDATED</p>
+              <h2>Get the latest forex news, broker updates, and trading insights</h2>
+              <p className="lead">Join our newsletter for broker updates, trading insights, and market trends delivered straight to your inbox.</p>
+            </div>
+            <form className="subscribe">
+              <div className="subscribe__field">
+                <img src="/assets/images/icon-email.svg" alt="" />
+                <input type="email" placeholder="Enter your email address" required />
+                <button type="submit" className="btn btn--secondary subscribe__submit--desktop">Sign Up Now</button>
+              </div>
+              <button type="submit" className="subscribe__submit--mobile">Sign Up Now</button>
+              <p className="subscribe__note">
+                <img src="/assets/images/icon-shield.svg" alt="" />
+                We respect your privacy. Unsubscribe at any time
+              </p>
+            </form>
           </div>
         </div>
       </section>

@@ -2522,7 +2522,7 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 .article-image { width: 100%; overflow: hidden; }
 .article-image img { width: 100%; height: 494px; object-fit: cover; display: block; }
 
-.article-share { display: flex; align-items: center; justify-content: flex-end; gap: 108px; width: 100%; }
+.article-share { display: flex; align-items: center; justify-content: flex-end; gap: 10px; width: 100%; }
 .article-share__label { font-size: 14px; color: var(--body-text); }
 .article-share__icons { display: flex; gap: 4px; align-items: center; }
 .article-share__icons img { width: 24px; height: 24px; }

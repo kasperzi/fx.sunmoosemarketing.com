@@ -293,7 +293,7 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
           // Manual-only fields (not in DB)
           const timeOpen    = b.time_open    || '—'
           const creditCard  = b.credit_card  ?? true
-          const mobileScore = live?.mobile_app_rating != null ? `${live.mobile_app_rating}/5` : b.mobile_score || '—'
+          const mobileScore = live?.mobile_app_rating != null ? String(live.mobile_app_rating) : b.mobile_score || '—'
           const inactFee    = b.inactivity_fee || '—'
           const commission  = b.commission   || '—'
           const fractional  = b.fractional_shares ?? false

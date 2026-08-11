@@ -6,7 +6,7 @@ type NavProps = {
 
 function NavLink({ page, current, href, label }: { page: NavPage | undefined; current: NavPage; href: string; label: string }) {
   if (page === current) {
-    return <li className="breadcrumb__current">{label}</li>
+    return <li><a href={href} className="breadcrumb__current">{label}</a></li>
   }
   return <li><a href={href}>{label}</a></li>
 }

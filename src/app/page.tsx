@@ -26,8 +26,8 @@ export default function HomePage() {
                   <p className="lead">Compare trusted forex brokers by fees, platforms, regulations, country availability, and real trading conditions.</p>
                 </div>
                 <div className="hero__ctas">
-                  <a href="#" className="btn btn--secondary">Find Your Broker</a>
-                  <a href="#" className="btn btn--text btn--text--px">Compare Brokers <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
+                  <a href="/find-broker" className="btn btn--secondary">Find Your Broker</a>
+                  <a href="/compare-brokers" className="btn btn--text btn--text--px">Compare Brokers <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
                 </div>
                 <div className="hero__perks">
                   <div className="perk-col">

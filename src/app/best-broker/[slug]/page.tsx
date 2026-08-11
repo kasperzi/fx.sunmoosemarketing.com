@@ -174,7 +174,10 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
   }
 
   if (type === 'text') {
-    const html = String(data.html ?? '').replace(/&nbsp;/g, ' ').replace(/<p><br\s*\/?><\/p>/g, '<br>')
+    const html = String(data.html ?? '')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/<p>(\s*<br\s*\/?>)?\s*<\/p>/g, '<br>')  // empty <p> → <br>
+      .replace(/(<br\s*\/?>\s*){2,}/g, '<br>')           // dva+ uzastopna <br> → jedan
     return (
       <div key={block.id} className="bb-block">
         <div className="bb-prose" dangerouslySetInnerHTML={{ __html: html }} />

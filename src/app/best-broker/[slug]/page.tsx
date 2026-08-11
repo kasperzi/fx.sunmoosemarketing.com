@@ -191,7 +191,7 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
     if (!url) return null
     const embedUrl     = url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')
     const videoTitle   = String(data.title ?? 'Video')
-    const thumbnailUrl = data.thumbnail_url ? String(data.thumbnail_url) : null
+    const thumbnailUrl = bmsMedia(String(data.thumbnail_url ?? '')) || null
     return (
       <div key={block.id} className="bb-video">
         {thumbnailUrl ? (

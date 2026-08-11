@@ -298,7 +298,7 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
     const btnUrl   = String(data.button_url   ?? '/find-broker')
     const btn2Text = String(data.button2_text ?? '')
     const btn2Url  = String(data.button2_url  ?? '/compare-brokers')
-    const imgUrl   = data.image_url ? String(data.image_url) : '/assets/images/cta-find-broker.png'
+    const imgUrl   = bmsMedia(String(data.image_url ?? '')) || '/assets/images/cta-find-broker.png'
     return (
       <div key={block.id} className="bb-cta">
         <div className="bb-cta__content">
@@ -441,6 +441,17 @@ function renderContentBlocks(blocks: ContentBlock[], items: CollectionItem[]) {
       </section>
     )
   })
+}
+
+// ─── BMS media proxy helper ───────────────────────────────────────────────────
+// Converts relative BMS storage paths to /api/media/... proxy URLs.
+// Full https:// URLs (legacy or external) are passed through unchanged.
+function bmsMedia(url: string | null | undefined): string {
+  if (!url) return ''
+  if (url.startsWith('http://') || url.startsWith('https://')) return url
+  // strip leading slash so path.join works predictably
+  const clean = url.startsWith('/') ? url.slice(1) : url
+  return `/api/media/${clean}`
 }
 
 // ─── broker_ranking full-width block ──────────────────────────────────────────

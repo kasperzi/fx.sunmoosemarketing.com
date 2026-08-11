@@ -5,76 +5,184 @@ import { useSearchParams } from 'next/navigation'
 import { resolveCountry, saveCountry } from '@/lib/country'
 import type { Broker } from '@/lib/api'
 
-// ─── Country list ────────────────────────────────────────────────────────────
+// ─── Country list ─────────────────────────────────────────────────────────────
 
 const COUNTRIES = [
-  { code: 'AE', name: 'United Arab Emirates' },
-  { code: 'AT', name: 'Austria' },
-  { code: 'AU', name: 'Australia' },
-  { code: 'BE', name: 'Belgium' },
-  { code: 'BH', name: 'Bahrain' },
-  { code: 'BR', name: 'Brazil' },
-  { code: 'CA', name: 'Canada' },
-  { code: 'CH', name: 'Switzerland' },
-  { code: 'CN', name: 'China' },
-  { code: 'CY', name: 'Cyprus' },
-  { code: 'CZ', name: 'Czech Republic' },
-  { code: 'DE', name: 'Germany' },
-  { code: 'DK', name: 'Denmark' },
-  { code: 'EG', name: 'Egypt' },
-  { code: 'ES', name: 'Spain' },
-  { code: 'FI', name: 'Finland' },
-  { code: 'FR', name: 'France' },
-  { code: 'GB', name: 'United Kingdom' },
-  { code: 'GH', name: 'Ghana' },
-  { code: 'GR', name: 'Greece' },
-  { code: 'HK', name: 'Hong Kong' },
-  { code: 'HU', name: 'Hungary' },
-  { code: 'ID', name: 'Indonesia' },
-  { code: 'IE', name: 'Ireland' },
-  { code: 'IL', name: 'Israel' },
-  { code: 'IN', name: 'India' },
-  { code: 'IT', name: 'Italy' },
-  { code: 'JO', name: 'Jordan' },
-  { code: 'JP', name: 'Japan' },
-  { code: 'KE', name: 'Kenya' },
-  { code: 'KR', name: 'South Korea' },
-  { code: 'KW', name: 'Kuwait' },
-  { code: 'LB', name: 'Lebanon' },
-  { code: 'MA', name: 'Morocco' },
-  { code: 'MX', name: 'Mexico' },
-  { code: 'MY', name: 'Malaysia' },
-  { code: 'NG', name: 'Nigeria' },
-  { code: 'NL', name: 'Netherlands' },
-  { code: 'NO', name: 'Norway' },
-  { code: 'NZ', name: 'New Zealand' },
-  { code: 'OM', name: 'Oman' },
-  { code: 'PH', name: 'Philippines' },
-  { code: 'PK', name: 'Pakistan' },
-  { code: 'PL', name: 'Poland' },
-  { code: 'PT', name: 'Portugal' },
-  { code: 'QA', name: 'Qatar' },
-  { code: 'RO', name: 'Romania' },
-  { code: 'SA', name: 'Saudi Arabia' },
-  { code: 'SE', name: 'Sweden' },
-  { code: 'SG', name: 'Singapore' },
-  { code: 'TH', name: 'Thailand' },
-  { code: 'TN', name: 'Tunisia' },
-  { code: 'TR', name: 'Turkey' },
-  { code: 'TW', name: 'Taiwan' },
-  { code: 'US', name: 'United States' },
-  { code: 'VN', name: 'Vietnam' },
-  { code: 'ZA', name: 'South Africa' },
+  { code: 'AE', name: 'United Arab Emirates', emoji: '🇦🇪' },
+  { code: 'AF', name: 'Afghanistan', emoji: '🇦🇫' },
+  { code: 'AL', name: 'Albania', emoji: '🇦🇱' },
+  { code: 'AM', name: 'Armenia', emoji: '🇦🇲' },
+  { code: 'AO', name: 'Angola', emoji: '🇦🇴' },
+  { code: 'AR', name: 'Argentina', emoji: '🇦🇷' },
+  { code: 'AT', name: 'Austria', emoji: '🇦🇹' },
+  { code: 'AU', name: 'Australia', emoji: '🇦🇺' },
+  { code: 'AZ', name: 'Azerbaijan', emoji: '🇦🇿' },
+  { code: 'BA', name: 'Bosnia and Herzegovina', emoji: '🇧🇦' },
+  { code: 'BD', name: 'Bangladesh', emoji: '🇧🇩' },
+  { code: 'BE', name: 'Belgium', emoji: '🇧🇪' },
+  { code: 'BF', name: 'Burkina Faso', emoji: '🇧🇫' },
+  { code: 'BG', name: 'Bulgaria', emoji: '🇧🇬' },
+  { code: 'BH', name: 'Bahrain', emoji: '🇧🇭' },
+  { code: 'BJ', name: 'Benin', emoji: '🇧🇯' },
+  { code: 'BN', name: 'Brunei', emoji: '🇧🇳' },
+  { code: 'BO', name: 'Bolivia', emoji: '🇧🇴' },
+  { code: 'BR', name: 'Brazil', emoji: '🇧🇷' },
+  { code: 'BW', name: 'Botswana', emoji: '🇧🇼' },
+  { code: 'BY', name: 'Belarus', emoji: '🇧🇾' },
+  { code: 'CA', name: 'Canada', emoji: '🇨🇦' },
+  { code: 'CD', name: 'DR Congo', emoji: '🇨🇩' },
+  { code: 'CF', name: 'Central African Republic', emoji: '🇨🇫' },
+  { code: 'CG', name: 'Republic of the Congo', emoji: '🇨🇬' },
+  { code: 'CH', name: 'Switzerland', emoji: '🇨🇭' },
+  { code: 'CI', name: 'Ivory Coast', emoji: '🇨🇮' },
+  { code: 'CL', name: 'Chile', emoji: '🇨🇱' },
+  { code: 'CM', name: 'Cameroon', emoji: '🇨🇲' },
+  { code: 'CN', name: 'China', emoji: '🇨🇳' },
+  { code: 'CO', name: 'Colombia', emoji: '🇨🇴' },
+  { code: 'CR', name: 'Costa Rica', emoji: '🇨🇷' },
+  { code: 'CY', name: 'Cyprus', emoji: '🇨🇾' },
+  { code: 'CZ', name: 'Czech Republic', emoji: '🇨🇿' },
+  { code: 'DE', name: 'Germany', emoji: '🇩🇪' },
+  { code: 'DJ', name: 'Djibouti', emoji: '🇩🇯' },
+  { code: 'DK', name: 'Denmark', emoji: '🇩🇰' },
+  { code: 'DZ', name: 'Algeria', emoji: '🇩🇿' },
+  { code: 'EC', name: 'Ecuador', emoji: '🇪🇨' },
+  { code: 'EE', name: 'Estonia', emoji: '🇪🇪' },
+  { code: 'EG', name: 'Egypt', emoji: '🇪🇬' },
+  { code: 'ER', name: 'Eritrea', emoji: '🇪🇷' },
+  { code: 'ES', name: 'Spain', emoji: '🇪🇸' },
+  { code: 'ET', name: 'Ethiopia', emoji: '🇪🇹' },
+  { code: 'FI', name: 'Finland', emoji: '🇫🇮' },
+  { code: 'FR', name: 'France', emoji: '🇫🇷' },
+  { code: 'GA', name: 'Gabon', emoji: '🇬🇦' },
+  { code: 'GB', name: 'United Kingdom', emoji: '🇬🇧' },
+  { code: 'GE', name: 'Georgia', emoji: '🇬🇪' },
+  { code: 'GH', name: 'Ghana', emoji: '🇬🇭' },
+  { code: 'GM', name: 'Gambia', emoji: '🇬🇲' },
+  { code: 'GN', name: 'Guinea', emoji: '🇬🇳' },
+  { code: 'GQ', name: 'Equatorial Guinea', emoji: '🇬🇶' },
+  { code: 'GR', name: 'Greece', emoji: '🇬🇷' },
+  { code: 'GT', name: 'Guatemala', emoji: '🇬🇹' },
+  { code: 'GW', name: 'Guinea-Bissau', emoji: '🇬🇼' },
+  { code: 'GY', name: 'Guyana', emoji: '🇬🇾' },
+  { code: 'HK', name: 'Hong Kong', emoji: '🇭🇰' },
+  { code: 'HN', name: 'Honduras', emoji: '🇭🇳' },
+  { code: 'HR', name: 'Croatia', emoji: '🇭🇷' },
+  { code: 'HT', name: 'Haiti', emoji: '🇭🇹' },
+  { code: 'HU', name: 'Hungary', emoji: '🇭🇺' },
+  { code: 'ID', name: 'Indonesia', emoji: '🇮🇩' },
+  { code: 'IE', name: 'Ireland', emoji: '🇮🇪' },
+  { code: 'IL', name: 'Israel', emoji: '🇮🇱' },
+  { code: 'IN', name: 'India', emoji: '🇮🇳' },
+  { code: 'IQ', name: 'Iraq', emoji: '🇮🇶' },
+  { code: 'IR', name: 'Iran', emoji: '🇮🇷' },
+  { code: 'IS', name: 'Iceland', emoji: '🇮🇸' },
+  { code: 'IT', name: 'Italy', emoji: '🇮🇹' },
+  { code: 'JM', name: 'Jamaica', emoji: '🇯🇲' },
+  { code: 'JO', name: 'Jordan', emoji: '🇯🇴' },
+  { code: 'JP', name: 'Japan', emoji: '🇯🇵' },
+  { code: 'KE', name: 'Kenya', emoji: '🇰🇪' },
+  { code: 'KG', name: 'Kyrgyzstan', emoji: '🇰🇬' },
+  { code: 'KH', name: 'Cambodia', emoji: '🇰🇭' },
+  { code: 'KM', name: 'Comoros', emoji: '🇰🇲' },
+  { code: 'KR', name: 'South Korea', emoji: '🇰🇷' },
+  { code: 'KW', name: 'Kuwait', emoji: '🇰🇼' },
+  { code: 'KZ', name: 'Kazakhstan', emoji: '🇰🇿' },
+  { code: 'LA', name: 'Laos', emoji: '🇱🇦' },
+  { code: 'LB', name: 'Lebanon', emoji: '🇱🇧' },
+  { code: 'LK', name: 'Sri Lanka', emoji: '🇱🇰' },
+  { code: 'LR', name: 'Liberia', emoji: '🇱🇷' },
+  { code: 'LS', name: 'Lesotho', emoji: '🇱🇸' },
+  { code: 'LT', name: 'Lithuania', emoji: '🇱🇹' },
+  { code: 'LU', name: 'Luxembourg', emoji: '🇱🇺' },
+  { code: 'LV', name: 'Latvia', emoji: '🇱🇻' },
+  { code: 'LY', name: 'Libya', emoji: '🇱🇾' },
+  { code: 'MA', name: 'Morocco', emoji: '🇲🇦' },
+  { code: 'MD', name: 'Moldova', emoji: '🇲🇩' },
+  { code: 'MG', name: 'Madagascar', emoji: '🇲🇬' },
+  { code: 'MK', name: 'North Macedonia', emoji: '🇲🇰' },
+  { code: 'ML', name: 'Mali', emoji: '🇲🇱' },
+  { code: 'MM', name: 'Myanmar', emoji: '🇲🇲' },
+  { code: 'MN', name: 'Mongolia', emoji: '🇲🇳' },
+  { code: 'MR', name: 'Mauritania', emoji: '🇲🇷' },
+  { code: 'MT', name: 'Malta', emoji: '🇲🇹' },
+  { code: 'MU', name: 'Mauritius', emoji: '🇲🇺' },
+  { code: 'MV', name: 'Maldives', emoji: '🇲🇻' },
+  { code: 'MW', name: 'Malawi', emoji: '🇲🇼' },
+  { code: 'MX', name: 'Mexico', emoji: '🇲🇽' },
+  { code: 'MY', name: 'Malaysia', emoji: '🇲🇾' },
+  { code: 'MZ', name: 'Mozambique', emoji: '🇲🇿' },
+  { code: 'NA', name: 'Namibia', emoji: '🇳🇦' },
+  { code: 'NE', name: 'Niger', emoji: '🇳🇪' },
+  { code: 'NG', name: 'Nigeria', emoji: '🇳🇬' },
+  { code: 'NI', name: 'Nicaragua', emoji: '🇳🇮' },
+  { code: 'NL', name: 'Netherlands', emoji: '🇳🇱' },
+  { code: 'NO', name: 'Norway', emoji: '🇳🇴' },
+  { code: 'NP', name: 'Nepal', emoji: '🇳🇵' },
+  { code: 'NZ', name: 'New Zealand', emoji: '🇳🇿' },
+  { code: 'OM', name: 'Oman', emoji: '🇴🇲' },
+  { code: 'PA', name: 'Panama', emoji: '🇵🇦' },
+  { code: 'PE', name: 'Peru', emoji: '🇵🇪' },
+  { code: 'PG', name: 'Papua New Guinea', emoji: '🇵🇬' },
+  { code: 'PH', name: 'Philippines', emoji: '🇵🇭' },
+  { code: 'PK', name: 'Pakistan', emoji: '🇵🇰' },
+  { code: 'PL', name: 'Poland', emoji: '🇵🇱' },
+  { code: 'PT', name: 'Portugal', emoji: '🇵🇹' },
+  { code: 'PY', name: 'Paraguay', emoji: '🇵🇾' },
+  { code: 'QA', name: 'Qatar', emoji: '🇶🇦' },
+  { code: 'RO', name: 'Romania', emoji: '🇷🇴' },
+  { code: 'RS', name: 'Serbia', emoji: '🇷🇸' },
+  { code: 'RU', name: 'Russia', emoji: '🇷🇺' },
+  { code: 'RW', name: 'Rwanda', emoji: '🇷🇼' },
+  { code: 'SA', name: 'Saudi Arabia', emoji: '🇸🇦' },
+  { code: 'SC', name: 'Seychelles', emoji: '🇸🇨' },
+  { code: 'SD', name: 'Sudan', emoji: '🇸🇩' },
+  { code: 'SE', name: 'Sweden', emoji: '🇸🇪' },
+  { code: 'SG', name: 'Singapore', emoji: '🇸🇬' },
+  { code: 'SI', name: 'Slovenia', emoji: '🇸🇮' },
+  { code: 'SK', name: 'Slovakia', emoji: '🇸🇰' },
+  { code: 'SL', name: 'Sierra Leone', emoji: '🇸🇱' },
+  { code: 'SN', name: 'Senegal', emoji: '🇸🇳' },
+  { code: 'SO', name: 'Somalia', emoji: '🇸🇴' },
+  { code: 'SR', name: 'Suriname', emoji: '🇸🇷' },
+  { code: 'SS', name: 'South Sudan', emoji: '🇸🇸' },
+  { code: 'SV', name: 'El Salvador', emoji: '🇸🇻' },
+  { code: 'SY', name: 'Syria', emoji: '🇸🇾' },
+  { code: 'SZ', name: 'Eswatini', emoji: '🇸🇿' },
+  { code: 'TD', name: 'Chad', emoji: '🇹🇩' },
+  { code: 'TG', name: 'Togo', emoji: '🇹🇬' },
+  { code: 'TH', name: 'Thailand', emoji: '🇹🇭' },
+  { code: 'TJ', name: 'Tajikistan', emoji: '🇹🇯' },
+  { code: 'TL', name: 'Timor-Leste', emoji: '🇹🇱' },
+  { code: 'TM', name: 'Turkmenistan', emoji: '🇹🇲' },
+  { code: 'TN', name: 'Tunisia', emoji: '🇹🇳' },
+  { code: 'TR', name: 'Turkey', emoji: '🇹🇷' },
+  { code: 'TT', name: 'Trinidad and Tobago', emoji: '🇹🇹' },
+  { code: 'TW', name: 'Taiwan', emoji: '🇹🇼' },
+  { code: 'TZ', name: 'Tanzania', emoji: '🇹🇿' },
+  { code: 'UA', name: 'Ukraine', emoji: '🇺🇦' },
+  { code: 'UG', name: 'Uganda', emoji: '🇺🇬' },
+  { code: 'US', name: 'United States', emoji: '🇺🇸' },
+  { code: 'UY', name: 'Uruguay', emoji: '🇺🇾' },
+  { code: 'UZ', name: 'Uzbekistan', emoji: '🇺🇿' },
+  { code: 'VE', name: 'Venezuela', emoji: '🇻🇪' },
+  { code: 'VN', name: 'Vietnam', emoji: '🇻🇳' },
+  { code: 'YE', name: 'Yemen', emoji: '🇾🇪' },
+  { code: 'ZA', name: 'South Africa', emoji: '🇿🇦' },
+  { code: 'ZM', name: 'Zambia', emoji: '🇿🇲' },
+  { code: 'ZW', name: 'Zimbabwe', emoji: '🇿🇼' },
 ].sort((a, b) => a.name.localeCompare(b.name))
-
-function countryFlag(code: string): string {
-  return [...code.toUpperCase()]
-    .map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65))
-    .join('')
-}
 
 function getCountryName(code: string): string {
   return COUNTRIES.find(c => c.code === code)?.name ?? code
+}
+
+function getCountryEmoji(code: string): string {
+  return COUNTRIES.find(c => c.code === code)?.emoji ?? ''
+}
+
+function flagImgUrl(code: string): string {
+  return `https://flagcdn.com/w40/${code.toLowerCase()}.png`
 }
 
 // ─── Platform helpers ─────────────────────────────────────────────────────────
@@ -96,7 +204,7 @@ function shortenPlatform(p: string): string {
     .replace(/MetaTrader/i, 'MT')
 }
 
-// ─── Broker card ──────────────────────────────────────────────────────────────
+// ─── Broker card (matches HTML exactly) ──────────────────────────────────────
 
 function BrokerResultCard({ broker, featured }: { broker: Broker; featured?: boolean }) {
   const logoUrl = broker.logos?.square_light || broker.logos?.square_dark || null
@@ -181,7 +289,7 @@ function BrokerResultCard({ broker, featured }: { broker: Broker; featured?: boo
   )
 }
 
-// ─── Main component ────────────────────────────────────────────────────────────
+// ─── Main ─────────────────────────────────────────────────────────────────────
 
 const PAGE_SIZE = 12
 
@@ -192,23 +300,25 @@ const SORT_LABELS: Record<string, string> = {
   most_popular: 'Most Popular',
 }
 
-const XIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-    <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-  </svg>
+const XBtn = ({ onClick }: { onClick: () => void }) => (
+  <button type="button" aria-label="Remove" onClick={onClick}>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+      <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+    </svg>
+  </button>
 )
 
 export default function SearchClient() {
   const searchParams = useSearchParams()
   const searchQuery = searchParams.get('q') ?? ''
 
-  // Broker data
   const [country, setCountry] = useState('NL')
   const [brokers, setBrokers] = useState<Broker[]>([])
   const [loading, setLoading] = useState(true)
 
-  // Filters
+  // Filters — all empty by default (no pre-checked)
   const [selectedPlatforms, setSelectedPlatforms] = useState<Set<string>>(new Set())
+  const [minDeposit, setMinDeposit] = useState(0)
   const [maxDeposit, setMaxDeposit] = useState(500)
   const [minRating, setMinRating] = useState(0)
 
@@ -222,9 +332,10 @@ export default function SearchClient() {
   const [countrySearch, setCountrySearch] = useState('')
   const countryRef = useRef<HTMLDivElement>(null)
 
-  // Accordion state — no defaultChecked items
+  // Accordion state
   const [openSections, setOpenSections] = useState({
     country: true,
+    instruments: true,
     platforms: true,
     deposit: true,
     rating: false,
@@ -232,7 +343,7 @@ export default function SearchClient() {
     bonus: false,
   })
 
-  // ── Load country + brokers on mount ─────────────────────────────────────────
+  // ── Load ────────────────────────────────────────────────────────────────────
   useEffect(() => {
     resolveCountry().then(c => {
       setCountry(c)
@@ -240,7 +351,6 @@ export default function SearchClient() {
     })
   }, [])
 
-  // Listen for global country changes (lang panel in script.js)
   useEffect(() => {
     function onCountryChange(e: Event) {
       const code = (e as CustomEvent<string>).detail
@@ -253,7 +363,6 @@ export default function SearchClient() {
     return () => window.removeEventListener('fx:countryChange', onCountryChange)
   }, [])
 
-  // Close country dropdown on outside click
   useEffect(() => {
     function onMouseDown(e: MouseEvent) {
       if (countryRef.current && !countryRef.current.contains(e.target as Node)) {
@@ -304,6 +413,7 @@ export default function SearchClient() {
 
   function resetFilters() {
     setSelectedPlatforms(new Set())
+    setMinDeposit(0)
     setMaxDeposit(500)
     setMinRating(0)
     setVisibleCount(PAGE_SIZE)
@@ -333,8 +443,11 @@ export default function SearchClient() {
       )
     }
 
-    if (maxDeposit < 500) {
-      result = result.filter(b => (b.min_deposit ?? 0) <= maxDeposit)
+    if (minDeposit > 0 || maxDeposit < 500) {
+      result = result.filter(b => {
+        const d = b.min_deposit ?? 0
+        return d >= minDeposit && (maxDeposit >= 500 || d <= maxDeposit)
+      })
     }
 
     if (minRating > 0) {
@@ -350,31 +463,34 @@ export default function SearchClient() {
     }
 
     return result
-  }, [brokers, searchQuery, selectedPlatforms, maxDeposit, minRating, sortBy])
+  }, [brokers, searchQuery, selectedPlatforms, minDeposit, maxDeposit, minRating, sortBy])
 
   const visible = filtered.slice(0, visibleCount)
 
-  // ── Filter chips ──────────────────────────────────────────────────────────
+  // ── Chips ────────────────────────────────────────────────────────────────
   const chips: Array<{ label: string; onRemove?: () => void }> = [
     { label: getCountryName(country) },
     ...Array.from(selectedPlatforms).map(p => ({ label: p, onRemove: () => togglePlatform(p) })),
     ...(minRating > 0 ? [{ label: `${minRating}+ Stars`, onRemove: () => setMinRating(0) }] : []),
-    ...(maxDeposit < 500 ? [{ label: `Max deposit $${maxDeposit}`, onRemove: () => setMaxDeposit(500) }] : []),
+    ...(minDeposit > 0 ? [{ label: `Min $${minDeposit}`, onRemove: () => setMinDeposit(0) }] : []),
+    ...(maxDeposit < 500 ? [{ label: `Max $${maxDeposit}`, onRemove: () => setMaxDeposit(500) }] : []),
   ]
 
-  const hasActiveFilters = selectedPlatforms.size > 0 || minRating > 0 || maxDeposit < 500
+  const hasActiveFilters = selectedPlatforms.size > 0 || minRating > 0 || minDeposit > 0 || maxDeposit < 500
 
   const filteredCountries = COUNTRIES.filter(c =>
     c.name.toLowerCase().includes(countrySearch.toLowerCase())
   )
 
+  // Deposit range fill percentages
+  const fillLeft = `${(minDeposit / 500) * 100}%`
   const fillRight = `${100 - (maxDeposit / 500) * 100}%`
 
   return (
     <section>
       <div className="section-inner section-inner--row">
 
-        {/* ── Sidebar ─────────────────────────────────────────────────────── */}
+        {/* ── Sidebar ──────────────────────────────────────────────────────── */}
         <aside className="search-sidebar">
           <div className="filters-panel filters-panel--sidebar">
             <div className="filters-panel__header">
@@ -398,7 +514,12 @@ export default function SearchClient() {
                         className="select-row country-toggle"
                         onClick={() => { setCountryOpen(o => !o); setCountrySearch('') }}
                       >
-                        <span style={{ fontSize: '1.3rem', lineHeight: 1 }}>{countryFlag(country)}</span>
+                        <img
+                          src={flagImgUrl(country)}
+                          alt={getCountryName(country)}
+                          className="flag"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                        />
                         <span className="select-value">{getCountryName(country)}</span>
                         <img src="/assets/images/icon-chevron-down.svg" alt="" className="icon-24 select-chevron" />
                       </button>
@@ -423,8 +544,10 @@ export default function SearchClient() {
                                 className={`country-option${c.code === country ? ' country-option--selected' : ''}`}
                                 role="option"
                                 onClick={() => selectCountry(c.code)}
+                                data-flag={c.emoji}
+                                data-name={c.name}
                               >
-                                <span className="flag-emoji">{countryFlag(c.code)}</span>
+                                <span className="flag-emoji">{c.emoji}</span>
                                 {c.name}
                               </li>
                             ))}
@@ -435,6 +558,25 @@ export default function SearchClient() {
                         </div>
                       )}
                     </div>
+                  </div>
+                )}
+              </li>
+
+              {/* Instruments (UI only — no API data) */}
+              <li className={`filters-item${openSections.instruments ? ' is-open' : ''}`}>
+                <button type="button" className="filters-row" onClick={() => toggleSection('instruments')}>
+                  Instruments
+                  <img src="/assets/images/icon-chevron-down.svg" alt="" className="icon-18 filters-chevron" />
+                </button>
+                {openSections.instruments && (
+                  <div className="filters-content">
+                    {['General Brokers', 'Forex', 'CFDs', 'Stocks', 'Crypto', 'Options'].map(item => (
+                      <label key={item} className="filters-checkbox">
+                        <input type="checkbox" />
+                        <span className="filters-checkbox__box"></span>
+                        {item}
+                      </label>
+                    ))}
                   </div>
                 )}
               </li>
@@ -472,16 +614,27 @@ export default function SearchClient() {
                   <div className="filters-content">
                     <div className="filters-range">
                       <div className="filters-range__values">
-                        <span className="filters-range__value">$0</span>
-                        <span className="filters-range__value">
-                          {maxDeposit >= 500 ? '$500+' : `$${maxDeposit}`}
-                        </span>
+                        <span className="filters-range__value">{minDeposit > 0 ? `$${minDeposit}` : '$0'}</span>
+                        <span className="filters-range__value">{maxDeposit >= 500 ? '$500+' : `$${maxDeposit}`}</span>
                       </div>
                       <div className="filters-range__track">
                         <div
                           className="filters-range__fill"
-                          style={{ left: 0, right: fillRight }}
+                          style={{ left: fillLeft, right: fillRight }}
                         ></div>
+                        <input
+                          type="range"
+                          min="0"
+                          max="500"
+                          step="10"
+                          value={minDeposit}
+                          onChange={e => {
+                            const v = Number(e.target.value)
+                            setMinDeposit(Math.min(v, maxDeposit - 10))
+                            setVisibleCount(PAGE_SIZE)
+                          }}
+                          className="filters-range__input"
+                        />
                         <input
                           type="range"
                           min="0"
@@ -489,7 +642,8 @@ export default function SearchClient() {
                           step="10"
                           value={maxDeposit}
                           onChange={e => {
-                            setMaxDeposit(Number(e.target.value))
+                            const v = Number(e.target.value)
+                            setMaxDeposit(Math.max(v, minDeposit + 10))
                             setVisibleCount(PAGE_SIZE)
                           }}
                           className="filters-range__input"
@@ -532,8 +686,8 @@ export default function SearchClient() {
                 {openSections.depositMethod && (
                   <div className="filters-content">
                     {['Bank Transfer', 'Credit Card', 'Crypto', 'E-Wallet'].map(m => (
-                      <label key={m} className="filters-checkbox" style={{ opacity: 0.5 }}>
-                        <input type="checkbox" disabled />
+                      <label key={m} className="filters-checkbox">
+                        <input type="checkbox" />
                         <span className="filters-checkbox__box"></span>
                         {m}
                       </label>
@@ -551,8 +705,8 @@ export default function SearchClient() {
                 {openSections.bonus && (
                   <div className="filters-content">
                     {['No Deposit Bonus', 'Welcome Bonus', 'Deposit Match Bonus'].map(b => (
-                      <label key={b} className="filters-checkbox" style={{ opacity: 0.5 }}>
-                        <input type="checkbox" disabled />
+                      <label key={b} className="filters-checkbox">
+                        <input type="checkbox" />
                         <span className="filters-checkbox__box"></span>
                         {b}
                       </label>
@@ -584,7 +738,7 @@ export default function SearchClient() {
               </strong>
             </p>
             <span className="sb-sort-label">Sort by</span>
-            <div className={`mini-dropdown${sortOpen ? ' is-open' : ''}`} data-mini-dropdown="">
+            <div className="mini-dropdown" data-mini-dropdown="">
               <button
                 type="button"
                 className="sb-sort-toggle mini-dropdown__toggle"
@@ -627,25 +781,19 @@ export default function SearchClient() {
             </div>
           </div>
 
-          {chips.length > 0 && (
-            <div className="filter-chips">
-              {chips.map((chip, i) => (
-                <span key={i} className="filter-chip">
-                  {chip.label}
-                  {chip.onRemove && (
-                    <button type="button" aria-label="Remove" onClick={chip.onRemove}>
-                      <XIcon />
-                    </button>
-                  )}
-                </span>
-              ))}
-              {hasActiveFilters && (
-                <button type="button" className="filter-chips__clear" onClick={resetFilters}>
-                  Clear All
-                </button>
-              )}
-            </div>
-          )}
+          <div className="filter-chips">
+            {chips.map((chip, i) => (
+              <span key={i} className="filter-chip">
+                {chip.label}
+                {chip.onRemove && <XBtn onClick={chip.onRemove} />}
+              </span>
+            ))}
+            {hasActiveFilters && (
+              <button type="button" className="filter-chips__clear" onClick={resetFilters}>
+                Clear All
+              </button>
+            )}
+          </div>
 
           {loading ? (
             <div className="broker-grid">

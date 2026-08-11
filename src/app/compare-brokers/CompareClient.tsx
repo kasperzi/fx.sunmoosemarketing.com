@@ -242,7 +242,10 @@ function BrokerColHeader({ state, isFirst }: { state: BrokerState; isFirst: bool
       <div className="cmp-broker-card">
         <div className="cmp-broker-card__top">
           {/* logo: CSS controls size (64×64, border-radius 9px) — no inline styles */}
-          {logo ? <img src={logo} alt={basic.name} /> : <div style={{ width: 64, height: 64 }} />}
+          {logo
+            ? <img src={logo} alt={basic.name} />
+            : <span className="broker-logo-placeholder broker-logo-placeholder--sm">{basic.name.charAt(0)}</span>
+          }
           <div>
             {isFirst && <span className="top10-card__badge">TOP PICK</span>}
             <p className="cmp-broker-card__name">{basic.name}</p>

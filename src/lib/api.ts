@@ -24,6 +24,7 @@ export interface Broker {
   users_count: number | null
   platforms: string[]
   instruments: string[]
+  deposit_methods: string[]
   promotion: BrokerPromotion | null
   brand_color?: string | null
 }

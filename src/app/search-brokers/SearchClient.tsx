@@ -309,6 +309,7 @@ export default function SearchClient() {
   // Filters — all empty by default (no pre-checked)
   const [selectedInstruments, setSelectedInstruments] = useState<Set<string>>(new Set())
   const [selectedPlatforms, setSelectedPlatforms] = useState<Set<string>>(new Set())
+  const [selectedDepositMethods, setSelectedDepositMethods] = useState<Set<string>>(new Set())
   const [minDeposit, setMinDeposit] = useState(0)
   const [maxDeposit, setMaxDeposit] = useState(500)
   const [minRating, setMinRating] = useState(0)
@@ -401,6 +402,15 @@ export default function SearchClient() {
     setVisibleCount(PAGE_SIZE)
   }
 
+  function toggleDepositMethod(label: string) {
+    setSelectedDepositMethods(prev => {
+      const next = new Set(prev)
+      next.has(label) ? next.delete(label) : next.add(label)
+      return next
+    })
+    setVisibleCount(PAGE_SIZE)
+  }
+
   function togglePlatform(label: string) {
     setSelectedPlatforms(prev => {
       const next = new Set(prev)
@@ -418,6 +428,7 @@ export default function SearchClient() {
   function resetFilters() {
     setSelectedInstruments(new Set<string>())
     setSelectedPlatforms(new Set<string>())
+    setSelectedDepositMethods(new Set<string>())
     setMinDeposit(0)
     setMaxDeposit(500)
     setMinRating(0)
@@ -439,6 +450,12 @@ export default function SearchClient() {
   const allPlatforms = useMemo(() => {
     const set = new Set<string>()
     brokers.forEach(b => b.platforms?.forEach(p => set.add(p)))
+    return Array.from(set).sort()
+  }, [brokers])
+
+  const allDepositMethods = useMemo(() => {
+    const set = new Set<string>()
+    brokers.forEach(b => b.deposit_methods?.forEach(m => set.add(m)))
     return Array.from(set).sort()
   }, [brokers])
 
@@ -466,6 +483,12 @@ export default function SearchClient() {
       )
     }
 
+    if (selectedDepositMethods.size > 0) {
+      result = result.filter(b =>
+        b.deposit_methods?.some(m => selectedDepositMethods.has(m))
+      )
+    }
+
     if (minDeposit > 0 || maxDeposit < 500) {
       result = result.filter(b => {
         const d = b.min_deposit ?? 0
@@ -486,7 +509,7 @@ export default function SearchClient() {
     }
 
     return result
-  }, [brokers, searchQuery, selectedInstruments, selectedPlatforms, minDeposit, maxDeposit, minRating, sortBy])
+  }, [brokers, searchQuery, selectedInstruments, selectedPlatforms, selectedDepositMethods, minDeposit, maxDeposit, minRating, sortBy])
 
   const visible = filtered.slice(0, visibleCount)
 
@@ -495,12 +518,13 @@ export default function SearchClient() {
     { label: getCountryName(country) },
     ...Array.from(selectedInstruments).map(i => ({ label: i, onRemove: () => toggleInstrument(i) })),
     ...Array.from(selectedPlatforms).map(p => ({ label: p, onRemove: () => togglePlatform(p) })),
+    ...Array.from(selectedDepositMethods).map(m => ({ label: m, onRemove: () => toggleDepositMethod(m) })),
     ...(minRating > 0 ? [{ label: `${minRating}+ Stars`, onRemove: () => setMinRating(0) }] : []),
     ...(minDeposit > 0 ? [{ label: `Min $${minDeposit}`, onRemove: () => setMinDeposit(0) }] : []),
     ...(maxDeposit < 500 ? [{ label: `Max $${maxDeposit}`, onRemove: () => setMaxDeposit(500) }] : []),
   ]
 
-  const hasActiveFilters = selectedInstruments.size > 0 || selectedPlatforms.size > 0 || minRating > 0 || minDeposit > 0 || maxDeposit < 500
+  const hasActiveFilters = selectedInstruments.size > 0 || selectedPlatforms.size > 0 || selectedDepositMethods.size > 0 || minRating > 0 || minDeposit > 0 || maxDeposit < 500
 
   const filteredCountries = COUNTRIES.filter(c =>
     c.name.toLowerCase().includes(countrySearch.toLowerCase())
@@ -715,7 +739,7 @@ export default function SearchClient() {
                 )}
               </li>
 
-              {/* Deposit Method */}
+              {/* Deposit Method — dynamic from API */}
               <li className={`filters-item${openSections.depositMethod ? ' is-open' : ''}`}>
                 <button type="button" className="filters-row" onClick={() => toggleSection('depositMethod')}>
                   Deposit Method
@@ -723,9 +747,16 @@ export default function SearchClient() {
                 </button>
                 {openSections.depositMethod && (
                   <div className="filters-content">
-                    {['Bank Transfer', 'Credit Card', 'Crypto', 'E-Wallet'].map(m => (
+                    {allDepositMethods.length === 0 && !loading && (
+                      <p style={{ fontSize: '0.85rem', color: '#888', margin: 0 }}>No deposit methods found.</p>
+                    )}
+                    {allDepositMethods.map(m => (
                       <label key={m} className="filters-checkbox">
-                        <input type="checkbox" />
+                        <input
+                          type="checkbox"
+                          checked={selectedDepositMethods.has(m)}
+                          onChange={() => toggleDepositMethod(m)}
+                        />
                         <span className="filters-checkbox__box"></span>
                         {m}
                       </label>

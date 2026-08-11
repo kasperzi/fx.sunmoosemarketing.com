@@ -1821,7 +1821,7 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 .bb-cta--overlay .bb-cta__image-wrap { position: absolute; inset: 0; }
 .bb-cta--overlay .bb-cta__shape { position: absolute; left: 409px; top: -0.88px; right: 0; height: 392px; width: auto; object-fit: fill; }
 .bb-cta--overlay .bb-cta__photo { position: absolute; top: 61.18px; left: 544.67px; width: 246.87px; height: 153.86px; border-radius: var(--radius-md); overflow: hidden; object-fit: cover; }
-.bb-cta__badge-group { position: absolute; top: 50%; left: 409px; right: 0; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.bb-cta__badge-group { position: absolute; top: 50%; left: 500px; right: 0; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 20px; }
 .bb-cta__badge { display: flex; flex-direction: column; align-items: center; gap: 8px; color: #fff; }
 .bb-cta__badge-logo { width: 72px; height: 72px; border-radius: var(--radius-md); object-fit: contain; background: #1a1a2e; padding: 8px; }
 .bb-cta__award-label { font-size: 16px; font-weight: 600; text-align: center; color: #fff; }

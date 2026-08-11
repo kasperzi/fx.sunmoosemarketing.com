@@ -126,6 +126,7 @@ async function loadDetail(slug: string): Promise<BrokerDetail | null> {
 
 // ─── Shared atoms ─────────────────────────────────────────────────────────────
 
+/** Used in broker card header — uses .star-row styles */
 function Stars({ rating }: { rating: number | null }) {
   if (!rating) return <span>—</span>
   return (
@@ -133,6 +134,17 @@ function Stars({ rating }: { rating: number | null }) {
       <img src="/assets/images/icon-star.svg" alt="" />
       <span>{parseFloat(rating.toFixed(1))}/5</span>
     </span>
+  )
+}
+
+/** Used inside .cmp-cell--value — inherits cell font-size/color, no wrapper */
+function RatingCell({ rating }: { rating: number | null }) {
+  if (!rating) return <>—</>
+  return (
+    <>
+      <img src="/assets/images/icon-star.svg" alt="" />
+      {parseFloat(rating.toFixed(1))}/5
+    </>
   )
 }
 
@@ -348,7 +360,7 @@ function CompareTable({ stateA, stateB }: { stateA: BrokerState; stateB: BrokerS
       {/* Overall */}
       <div className="cmp-row-group">
         <div className="cmp-group__head"><img src="/assets/images/rv-icon-chart-up-group.svg" alt="" /><span>Overall</span></div>
-        {row('Overall rating', (_, b) => <Stars rating={b.total_rating} />)}
+        {row('Overall rating', (_, b) => <RatingCell rating={b.total_rating} />)}
         {row('Founded', d => d.founded_year ? String(d.founded_year) : '—')}
         {row('Min deposit', (d, b) => { const v = d.accounts.min_deposit ?? b.min_deposit; return v != null ? `$${v}` : '—' })}
         {row('Max leverage', d => d.accounts.max_leverage || '—')}

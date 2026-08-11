@@ -244,6 +244,54 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
     )
   }
 
+  if (type === 'comparison_table') {
+    interface CmpBroker { broker_id: number; name: string }
+    interface CmpColumn { id: string; label: string }
+    const brokers = (data.brokers as CmpBroker[]) ?? []
+    const columns = (data.columns as CmpColumn[]) ?? []
+    const cells   = (data.cells as Record<string, string>) ?? {}
+    if (brokers.length === 0 || columns.length === 0) return null
+
+    const renderCell = (val: string) => {
+      if (val === 'yes') return <img src="/assets/images/icon-check-mark.svg" alt="Yes" className="icon-20" />
+      if (val === 'no')  return <img src="/assets/images/icon-xcircle.svg"    alt="No"  className="icon-24" />
+      return <>{val || '—'}</>
+    }
+
+    return (
+      <div key={block.id} className="bb-mini-table">
+        {/* Header row */}
+        <div className="bb-mini-table__row">
+          <div className="bb-mini-table__cell bb-mini-table__cell--head">Broker</div>
+          {columns.map((col) => (
+            <div key={col.id} className="bb-mini-table__cell bb-mini-table__cell--dropdown">
+              <div className="mini-dropdown" data-mini-dropdown>
+                <button type="button" className="bb-mini-table__dropdown mini-dropdown__toggle" aria-expanded="false">
+                  <span className="mini-dropdown__label">{col.label}</span>
+                  <img src="/assets/images/icon-caret-down.svg" alt="" className="mini-dropdown__caret" />
+                </button>
+                <ul className="mini-dropdown__panel" hidden>
+                  <li><button type="button" className="mini-dropdown__option is-selected">{col.label}</button></li>
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* Data rows */}
+        {brokers.map((b) => (
+          <div key={b.broker_id} className="bb-mini-table__row">
+            <div className="bb-mini-table__cell bb-mini-table__cell--head">{b.name}</div>
+            {columns.map((col) => (
+              <div key={col.id} className="bb-mini-table__cell">
+                {renderCell(cells[`${b.broker_id}_${col.id}`] ?? '')}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   if (type === 'broker_detail_cards') {
     const attrs = (data.attributes as string[]) ?? ['total_rating', 'min_deposit', 'max_leverage']
     return (

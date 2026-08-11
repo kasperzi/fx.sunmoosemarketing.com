@@ -23,6 +23,7 @@ export interface Broker {
   total_rating: number | null
   users_count: number | null
   platforms: string[]
+  instruments: string[]
   promotion: BrokerPromotion | null
   brand_color?: string | null
 }

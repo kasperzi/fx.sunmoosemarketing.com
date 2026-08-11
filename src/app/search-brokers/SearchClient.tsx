@@ -317,6 +317,7 @@ export default function SearchClient() {
   const [loading, setLoading] = useState(true)
 
   // Filters — all empty by default (no pre-checked)
+  const [selectedInstruments, setSelectedInstruments] = useState<Set<string>>(new Set())
   const [selectedPlatforms, setSelectedPlatforms] = useState<Set<string>>(new Set())
   const [minDeposit, setMinDeposit] = useState(0)
   const [maxDeposit, setMaxDeposit] = useState(500)
@@ -397,6 +398,15 @@ export default function SearchClient() {
     setVisibleCount(PAGE_SIZE)
   }
 
+  function toggleInstrument(label: string) {
+    setSelectedInstruments(prev => {
+      const next = new Set(prev)
+      next.has(label) ? next.delete(label) : next.add(label)
+      return next
+    })
+    setVisibleCount(PAGE_SIZE)
+  }
+
   function togglePlatform(label: string) {
     setSelectedPlatforms(prev => {
       const next = new Set(prev)
@@ -412,6 +422,7 @@ export default function SearchClient() {
   }
 
   function resetFilters() {
+    setSelectedInstruments(new Set())
     setSelectedPlatforms(new Set())
     setMinDeposit(0)
     setMaxDeposit(500)
@@ -423,6 +434,13 @@ export default function SearchClient() {
     setOpenSections(prev => ({ ...prev, [key]: !prev[key] }))
   }
 
+  // ── Derived instrument list from API data ────────────────────────────────
+  const allInstruments = useMemo(() => {
+    const set = new Set<string>()
+    brokers.forEach(b => b.instruments?.forEach(i => set.add(i)))
+    return Array.from(set).sort()
+  }, [brokers])
+
   // ── Filter + sort ─────────────────────────────────────────────────────────
   const filtered = useMemo(() => {
     let result = [...brokers]
@@ -432,6 +450,12 @@ export default function SearchClient() {
       result = result.filter(b =>
         b.name.toLowerCase().includes(q) ||
         b.platforms?.some(p => p.toLowerCase().includes(q))
+      )
+    }
+
+    if (selectedInstruments.size > 0) {
+      result = result.filter(b =>
+        b.instruments?.some(inst => selectedInstruments.has(inst))
       )
     }
 
@@ -463,20 +487,21 @@ export default function SearchClient() {
     }
 
     return result
-  }, [brokers, searchQuery, selectedPlatforms, minDeposit, maxDeposit, minRating, sortBy])
+  }, [brokers, searchQuery, selectedInstruments, selectedPlatforms, minDeposit, maxDeposit, minRating, sortBy])
 
   const visible = filtered.slice(0, visibleCount)
 
   // ── Chips ────────────────────────────────────────────────────────────────
   const chips: Array<{ label: string; onRemove?: () => void }> = [
     { label: getCountryName(country) },
+    ...Array.from(selectedInstruments).map(i => ({ label: i, onRemove: () => toggleInstrument(i) })),
     ...Array.from(selectedPlatforms).map(p => ({ label: p, onRemove: () => togglePlatform(p) })),
     ...(minRating > 0 ? [{ label: `${minRating}+ Stars`, onRemove: () => setMinRating(0) }] : []),
     ...(minDeposit > 0 ? [{ label: `Min $${minDeposit}`, onRemove: () => setMinDeposit(0) }] : []),
     ...(maxDeposit < 500 ? [{ label: `Max $${maxDeposit}`, onRemove: () => setMaxDeposit(500) }] : []),
   ]
 
-  const hasActiveFilters = selectedPlatforms.size > 0 || minRating > 0 || minDeposit > 0 || maxDeposit < 500
+  const hasActiveFilters = selectedInstruments.size > 0 || selectedPlatforms.size > 0 || minRating > 0 || minDeposit > 0 || maxDeposit < 500
 
   const filteredCountries = COUNTRIES.filter(c =>
     c.name.toLowerCase().includes(countrySearch.toLowerCase())
@@ -562,7 +587,7 @@ export default function SearchClient() {
                 )}
               </li>
 
-              {/* Instruments (UI only — no API data) */}
+              {/* Instruments — dynamic from API */}
               <li className={`filters-item${openSections.instruments ? ' is-open' : ''}`}>
                 <button type="button" className="filters-row" onClick={() => toggleSection('instruments')}>
                   Instruments
@@ -570,9 +595,16 @@ export default function SearchClient() {
                 </button>
                 {openSections.instruments && (
                   <div className="filters-content">
-                    {['General Brokers', 'Forex', 'CFDs', 'Stocks', 'Crypto', 'Options'].map(item => (
+                    {allInstruments.length === 0 && !loading && (
+                      <p style={{ fontSize: '0.85rem', color: '#888', margin: 0 }}>No instruments found.</p>
+                    )}
+                    {allInstruments.map(item => (
                       <label key={item} className="filters-checkbox">
-                        <input type="checkbox" />
+                        <input
+                          type="checkbox"
+                          checked={selectedInstruments.has(item)}
+                          onChange={() => toggleInstrument(item)}
+                        />
                         <span className="filters-checkbox__box"></span>
                         {item}
                       </label>

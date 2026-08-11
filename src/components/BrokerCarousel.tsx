@@ -13,7 +13,7 @@ function shortenPlatform(p: string): string {
 
 function BrokerCard({ broker }: { broker: Broker }) {
   const logoUrl = broker.logos?.square_light || broker.logos?.square_dark || null
-  const brokerUrl = broker.affiliate_link || '#'
+  const brokerUrl = broker.affiliate_link
   const reviewUrl = `/broker/${broker.slug}`
   const minDeposit = broker.min_deposit != null ? `$${broker.min_deposit}` : '—'
   const minSpread = broker.min_spread != null ? `${broker.min_spread} pips` : '—'
@@ -81,9 +81,11 @@ function BrokerCard({ broker }: { broker: Broker }) {
       </ul>
 
       <div className="broker-card__ctas">
-        <a href={brokerUrl} className="btn btn--primary btn--block" target="_blank" rel="noopener noreferrer">
-          Visit Broker
-        </a>
+        {brokerUrl && (
+          <a href={brokerUrl} className="btn btn--primary btn--block" target="_blank" rel="noopener noreferrer nofollow">
+            Visit Broker
+          </a>
+        )}
         <a href={reviewUrl} className="btn btn--text btn--text--px btn--center">
           Read Review <img src="/assets/images/icon-arrow-right.svg" alt="" />
         </a>

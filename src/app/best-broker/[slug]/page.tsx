@@ -266,7 +266,7 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
     }
     const bcBrokers = (data.brokers as BcBroker[]) ?? []
     if (bcBrokers.length === 0) return null
-    const checkIcon = '/assets/images/icon-check-mark.svg'
+    const checkIcon = '/assets/images/icon-check-fill-solid.svg'
     const xIcon     = '/assets/images/icon-xcircle.svg'
     const arrowIcon = '/assets/images/icon-arrow-right-duotone.svg'
     const boolVal   = (v: boolean | undefined) =>

@@ -161,7 +161,7 @@ export default function CompareBrokersPage() {
                 <h2>Get the latest forex news, broker updates, and trading insights</h2>
                 <p className="lead">Join our newsletter for broker updates, trading insights, and market trends delivered straight to your inbox.</p>
               </div>
-              <form className="subscribe" onSubmit={e => e.preventDefault()}>
+              <form className="subscribe">
                 <div className="subscribe__field">
                   <img src="/assets/images/icon-email.svg" alt="" />
                   <input type="email" placeholder="Enter your email address" required />

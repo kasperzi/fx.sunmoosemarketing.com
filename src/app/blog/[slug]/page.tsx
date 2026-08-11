@@ -303,7 +303,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
 
       {/* Article body */}
       <section className="rv-article">
-        <div className="section-inner">
+        <div className="section-inner" style={{ paddingTop: 0 }}>
           <div className="rv-article__layout">
 
             {/* Main content */}

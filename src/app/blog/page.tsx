@@ -65,7 +65,7 @@ export default function BlogIndexPage() {
 
           <Nav />
 
-          <div className="hero__main hero__main--search-centered">
+          <div className="hero__main hero__main--search hero__main--search-centered">
 
             {/* Breadcrumb */}
             <div className="breadcrumb" style={{ alignSelf: 'flex-start' }}>

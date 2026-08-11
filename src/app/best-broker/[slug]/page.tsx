@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
+import VideoLightbox from '@/components/VideoLightbox'
 
 export const dynamic = 'force-dynamic'
 
@@ -188,22 +189,28 @@ function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) 
     const url = String(data.url ?? '')
     if (!url) return null
     const embedUrl = url
-      .replace('youtube.com/watch?v=', 'youtube.com/embed/')
+      .replace('watch?v=', 'embed/')
       .replace('youtu.be/', 'youtube.com/embed/')
-    const videoTitle = String(data.title ?? 'Video')
+    const videoTitle    = String(data.title         ?? 'Video')
+    const thumbnailUrl  = data.thumbnail_url ? String(data.thumbnail_url) : null
+
     return (
       <section key={block.id} className="bb-block bb-block--video">
         <div className="section-inner">
-          {url && <p className="bb-video__title">{videoTitle}</p>}
-          <div className="bb-video__wrap" style={{ position: 'relative', paddingBottom: '56.25%', height: 0 }}>
-            <iframe
-              src={embedUrl}
-              title={videoTitle}
-              frameBorder="0"
-              allowFullScreen
-              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', borderRadius: 8 }}
-            />
-          </div>
+          {videoTitle && <p className="bb-video__title">{videoTitle}</p>}
+          {thumbnailUrl ? (
+            <VideoLightbox embedUrl={embedUrl} thumbnailUrl={thumbnailUrl} title={videoTitle} />
+          ) : (
+            <div className="bb-video__wrap" style={{ position: 'relative', paddingBottom: '56.25%', height: 0 }}>
+              <iframe
+                src={embedUrl}
+                title={videoTitle}
+                frameBorder="0"
+                allowFullScreen
+                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', borderRadius: 8 }}
+              />
+            </div>
+          )}
         </div>
       </section>
     )

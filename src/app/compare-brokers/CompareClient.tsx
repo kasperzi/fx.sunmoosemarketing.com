@@ -34,7 +34,6 @@ interface Instrument {
   attribute_item_id: number
   instrument: string
   asset_count?: string | null
-  leverage?: string | null
 }
 
 interface PaymentMethod {
@@ -89,46 +88,53 @@ interface BrokerState {
   loading: boolean
 }
 
-// ─── Utilities ────────────────────────────────────────────────────────────────
+// ─── Utils ────────────────────────────────────────────────────────────────────
 
-function getBrokerLogo(logos: BrokerLogos): string | null {
+function getSquareLogo(logos: BrokerLogos): string | null {
+  return logos.square_light || logos.square_dark || logos.rectangle_light || logos.rectangle_dark || null
+}
+
+function getRectLogo(logos: BrokerLogos): string | null {
   return logos.rectangle_light || logos.square_light || logos.square_dark || logos.rectangle_dark || null
 }
 
-function unionTitles(
-  a: PivotItem[] | undefined | null,
-  b: PivotItem[] | undefined | null,
-): string[] {
-  const set = new Set([
-    ...(a?.map(x => x.title) ?? []),
-    ...(b?.map(x => x.title) ?? []),
-  ])
-  return Array.from(set).sort()
+function unionTitles(a?: PivotItem[] | null, b?: PivotItem[] | null): string[] {
+  return Array.from(new Set([...(a?.map(x => x.title) ?? []), ...(b?.map(x => x.title) ?? [])])).sort()
 }
 
-function unionInstruments(
-  a: Instrument[] | undefined | null,
-  b: Instrument[] | undefined | null,
-): string[] {
-  const set = new Set([
-    ...(a?.map(x => x.instrument) ?? []),
-    ...(b?.map(x => x.instrument) ?? []),
-  ])
-  return Array.from(set).sort()
+function unionInstruments(a?: Instrument[] | null, b?: Instrument[] | null): string[] {
+  return Array.from(new Set([...(a?.map(x => x.instrument) ?? []), ...(b?.map(x => x.instrument) ?? [])])).sort()
 }
 
-function unionPayments(
-  a: PaymentMethod[] | undefined | null,
-  b: PaymentMethod[] | undefined | null,
-): string[] {
-  const set = new Set([
-    ...(a?.map(x => x.method) ?? []),
-    ...(b?.map(x => x.method) ?? []),
-  ])
-  return Array.from(set).sort()
+function unionPayments(a?: PaymentMethod[] | null, b?: PaymentMethod[] | null): string[] {
+  return Array.from(new Set([...(a?.map(x => x.method) ?? []), ...(b?.map(x => x.method) ?? [])])).sort()
 }
 
-// ─── Atom components ──────────────────────────────────────────────────────────
+async function loadBrokers(): Promise<BrokerBasic[]> {
+  const json = await fetch('/api/brokers?per_page=500&page=1').then(r => r.json())
+  return ((json.data ?? json ?? []) as BrokerBasic[]).sort((a, b) => a.name.localeCompare(b.name))
+}
+
+async function loadDetail(slug: string): Promise<BrokerDetail | null> {
+  try {
+    const json = await fetch(`/api/brokers/${slug}`).then(r => r.json())
+    return json.data ?? json ?? null
+  } catch {
+    return null
+  }
+}
+
+// ─── Shared atoms ─────────────────────────────────────────────────────────────
+
+function Stars({ rating }: { rating: number | null }) {
+  if (!rating) return <span>—</span>
+  const nodes: React.ReactNode[] = []
+  for (let i = 1; i <= 5; i++) {
+    if (rating >= i) nodes.push(<img key={i} src="/assets/images/icon-star.svg" alt="" />)
+    else if (rating >= i - 0.5) nodes.push(<img key={i} src="/assets/images/icon-star-half.svg" alt="" />)
+  }
+  return <span className="star-row">{nodes}<span>{parseFloat(rating.toFixed(1))}/5</span></span>
+}
 
 function CheckNode({ val }: { val: boolean }) {
   return (
@@ -136,37 +142,107 @@ function CheckNode({ val }: { val: boolean }) {
       <img
         src={val ? '/assets/images/icon-check-fill-solid.svg' : '/assets/images/rv-icon-negative-outline.svg'}
         alt={val ? 'Yes' : 'No'}
-        style={{ width: 20, height: 20 }}
+        style={{ width: 24, height: 24 }}
       />{' '}
       {val ? 'Yes' : 'No'}
     </>
   )
 }
 
-function Stars({ rating }: { rating: number | null }) {
-  if (!rating) return <span>—</span>
-  const stars: React.ReactNode[] = []
-  for (let i = 1; i <= 5; i++) {
-    if (rating >= i) stars.push(<img key={i} src="/assets/images/icon-star.svg" alt="" />)
-    else if (rating >= i - 0.5) stars.push(<img key={i} src="/assets/images/icon-star-half.svg" alt="" />)
-  }
-  return <span className="star-row">{stars}<span>{parseFloat(rating.toFixed(1))}/5</span></span>
+// ─── Broker dropdown ──────────────────────────────────────────────────────────
+
+interface DropdownProps {
+  allBrokers: BrokerBasic[]
+  selected: BrokerBasic | null
+  placeholder: string
+  onSelect: (b: BrokerBasic) => void
+  excludeSlug?: string | null
 }
 
-// ─── Broker column header ─────────────────────────────────────────────────────
+function BrokerDropdown({ allBrokers, selected, placeholder, onSelect, excludeSlug }: DropdownProps) {
+  const [open, setOpen] = useState(false)
+  const [search, setSearch] = useState('')
+  const ref = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) { setOpen(false); setSearch('') }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  useEffect(() => { if (open) inputRef.current?.focus() }, [open])
+
+  const filtered = allBrokers
+    .filter(b => b.slug !== excludeSlug)
+    .filter(b => !search || b.name.toLowerCase().includes(search.toLowerCase()))
+
+  const logo = selected ? getRectLogo(selected.logos) : null
+
+  return (
+    <div className="country-select broker-select" ref={ref}>
+      <button
+        type="button"
+        className="select-row country-toggle broker-toggle"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen(p => !p)}
+      >
+        {logo
+          ? <img src={logo} alt={selected!.name} className="broker-toggle__icon" style={{ width: 28, height: 28, objectFit: 'contain' }} />
+          : <img src="/assets/images/icon-search.svg" alt="" className="broker-toggle__icon" />
+        }
+        <span className={`select-value${!selected ? ' broker-toggle__placeholder' : ''}`}>
+          {selected ? selected.name : placeholder}
+        </span>
+        <img src="/assets/images/icon-chevron-down.svg" alt="" className="icon-24 select-chevron" />
+      </button>
+
+      {open && (
+        <div className="country-dropdown broker-dropdown">
+          <div className="country-search">
+            <img src="/assets/images/icon-search.svg" alt="" />
+            <input ref={inputRef} type="text" placeholder="Search broker..." autoComplete="off"
+              value={search} onChange={e => setSearch(e.target.value)} />
+          </div>
+          <ul className="country-list broker-list" role="listbox">
+            {filtered.map(b => {
+              const bLogo = getRectLogo(b.logos)
+              return (
+                <li key={b.slug}
+                  className={`country-option broker-option${selected?.slug === b.slug ? ' country-option--selected' : ''}`}
+                  role="option"
+                  onClick={() => { onSelect(b); setOpen(false); setSearch('') }}
+                >
+                  {bLogo && <img src={bLogo} alt="" className="broker-option__logo" />}
+                  {b.name}
+                </li>
+              )
+            })}
+          </ul>
+          {!filtered.length && <p className="country-empty">No brokers found.</p>}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ─── Comparison table ─────────────────────────────────────────────────────────
 
 function BrokerColHeader({ state, isFirst }: { state: BrokerState; isFirst: boolean }) {
   const { basic, detail } = state
-  const logo = getBrokerLogo(basic.logos)
+  // CSS expects 64×64 square logo
+  const logo = getSquareLogo(basic.logos)
   const affiliateLink = detail?.affiliate_link || basic.affiliate_link
 
   return (
     <div className="cmp-broker-col">
       <div className="cmp-broker-card">
         <div className="cmp-broker-card__top">
-          {logo && (
-            <img src={logo} alt={basic.name} style={{ height: 44, maxWidth: 120, objectFit: 'contain' }} />
-          )}
+          {/* logo: CSS controls size (64×64, border-radius 9px) — no inline styles */}
+          {logo ? <img src={logo} alt={basic.name} /> : <div style={{ width: 64, height: 64 }} />}
           <div>
             {isFirst && <span className="top10-card__badge">TOP PICK</span>}
             <p className="cmp-broker-card__name">{basic.name}</p>
@@ -175,16 +251,11 @@ function BrokerColHeader({ state, isFirst }: { state: BrokerState; isFirst: bool
         </div>
       </div>
       <div className="broker-card__ctas">
-        {affiliateLink && (
-          <a
-            href={affiliateLink}
-            className={`btn ${isFirst ? 'btn--secondary' : 'btn--primary'} btn--block`}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            Visit Broker
-          </a>
-        )}
+        {affiliateLink
+          ? <a href={affiliateLink} className={`btn ${isFirst ? 'btn--secondary' : 'btn--primary'} btn--block`}
+              target="_blank" rel="noopener noreferrer nofollow">Visit Broker</a>
+          : <span />
+        }
         <a href={`/broker/${basic.slug}`} className="btn btn--text btn--text--px btn--center">
           Read Review <img src="/assets/images/icon-arrow-right.svg" alt="" />
         </a>
@@ -192,8 +263,6 @@ function BrokerColHeader({ state, isFirst }: { state: BrokerState; isFirst: bool
     </div>
   )
 }
-
-// ─── Comparison table ─────────────────────────────────────────────────────────
 
 function CompareTable({ stateA, stateB }: { stateA: BrokerState; stateB: BrokerState | null }) {
   const dA = stateA.detail
@@ -206,56 +275,40 @@ function CompareTable({ stateA, stateB }: { stateA: BrokerState; stateB: BrokerS
   const allChannels    = unionTitles(dA?.support.channels, dB?.support.channels)
   const allPayments    = unionPayments(dA?.payment_methods, dB?.payment_methods)
 
-  // Render value cell for one broker
-  function cell(
-    state: BrokerState,
-    render: (d: BrokerDetail, basic: BrokerBasic) => React.ReactNode,
-    last?: boolean,
-  ): React.ReactElement {
-    let content: React.ReactNode
-    if (state.loading) content = <span style={{ opacity: 0.35 }}>…</span>
-    else if (!state.detail) content = '—'
-    else content = render(state.detail, state.basic)
+  // Render one value cell for a broker
+  function cell(state: BrokerState, render: (d: BrokerDetail, b: BrokerBasic) => React.ReactNode, last?: boolean) {
+    const content = state.loading
+      ? <span style={{ opacity: 0.35 }}>…</span>
+      : state.detail ? render(state.detail, state.basic) : '—'
     return <div className={`cmp-cell cmp-cell--value${last ? ' cmp-cell--last' : ''}`}>{content}</div>
   }
 
-  // Render a full row (label + 2 value cells)
-  function row(
-    label: string,
-    renderFn: (d: BrokerDetail, basic: BrokerBasic) => React.ReactNode,
-    last?: boolean,
-  ): React.ReactElement {
+  // Full row: label + broker A cell + broker B cell (or placeholder)
+  function row(label: string, renderFn: (d: BrokerDetail, b: BrokerBasic) => React.ReactNode, last?: boolean) {
     return (
       <>
         <div className={`cmp-cell${last ? ' cmp-cell--last' : ''}`}>{label}</div>
         {cell(stateA, renderFn, last)}
-        {stateB
-          ? cell(stateB, renderFn, last)
-          : <div className={`cmp-cell cmp-cell--value${last ? ' cmp-cell--last' : ''}`}>—</div>
-        }
+        {stateB ? cell(stateB, renderFn, last) : <div className={`cmp-cell cmp-cell--value${last ? ' cmp-cell--last' : ''}`}>—</div>}
       </>
     )
   }
 
-  // Bool row shorthand
-  function boolRow(label: string, getVal: (d: BrokerDetail) => boolean, last?: boolean) {
-    return row(label, (d) => <CheckNode val={getVal(d)} />, last)
+  function boolRow(label: string, fn: (d: BrokerDetail) => boolean, last?: boolean) {
+    return row(label, d => <CheckNode val={fn(d)} />, last)
   }
 
-  // Dynamic rows from a union list — check/cross for each broker
-  function dynamicRows(
+  // Dynamic rows: one row per item in the union list
+  function dynRows(
     items: string[],
-    hasA: (title: string) => boolean,
-    hasB: (title: string) => boolean,
-  ): React.ReactNode {
+    hasA: (t: string) => boolean,
+    hasB: (t: string) => boolean,
+  ) {
     if (!items.length) return null
     return items.map((title, idx) => {
       const last = idx === items.length - 1
-      const valA = stateA.loading ? null : (dA != null ? hasA(title) : null)
-      const valB = stateB
-        ? (stateB.loading ? null : (dB != null ? hasB(title) : null))
-        : undefined // stateB not selected at all
-
+      const valA = stateA.loading ? null : dA != null ? hasA(title) : null
+      const valB = stateB ? (stateB.loading ? null : dB != null ? hasB(title) : null) : undefined
       return (
         <Fragment key={title}>
           <div className={`cmp-cell${last ? ' cmp-cell--last' : ''}`}>{title}</div>
@@ -273,7 +326,7 @@ function CompareTable({ stateA, stateB }: { stateA: BrokerState; stateB: BrokerS
   return (
     <div className="cmp-table">
 
-      {/* Broker header cards */}
+      {/* Header */}
       <div className="cmp-table__head">
         <div className="cmp-table__head-label"><p>Feature</p></div>
         <BrokerColHeader state={stateA} isFirst />
@@ -281,7 +334,7 @@ function CompareTable({ stateA, stateB }: { stateA: BrokerState; stateB: BrokerS
           ? <BrokerColHeader state={stateB} isFirst={false} />
           : (
             <div className="cmp-broker-col" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <p style={{ fontSize: 14, textAlign: 'center', padding: '24px 16px', opacity: 0.5 }}>
+              <p style={{ fontSize: 14, textAlign: 'center', padding: 24, opacity: 0.5 }}>
                 Select a second broker above to compare
               </p>
             </div>
@@ -289,153 +342,103 @@ function CompareTable({ stateA, stateB }: { stateA: BrokerState; stateB: BrokerS
         }
       </div>
 
-      {/* ── Overall ── */}
+      {/* Overall */}
       <div className="cmp-row-group">
-        <div className="cmp-group__head">
-          <img src="/assets/images/rv-icon-chart-up-group.svg" alt="" />
-          <span>Overall</span>
-        </div>
+        <div className="cmp-group__head"><img src="/assets/images/rv-icon-chart-up-group.svg" alt="" /><span>Overall</span></div>
         {row('Overall rating', (_, b) => <Stars rating={b.total_rating} />)}
-        {row('Founded', (d) => d.founded_year ? String(d.founded_year) : '—')}
-        {row('Min deposit', (d, b) => {
-          const dep = d.accounts.min_deposit ?? b.min_deposit
-          return dep != null ? `$${dep}` : '—'
-        })}
-        {row('Max leverage', (d) => d.accounts.max_leverage || '—')}
-        {boolRow('Accepts US clients', (d) => d.accounts.accepts_us_clients, true)}
+        {row('Founded', d => d.founded_year ? String(d.founded_year) : '—')}
+        {row('Min deposit', (d, b) => { const v = d.accounts.min_deposit ?? b.min_deposit; return v != null ? `$${v}` : '—' })}
+        {row('Max leverage', d => d.accounts.max_leverage || '—')}
+        {boolRow('Accepts US clients', d => d.accounts.accepts_us_clients, true)}
       </div>
 
-      {/* ── Account features ── */}
+      {/* Account features */}
       <div className="cmp-row-group">
-        <div className="cmp-group__head">
-          <img src="/assets/images/icon-user.svg" alt="" />
-          <span>Account features</span>
-        </div>
-        {boolRow('Demo account', (d) => d.accounts.has_demo_accounts)}
-        {boolRow('Islamic account', (d) => d.accounts.has_islamic_accounts)}
-        {boolRow('Swap-free account', (d) => d.accounts.has_swap_free)}
-        {boolRow('Managed accounts', (d) => d.accounts.has_managed_accounts)}
-        {boolRow('Hedging allowed', (d) => d.accounts.has_hedging)}
-        {boolRow('EAs / robots allowed', (d) => d.accounts.has_eas_allowed)}
-        {boolRow('Trailing stop', (d) => d.accounts.has_trailing_stop, true)}
+        <div className="cmp-group__head"><img src="/assets/images/icon-user.svg" alt="" /><span>Account features</span></div>
+        {boolRow('Demo account', d => d.accounts.has_demo_accounts)}
+        {boolRow('Islamic account', d => d.accounts.has_islamic_accounts)}
+        {boolRow('Swap-free account', d => d.accounts.has_swap_free)}
+        {boolRow('Managed accounts', d => d.accounts.has_managed_accounts)}
+        {boolRow('Hedging allowed', d => d.accounts.has_hedging)}
+        {boolRow('EAs / robots allowed', d => d.accounts.has_eas_allowed)}
+        {boolRow('Trailing stop', d => d.accounts.has_trailing_stop, true)}
       </div>
 
-      {/* ── Fees ── */}
+      {/* Fees */}
       <div className="cmp-row-group">
-        <div className="cmp-group__head">
-          <img src="/assets/images/rv-icon-coin-group.svg" alt="" />
-          <span>Fees</span>
-        </div>
+        <div className="cmp-group__head"><img src="/assets/images/rv-icon-coin-group.svg" alt="" /><span>Fees</span></div>
         {row('EUR/USD min spread', (_, b) => b.min_spread != null ? `From ${b.min_spread} pips` : '—', true)}
       </div>
 
-      {/* ── Platforms — dynamic ── */}
+      {/* Platforms (dynamic) */}
       {allPlatforms.length > 0 && (
         <div className="cmp-row-group">
-          <div className="cmp-group__head">
-            <img src="/assets/images/rv-icon-screen-pc-tower.svg" alt="" />
-            <span>Platforms</span>
-          </div>
-          {dynamicRows(
-            allPlatforms,
-            (t) => !!dA?.accounts.platforms.some(p => p.title === t),
-            (t) => !!dB?.accounts.platforms.some(p => p.title === t),
-          )}
+          <div className="cmp-group__head"><img src="/assets/images/rv-icon-screen-pc-tower.svg" alt="" /><span>Platforms</span></div>
+          {dynRows(allPlatforms,
+            t => !!dA?.accounts.platforms.some(p => p.title === t),
+            t => !!dB?.accounts.platforms.some(p => p.title === t))}
         </div>
       )}
 
-      {/* ── Execution types — dynamic ── */}
+      {/* Execution (dynamic) */}
       {allExecTypes.length > 0 && (
         <div className="cmp-row-group">
-          <div className="cmp-group__head">
-            <img src="/assets/images/icon-arrow-swap-filled.svg" alt="" />
-            <span>Execution</span>
-          </div>
-          {dynamicRows(
-            allExecTypes,
-            (t) => !!dA?.accounts.execution_types.some(e => e.title === t),
-            (t) => !!dB?.accounts.execution_types.some(e => e.title === t),
-          )}
+          <div className="cmp-group__head"><img src="/assets/images/icon-arrow-swap-filled.svg" alt="" /><span>Execution</span></div>
+          {dynRows(allExecTypes,
+            t => !!dA?.accounts.execution_types.some(e => e.title === t),
+            t => !!dB?.accounts.execution_types.some(e => e.title === t))}
         </div>
       )}
 
-      {/* ── Account currencies — dynamic ── */}
+      {/* Account currencies (dynamic) */}
       {allCurrencies.length > 0 && (
         <div className="cmp-row-group">
-          <div className="cmp-group__head">
-            <img src="/assets/images/rv-icon-coin-group.svg" alt="" />
-            <span>Account currencies</span>
-          </div>
-          {dynamicRows(
-            allCurrencies,
-            (t) => !!dA?.accounts.currencies.some(c => c.title === t),
-            (t) => !!dB?.accounts.currencies.some(c => c.title === t),
-          )}
+          <div className="cmp-group__head"><img src="/assets/images/rv-icon-coin-group.svg" alt="" /><span>Account currencies</span></div>
+          {dynRows(allCurrencies,
+            t => !!dA?.accounts.currencies.some(c => c.title === t),
+            t => !!dB?.accounts.currencies.some(c => c.title === t))}
         </div>
       )}
 
-      {/* ── Instruments — dynamic ── */}
+      {/* Instruments (dynamic) */}
       {allInstruments.length > 0 && (
         <div className="cmp-row-group">
-          <div className="cmp-group__head">
-            <img src="/assets/images/icon-trading-pattern.svg" alt="" />
-            <span>Instruments</span>
-          </div>
-          {dynamicRows(
-            allInstruments,
-            (t) => !!dA?.instruments.some(i => i.instrument === t),
-            (t) => !!dB?.instruments.some(i => i.instrument === t),
-          )}
+          <div className="cmp-group__head"><img src="/assets/images/icon-trading-pattern.svg" alt="" /><span>Instruments</span></div>
+          {dynRows(allInstruments,
+            t => !!dA?.instruments.some(i => i.instrument === t),
+            t => !!dB?.instruments.some(i => i.instrument === t))}
         </div>
       )}
 
-      {/* ── Regulation & Safety ── */}
+      {/* Regulation */}
       <div className="cmp-row-group">
-        <div className="cmp-group__head">
-          <img src="/assets/images/icon-shield-check-outline.svg" alt="" />
-          <span>Regulation &amp; Safety</span>
-        </div>
-        {boolRow('Regulated', (d) => d.regulation.is_regulated)}
-        {row('Regulators', (d) => {
-          const regs = d.regulation.regulators
-          return regs.length > 0 ? regs.map(r => r.title).join(', ') : '—'
-        })}
-        {boolRow('Negative balance protection', (d) => d.regulation.has_negative_balance_protection, true)}
+        <div className="cmp-group__head"><img src="/assets/images/icon-shield-check-outline.svg" alt="" /><span>Regulation &amp; Safety</span></div>
+        {boolRow('Regulated', d => d.regulation.is_regulated)}
+        {row('Regulators', d => d.regulation.regulators.length ? d.regulation.regulators.map(r => r.title).join(', ') : '—')}
+        {boolRow('Negative balance protection', d => d.regulation.has_negative_balance_protection, true)}
       </div>
 
-      {/* ── Support ── */}
+      {/* Support */}
       <div className="cmp-row-group">
-        <div className="cmp-group__head">
-          <img src="/assets/images/rv-icon-language.svg" alt="" />
-          <span>Support</span>
-        </div>
+        <div className="cmp-group__head"><img src="/assets/images/rv-icon-language.svg" alt="" /><span>Support</span></div>
         {allChannels.length > 0
-          ? (
-            <>
-              {boolRow('24/7 support', (d) => d.support.has_24_7_support)}
-              {dynamicRows(
-                allChannels,
-                (t) => !!dA?.support.channels.some(c => c.title === t),
-                (t) => !!dB?.support.channels.some(c => c.title === t),
-              )}
+          ? <>
+              {boolRow('24/7 support', d => d.support.has_24_7_support)}
+              {dynRows(allChannels,
+                t => !!dA?.support.channels.some(c => c.title === t),
+                t => !!dB?.support.channels.some(c => c.title === t))}
             </>
-          )
-          : boolRow('24/7 support', (d) => d.support.has_24_7_support, true)
+          : boolRow('24/7 support', d => d.support.has_24_7_support, true)
         }
       </div>
 
-      {/* ── Deposit & Withdrawal — dynamic ── */}
+      {/* Deposit & Withdrawal (dynamic) */}
       {allPayments.length > 0 && (
         <div className="cmp-row-group">
-          <div className="cmp-group__head">
-            <img src="/assets/images/icon-card.svg" alt="" />
-            <span>Deposit &amp; Withdrawal</span>
-          </div>
-          {dynamicRows(
-            allPayments,
-            (t) => !!dA?.payment_methods.some(p => p.method === t),
-            (t) => !!dB?.payment_methods.some(p => p.method === t),
-          )}
+          <div className="cmp-group__head"><img src="/assets/images/icon-card.svg" alt="" /><span>Deposit &amp; Withdrawal</span></div>
+          {dynRows(allPayments,
+            t => !!dA?.payment_methods.some(p => p.method === t),
+            t => !!dB?.payment_methods.some(p => p.method === t))}
         </div>
       )}
 
@@ -443,101 +446,9 @@ function CompareTable({ stateA, stateB }: { stateA: BrokerState; stateB: BrokerS
   )
 }
 
-// ─── Broker dropdown ──────────────────────────────────────────────────────────
+// ─── Export 1: Selector card (goes INSIDE hero) ───────────────────────────────
 
-interface BrokerDropdownProps {
-  allBrokers: BrokerBasic[]
-  selected: BrokerBasic | null
-  placeholder: string
-  onSelect: (broker: BrokerBasic) => void
-  excludeSlug?: string | null
-}
-
-function BrokerDropdown({ allBrokers, selected, placeholder, onSelect, excludeSlug }: BrokerDropdownProps) {
-  const [open, setOpen] = useState(false)
-  const [search, setSearch] = useState('')
-  const ref = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    function handler(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false)
-        setSearch('')
-      }
-    }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [])
-
-  useEffect(() => {
-    if (open && inputRef.current) inputRef.current.focus()
-  }, [open])
-
-  const filtered = allBrokers
-    .filter(b => b.slug !== excludeSlug)
-    .filter(b => !search || b.name.toLowerCase().includes(search.toLowerCase()))
-
-  const logo = selected ? getBrokerLogo(selected.logos) : null
-
-  return (
-    <div className="country-select broker-select" ref={ref}>
-      <button
-        type="button"
-        className="select-row country-toggle broker-toggle"
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        onClick={() => setOpen(prev => !prev)}
-      >
-        {logo
-          ? <img src={logo} alt={selected!.name} className="broker-toggle__icon" style={{ width: 28, height: 28, objectFit: 'contain' }} />
-          : <img src="/assets/images/icon-search.svg" alt="" className="broker-toggle__icon" />
-        }
-        <span className={`select-value${!selected ? ' broker-toggle__placeholder' : ''}`}>
-          {selected ? selected.name : placeholder}
-        </span>
-        <img src="/assets/images/icon-chevron-down.svg" alt="" className="icon-24 select-chevron" />
-      </button>
-
-      {open && (
-        <div className="country-dropdown broker-dropdown">
-          <div className="country-search">
-            <img src="/assets/images/icon-search.svg" alt="" />
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder="Search broker..."
-              autoComplete="off"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-            />
-          </div>
-          <ul className="country-list broker-list" role="listbox">
-            {filtered.map(broker => {
-              const bLogo = getBrokerLogo(broker.logos)
-              return (
-                <li
-                  key={broker.slug}
-                  className={`country-option broker-option${selected?.slug === broker.slug ? ' country-option--selected' : ''}`}
-                  role="option"
-                  onClick={() => { onSelect(broker); setOpen(false); setSearch('') }}
-                >
-                  {bLogo && <img src={bLogo} alt="" className="broker-option__logo" />}
-                  {broker.name}
-                </li>
-              )
-            })}
-          </ul>
-          {filtered.length === 0 && <p className="country-empty">No brokers found.</p>}
-        </div>
-      )}
-    </div>
-  )
-}
-
-// ─── Main component ───────────────────────────────────────────────────────────
-
-export default function CompareClient() {
+export function CompareSelectorCard() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const slugA = searchParams.get('a')
@@ -547,104 +458,106 @@ export default function CompareClient() {
   const [loadingList, setLoadingList] = useState(true)
   const [selectedA, setSelectedA] = useState<BrokerBasic | null>(null)
   const [selectedB, setSelectedB] = useState<BrokerBasic | null>(null)
+
+  useEffect(() => {
+    loadBrokers().then(brokers => {
+      setAllBrokers(brokers)
+      setLoadingList(false)
+      if (slugA) setSelectedA(brokers.find(b => b.slug === slugA) ?? null)
+      if (slugB) setSelectedB(brokers.find(b => b.slug === slugB) ?? null)
+    })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  function updateUrl(a: BrokerBasic | null, b: BrokerBasic | null) {
+    const p = new URLSearchParams()
+    if (a) p.set('a', a.slug)
+    if (b) p.set('b', b.slug)
+    router.replace(`/compare-brokers${p.toString() ? `?${p}` : ''}`, { scroll: false })
+  }
+
+  return (
+    <div className="cmp-selector-card">
+      <div className="cmp-selector-card__head">
+        <p>Select Brokers to Compare</p>
+        <p className="lead">Choose two brokers below to generate a side-by-side comparison.</p>
+      </div>
+      <div className="cmp-selector-row">
+        <div className="cmp-select">
+          <label>Select first broker</label>
+          <BrokerDropdown
+            allBrokers={allBrokers}
+            selected={selectedA}
+            placeholder={loadingList ? 'Loading brokers…' : 'Search first broker...'}
+            onSelect={b => { setSelectedA(b); updateUrl(b, selectedB) }}
+            excludeSlug={selectedB?.slug}
+          />
+        </div>
+        <div className="cmp-select">
+          <label>Select second broker</label>
+          <BrokerDropdown
+            allBrokers={allBrokers}
+            selected={selectedB}
+            placeholder={loadingList ? 'Loading brokers…' : 'Search second broker...'}
+            onSelect={b => { setSelectedB(b); updateUrl(selectedA, b) }}
+            excludeSlug={selectedA?.slug}
+          />
+        </div>
+      </div>
+      <div className="cmp-selector-card__submit">
+        <button type="button" className="btn btn--secondary"
+          onClick={() => updateUrl(selectedA, selectedB)}
+          disabled={!selectedA && !selectedB}>
+          Compare Brokers
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ─── Export 2: Comparison table section (goes OUTSIDE hero) ──────────────────
+
+export function CompareTableSection() {
+  const searchParams = useSearchParams()
+  const slugA = searchParams.get('a')
+  const slugB = searchParams.get('b')
+
+  const [allBrokers, setAllBrokers] = useState<BrokerBasic[]>([])
   const [stateA, setStateA] = useState<BrokerState | null>(null)
   const [stateB, setStateB] = useState<BrokerState | null>(null)
 
-  // Load broker list once on mount
+  // Load broker list for basic info (total_rating, min_spread)
   useEffect(() => {
-    fetch('/api/brokers?per_page=500&page=1')
-      .then(r => r.json())
-      .then(json => {
-        const brokers: BrokerBasic[] = (json.data ?? json ?? [])
-          .sort((a: BrokerBasic, b: BrokerBasic) => a.name.localeCompare(b.name))
-        setAllBrokers(brokers)
-        setLoadingList(false)
-        if (slugA) { const f = brokers.find(b => b.slug === slugA); if (f) setSelectedA(f) }
-        if (slugB) { const f = brokers.find(b => b.slug === slugB); if (f) setSelectedB(f) }
-      })
-      .catch(() => setLoadingList(false))
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    if (!slugA && !slugB) return
+    loadBrokers().then(setAllBrokers)
+  }, [!!slugA, !!slugB]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Fetch broker detail when selection changes
+  // Load detail for broker A
   useEffect(() => {
-    if (!selectedA) { setStateA(null); return }
-    setStateA({ basic: selectedA, detail: null, loading: true })
-    fetch(`/api/brokers/${selectedA.slug}`)
-      .then(r => r.json())
-      .then(json => setStateA({ basic: selectedA, detail: json.data ?? json, loading: false }))
-      .catch(() => setStateA({ basic: selectedA, detail: null, loading: false }))
-  }, [selectedA?.slug]) // eslint-disable-line react-hooks/exhaustive-deps
+    if (!slugA) { setStateA(null); return }
+    const basic = allBrokers.find(b => b.slug === slugA)
+    if (!basic && allBrokers.length === 0) return // list not loaded yet
+    if (!basic) { setStateA(null); return }
+    setStateA({ basic, detail: null, loading: true })
+    loadDetail(slugA).then(detail => setStateA({ basic, detail, loading: false }))
+  }, [slugA, allBrokers]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Load detail for broker B
   useEffect(() => {
-    if (!selectedB) { setStateB(null); return }
-    setStateB({ basic: selectedB, detail: null, loading: true })
-    fetch(`/api/brokers/${selectedB.slug}`)
-      .then(r => r.json())
-      .then(json => setStateB({ basic: selectedB, detail: json.data ?? json, loading: false }))
-      .catch(() => setStateB({ basic: selectedB, detail: null, loading: false }))
-  }, [selectedB?.slug]) // eslint-disable-line react-hooks/exhaustive-deps
+    if (!slugB) { setStateB(null); return }
+    const basic = allBrokers.find(b => b.slug === slugB)
+    if (!basic && allBrokers.length === 0) return
+    if (!basic) { setStateB(null); return }
+    setStateB({ basic, detail: null, loading: true })
+    loadDetail(slugB).then(detail => setStateB({ basic, detail, loading: false }))
+  }, [slugB, allBrokers]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  function updateUrl(a: BrokerBasic | null, b: BrokerBasic | null) {
-    const params = new URLSearchParams()
-    if (a) params.set('a', a.slug)
-    if (b) params.set('b', b.slug)
-    const qs = params.toString()
-    router.replace(`/compare-brokers${qs ? `?${qs}` : ''}`, { scroll: false })
-  }
-
-  function handleSelectA(broker: BrokerBasic) { setSelectedA(broker); updateUrl(broker, selectedB) }
-  function handleSelectB(broker: BrokerBasic) { setSelectedB(broker); updateUrl(selectedA, broker) }
+  if (!slugA || !stateA) return null
 
   return (
-    <>
-      {/* Broker selector card */}
-      <div className="cmp-selector-card">
-        <div className="cmp-selector-card__head">
-          <p>Select Brokers to Compare</p>
-          <p className="lead">Choose two brokers below to generate a side-by-side comparison.</p>
-        </div>
-        <div className="cmp-selector-row">
-          <div className="cmp-select">
-            <label>Select first broker</label>
-            <BrokerDropdown
-              allBrokers={allBrokers}
-              selected={selectedA}
-              placeholder={loadingList ? 'Loading brokers…' : 'Search first broker...'}
-              onSelect={handleSelectA}
-              excludeSlug={selectedB?.slug}
-            />
-          </div>
-          <div className="cmp-select">
-            <label>Select second broker</label>
-            <BrokerDropdown
-              allBrokers={allBrokers}
-              selected={selectedB}
-              placeholder={loadingList ? 'Loading brokers…' : 'Search second broker...'}
-              onSelect={handleSelectB}
-              excludeSlug={selectedA?.slug}
-            />
-          </div>
-        </div>
-        <div className="cmp-selector-card__submit">
-          <button
-            type="button"
-            className="btn btn--secondary"
-            onClick={() => updateUrl(selectedA, selectedB)}
-            disabled={!selectedA && !selectedB}
-          >
-            Compare Brokers
-          </button>
-        </div>
+    <section>
+      <div className="section-inner">
+        <CompareTable stateA={stateA} stateB={stateB} />
       </div>
-
-      {/* Comparison table — shown once at least one broker is selected */}
-      {stateA && (
-        <section>
-          <div className="section-inner">
-            <CompareTable stateA={stateA} stateB={stateB} />
-          </div>
-        </section>
-      )}
-    </>
+    </section>
   )
 }

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
-import CompareClient from './CompareClient'
+import { CompareSelectorCard, CompareTableSection } from './CompareClient'
 
 export const metadata: Metadata = {
   title: 'Compare Forex Brokers Side by Side — FX Look Up',
@@ -40,11 +40,16 @@ export default function CompareBrokersPage() {
                 <p className="lead">Select two brokers to compare fees, regulation, platforms, deposit methods, instruments, ratings, and key trading conditions.</p>
               </div>
               <Suspense fallback={<div className="cmp-selector-card" />}>
-                <CompareClient />
+                <CompareSelectorCard />
               </Suspense>
             </div>
           </div>
         </section>
+
+        {/* ── Comparison table (dynamic, outside hero) ── */}
+        <Suspense fallback={null}>
+          <CompareTableSection />
+        </Suspense>
 
         {/* ── Comparison guide ── */}
         <section>

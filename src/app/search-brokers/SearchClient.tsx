@@ -641,7 +641,7 @@ export default function SearchClient() {
                   <img src="/assets/images/icon-chevron-down.svg" alt="" className="icon-18 filters-chevron" />
                 </button>
                 {openSections.instruments && (
-                  <div className="filters-content">
+                  <div className="filters-content" style={{ maxHeight: '200px', overflowY: 'auto' }}>
                     {allInstruments.length === 0 && !loading && (
                       <p style={{ fontSize: '0.85rem', color: '#888', margin: 0 }}>No instruments found.</p>
                     )}
@@ -667,7 +667,7 @@ export default function SearchClient() {
                   <img src="/assets/images/icon-chevron-down.svg" alt="" className="icon-18 filters-chevron" />
                 </button>
                 {openSections.platforms && (
-                  <div className="filters-content">
+                  <div className="filters-content" style={{ maxHeight: '200px', overflowY: 'auto' }}>
                     {allPlatforms.length === 0 && !loading && (
                       <p style={{ fontSize: '0.85rem', color: '#888', margin: 0 }}>No platforms found.</p>
                     )}
@@ -770,7 +770,7 @@ export default function SearchClient() {
                   <img src="/assets/images/icon-chevron-down.svg" alt="" className="icon-18 filters-chevron" />
                 </button>
                 {openSections.depositMethod && (
-                  <div className="filters-content">
+                  <div className="filters-content" style={{ maxHeight: '200px', overflowY: 'auto' }}>
                     {allDepositMethods.length === 0 && !loading && (
                       <p style={{ fontSize: '0.85rem', color: '#888', margin: 0 }}>No deposit methods found.</p>
                     )}
@@ -796,7 +796,7 @@ export default function SearchClient() {
                   <img src="/assets/images/icon-chevron-down.svg" alt="" className="icon-18 filters-chevron" />
                 </button>
                 {openSections.bonus && (
-                  <div className="filters-content">
+                  <div className="filters-content" style={{ maxHeight: '200px', overflowY: 'auto' }}>
                     {allBonusTypes.length === 0 && !loading && (
                       <p style={{ fontSize: '0.85rem', color: '#888', margin: 0 }}>No bonuses found.</p>
                     )}

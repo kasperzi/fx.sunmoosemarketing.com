@@ -295,6 +295,7 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
     const ctaText  = String(data.text       ?? '')
     const btnText  = String(data.button_text ?? 'Get Started')
     const btnUrl   = String(data.button_url  ?? '/find-broker')
+    const imgUrl   = data.image_url ? String(data.image_url) : '/assets/images/cta-find-broker.png'
     return (
       <div key={block.id} className="bb-cta">
         <div className="bb-cta__copy">
@@ -303,7 +304,7 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
           {btnText  && <a href={btnUrl} className="btn btn--primary">{btnText}</a>}
         </div>
         <div className="bb-cta__image" aria-hidden="true">
-          <img src="/assets/images/cta-find-broker.png" alt="" />
+          <img src={imgUrl} alt="" />
         </div>
       </div>
     )

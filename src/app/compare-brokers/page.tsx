@@ -26,9 +26,7 @@ export default function CompareBrokersPage() {
         {/* ── Hero ── */}
         <section className="hero hero--flush">
           <div className="hero__border hero__border--plain-gradient">
-
             <Nav activePage="compare" />
-
             <div className="hero__main hero__main--search hero__main--search-centered">
               <div className="breadcrumb">
                 <img src="/assets/images/icon-home-outline.svg" alt="" className="icon-24" />
@@ -41,16 +39,14 @@ export default function CompareBrokersPage() {
                 <h1>Compare Forex Brokers Side by Side</h1>
                 <p className="lead">Select two brokers to compare fees, regulation, platforms, deposit methods, instruments, ratings, and key trading conditions.</p>
               </div>
-
               <Suspense fallback={<div className="cmp-selector-card" />}>
                 <CompareClient />
               </Suspense>
             </div>
-
           </div>
         </section>
 
-        {/* ── Guide ── */}
+        {/* ── Comparison guide ── */}
         <section>
           <div className="section-inner">
             <div className="sb-guide">
@@ -61,33 +57,23 @@ export default function CompareBrokersPage() {
               </div>
               <div className="sb-guide__steps">
                 <div className="step-card">
-                  <span className="step-icon">
-                    <img src="/assets/images/icon-arrow-swap-filled.svg" alt="" />
-                  </span>
+                  <span className="step-icon"><img src="/assets/images/icon-arrow-swap-filled.svg" alt="" /></span>
                   <p className="lead">Compare regulation and safety</p>
                 </div>
                 <div className="step-card">
-                  <span className="step-icon">
-                    <img src="/assets/images/icon-trading-pattern.svg" alt="" />
-                  </span>
+                  <span className="step-icon"><img src="/assets/images/icon-trading-pattern.svg" alt="" /></span>
                   <p className="lead">Review spreads and trading costs</p>
                 </div>
                 <div className="step-card">
-                  <span className="step-icon">
-                    <img src="/assets/images/rv-icon-screen-pc-tower.svg" alt="" />
-                  </span>
+                  <span className="step-icon"><img src="/assets/images/rv-icon-screen-pc-tower.svg" alt="" /></span>
                   <p className="lead">Check supported platforms</p>
                 </div>
                 <div className="step-card">
-                  <span className="step-icon">
-                    <img src="/assets/images/icon-card.svg" alt="" />
-                  </span>
+                  <span className="step-icon"><img src="/assets/images/icon-card.svg" alt="" /></span>
                   <p className="lead">Confirm deposit and withdrawal methods</p>
                 </div>
                 <div className="step-card">
-                  <span className="step-icon">
-                    <img src="/assets/images/rv-icon-language.svg" alt="" />
-                  </span>
+                  <span className="step-icon"><img src="/assets/images/rv-icon-language.svg" alt="" /></span>
                   <p className="lead">Verify country availability</p>
                 </div>
               </div>
@@ -95,13 +81,13 @@ export default function CompareBrokersPage() {
           </div>
         </section>
 
-        {/* ── Content row 1 ── */}
+        {/* ── SEO content row 1 ── */}
         <section>
           <div className="section-inner">
             <div className="sb-compare__row">
-              <div className="sb-compare__media" />
+              <div className="sb-compare__media"></div>
               <div className="sb-compare__copy">
-                <p className="eyebrow">REGULATION & SAFETY</p>
+                <p className="eyebrow">REGULATION &amp; SAFETY</p>
                 <h2>Why Broker Regulation Matters for Your Capital</h2>
                 <p className="lead">A regulated broker is required to meet strict financial standards, segregate client funds, and provide access to investor compensation schemes. Always check which authority licenses your broker and what protection it offers in your country.</p>
                 <ul className="check-list">
@@ -123,7 +109,7 @@ export default function CompareBrokersPage() {
           </div>
         </section>
 
-        {/* ── Content row 2 ── */}
+        {/* ── SEO content row 2 ── */}
         <section>
           <div className="section-inner">
             <div className="sb-compare__row">
@@ -146,7 +132,7 @@ export default function CompareBrokersPage() {
                   </li>
                 </ul>
               </div>
-              <div className="sb-compare__media" />
+              <div className="sb-compare__media"></div>
             </div>
           </div>
         </section>

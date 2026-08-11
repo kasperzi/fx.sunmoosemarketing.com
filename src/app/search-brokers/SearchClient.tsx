@@ -310,6 +310,7 @@ export default function SearchClient() {
   const [selectedInstruments, setSelectedInstruments] = useState<Set<string>>(new Set())
   const [selectedPlatforms, setSelectedPlatforms] = useState<Set<string>>(new Set())
   const [selectedDepositMethods, setSelectedDepositMethods] = useState<Set<string>>(new Set())
+  const [selectedBonusTypes, setSelectedBonusTypes] = useState<Set<string>>(new Set())
   const [minDeposit, setMinDeposit] = useState(0)
   const [maxDeposit, setMaxDeposit] = useState(500)
   const [minRating, setMinRating] = useState(0)
@@ -402,6 +403,15 @@ export default function SearchClient() {
     setVisibleCount(PAGE_SIZE)
   }
 
+  function toggleBonusType(label: string) {
+    setSelectedBonusTypes(prev => {
+      const next = new Set(prev)
+      next.has(label) ? next.delete(label) : next.add(label)
+      return next
+    })
+    setVisibleCount(PAGE_SIZE)
+  }
+
   function toggleDepositMethod(label: string) {
     setSelectedDepositMethods(prev => {
       const next = new Set(prev)
@@ -429,6 +439,7 @@ export default function SearchClient() {
     setSelectedInstruments(new Set<string>())
     setSelectedPlatforms(new Set<string>())
     setSelectedDepositMethods(new Set<string>())
+    setSelectedBonusTypes(new Set<string>())
     setMinDeposit(0)
     setMaxDeposit(500)
     setMinRating(0)
@@ -456,6 +467,12 @@ export default function SearchClient() {
   const allDepositMethods = useMemo(() => {
     const set = new Set<string>()
     brokers.forEach(b => b.deposit_methods?.forEach(m => set.add(m)))
+    return Array.from(set).sort()
+  }, [brokers])
+
+  const allBonusTypes = useMemo(() => {
+    const set = new Set<string>()
+    brokers.forEach(b => b.bonus_types?.forEach(t => set.add(t)))
     return Array.from(set).sort()
   }, [brokers])
 
@@ -489,6 +506,12 @@ export default function SearchClient() {
       )
     }
 
+    if (selectedBonusTypes.size > 0) {
+      result = result.filter(b =>
+        b.bonus_types?.some(t => selectedBonusTypes.has(t))
+      )
+    }
+
     if (minDeposit > 0 || maxDeposit < 500) {
       result = result.filter(b => {
         const d = b.min_deposit ?? 0
@@ -509,7 +532,7 @@ export default function SearchClient() {
     }
 
     return result
-  }, [brokers, searchQuery, selectedInstruments, selectedPlatforms, selectedDepositMethods, minDeposit, maxDeposit, minRating, sortBy])
+  }, [brokers, searchQuery, selectedInstruments, selectedPlatforms, selectedDepositMethods, selectedBonusTypes, minDeposit, maxDeposit, minRating, sortBy])
 
   const visible = filtered.slice(0, visibleCount)
 
@@ -519,12 +542,13 @@ export default function SearchClient() {
     ...Array.from(selectedInstruments).map(i => ({ label: i, onRemove: () => toggleInstrument(i) })),
     ...Array.from(selectedPlatforms).map(p => ({ label: p, onRemove: () => togglePlatform(p) })),
     ...Array.from(selectedDepositMethods).map(m => ({ label: m, onRemove: () => toggleDepositMethod(m) })),
+    ...Array.from(selectedBonusTypes).map(t => ({ label: t, onRemove: () => toggleBonusType(t) })),
     ...(minRating > 0 ? [{ label: `${minRating}+ Stars`, onRemove: () => setMinRating(0) }] : []),
     ...(minDeposit > 0 ? [{ label: `Min $${minDeposit}`, onRemove: () => setMinDeposit(0) }] : []),
     ...(maxDeposit < 500 ? [{ label: `Max $${maxDeposit}`, onRemove: () => setMaxDeposit(500) }] : []),
   ]
 
-  const hasActiveFilters = selectedInstruments.size > 0 || selectedPlatforms.size > 0 || selectedDepositMethods.size > 0 || minRating > 0 || minDeposit > 0 || maxDeposit < 500
+  const hasActiveFilters = selectedInstruments.size > 0 || selectedPlatforms.size > 0 || selectedDepositMethods.size > 0 || selectedBonusTypes.size > 0 || minRating > 0 || minDeposit > 0 || maxDeposit < 500
 
   const filteredCountries = COUNTRIES.filter(c =>
     c.name.toLowerCase().includes(countrySearch.toLowerCase())
@@ -765,7 +789,7 @@ export default function SearchClient() {
                 )}
               </li>
 
-              {/* Deposit Bonus */}
+              {/* Deposit Bonus — dynamic from API */}
               <li className={`filters-item${openSections.bonus ? ' is-open' : ''}`}>
                 <button type="button" className="filters-row" onClick={() => toggleSection('bonus')}>
                   Deposit Bonus
@@ -773,11 +797,18 @@ export default function SearchClient() {
                 </button>
                 {openSections.bonus && (
                   <div className="filters-content">
-                    {['No Deposit Bonus', 'Welcome Bonus', 'Deposit Match Bonus'].map(b => (
-                      <label key={b} className="filters-checkbox">
-                        <input type="checkbox" />
+                    {allBonusTypes.length === 0 && !loading && (
+                      <p style={{ fontSize: '0.85rem', color: '#888', margin: 0 }}>No bonuses found.</p>
+                    )}
+                    {allBonusTypes.map(t => (
+                      <label key={t} className="filters-checkbox">
+                        <input
+                          type="checkbox"
+                          checked={selectedBonusTypes.has(t)}
+                          onChange={() => toggleBonusType(t)}
+                        />
                         <span className="filters-checkbox__box"></span>
-                        {b}
+                        {t}
                       </label>
                     ))}
                   </div>

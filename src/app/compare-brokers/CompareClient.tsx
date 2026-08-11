@@ -192,7 +192,7 @@ function BrokerDropdown({ allBrokers, selected, placeholder, onSelect, excludeSl
     .filter(b => b.slug !== excludeSlug)
     .filter(b => !search || b.name.toLowerCase().includes(search.toLowerCase()))
 
-  const logo = selected ? getRectLogo(selected.logos) : null
+  const logo = selected ? getSquareLogo(selected.logos) : null
 
   return (
     <div className="country-select broker-select" ref={ref}>
@@ -222,7 +222,7 @@ function BrokerDropdown({ allBrokers, selected, placeholder, onSelect, excludeSl
           </div>
           <ul className="country-list broker-list" role="listbox">
             {filtered.map(b => {
-              const bLogo = getRectLogo(b.logos)
+              const bLogo = getSquareLogo(b.logos)
               return (
                 <li key={b.slug}
                   className={`country-option broker-option${selected?.slug === b.slug ? ' country-option--selected' : ''}`}

@@ -27,6 +27,9 @@ interface CollectionItem {
   max_leverage:                     string | null
   is_regulated:                     boolean
   has_negative_balance_protection:  boolean
+  has_demo_accounts:                boolean
+  us_stock_fee:                     number | null
+  min_spread:                       number | null
   total_rating:                     number | null
   affiliate_link:                   string | null
 }
@@ -266,12 +269,30 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
     const checkIcon = '/assets/images/icon-check-mark.svg'
     const xIcon     = '/assets/images/icon-xcircle.svg'
     const arrowIcon = '/assets/images/icon-arrow-right-duotone.svg'
-    const boolVal   = (v: boolean | undefined, accent?: boolean) =>
+    const boolVal   = (v: boolean | undefined) =>
       <img src={v ? checkIcon : xIcon} alt={v ? 'Yes' : 'No'} style={{ width: 20, height: 20 }} />
 
     return (
       <div key={block.id} className="bb-block" style={{ gap: 24 }}>
-        {bcBrokers.map((b, i) => (
+        {bcBrokers.map((b, i) => {
+          // Live data from collection items (always fresh from DB)
+          const live = b.broker_id ? items.find((it) => it.broker_id === b.broker_id) : null
+
+          // Auto-resolved fields (live DB → stored fallback)
+          const minDeposit  = live?.min_deposit  != null ? `$${live.min_deposit}`              : b.min_deposit  || '—'
+          const spread      = live?.min_spread   != null ? String(live.min_spread)             : b.spread       || '—'
+          const demoAccount = live              != null  ? live.has_demo_accounts               : b.demo_account ?? true
+          const usStockFee  = live?.us_stock_fee != null ? `${live.us_stock_fee} USD`          : b.us_stock_fee || '—'
+
+          // Manual-only fields (not in DB)
+          const timeOpen    = b.time_open    || '—'
+          const creditCard  = b.credit_card  ?? true
+          const mobileScore = b.mobile_score || '—'
+          const inactFee    = b.inactivity_fee || '—'
+          const commission  = b.commission   || '—'
+          const fractional  = b.fractional_shares ?? false
+
+          return (
           <div key={b.broker_id} className={`bb-comparison-card${i === 0 ? ' bb-comparison-card--pick' : ''}`}>
             <div className="bb-comparison-card__top">
               <div className="bb-comparison-card__info">
@@ -305,11 +326,11 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
                   <p>Minimum deposit</p><p>Time Open Account</p><p>Credit card / Debit Card</p><p>Spread</p><p>Demo Account</p>
                 </div>
                 <div className="bb-comparison-card__values">
-                  <p>{b.min_deposit || '—'}</p>
-                  <p>{b.time_open   || '—'}</p>
-                  <p>{boolVal(b.credit_card)}</p>
-                  <p>{b.spread      || '—'}</p>
-                  <p>{boolVal(b.demo_account)}</p>
+                  <p>{minDeposit}</p>
+                  <p>{timeOpen}</p>
+                  <p>{boolVal(creditCard)}</p>
+                  <p>{spread}</p>
+                  <p>{boolVal(demoAccount)}</p>
                 </div>
               </div>
               <div className="bb-comparison-card__divider" />
@@ -318,11 +339,11 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
                   <p>Mobile Platform Score</p><p>Inactivity fee</p><p>Commission</p><p>Fractional Shares</p><p>US Stock fee</p>
                 </div>
                 <div className="bb-comparison-card__values bb-comparison-card__values--accent">
-                  <p>{b.mobile_score    || '—'}</p>
-                  <p>{b.inactivity_fee  || '—'}</p>
-                  <p>{b.commission      || '—'}</p>
-                  <p>{boolVal(b.fractional_shares)}</p>
-                  <p>{b.us_stock_fee    || '—'}</p>
+                  <p>{mobileScore}</p>
+                  <p>{inactFee}</p>
+                  <p>{commission}</p>
+                  <p>{boolVal(fractional)}</p>
+                  <p>{usStockFee}</p>
                 </div>
               </div>
             </div>
@@ -331,7 +352,8 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
               Compare Broker <img src={arrowIcon} alt="" />
             </a>
           </div>
-        ))}
+          )
+        })}
       </div>
     )
   }

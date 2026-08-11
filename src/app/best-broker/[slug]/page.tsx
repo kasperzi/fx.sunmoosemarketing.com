@@ -345,8 +345,9 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
     const scoreLabel   = String(data.score_label  ?? '')
     // Pull live rating from collection items if broker is in there, else fall back to stored value
     const liveItem     = brokerIdNum ? items.find((it) => it.broker_id === brokerIdNum) : null
-    const rawRating    = (liveItem?.total_rating) ?? (data.score_value ?? null)
-    const scoreValue   = rawRating ? `${parseFloat(String(rawRating)).toFixed(1)}/5` : ''
+    // total_rating comes live from the collections API; score_value is legacy fallback
+    const rawRating    = liveItem?.total_rating ?? (data.score_value != null ? parseFloat(String(data.score_value)) : null)
+    const scoreValue   = rawRating != null && !isNaN(Number(rawRating)) ? `${Number(rawRating).toFixed(1)}/5` : ''
     // Initials helper for badge logo fallback
     const badgeInitials = brokerName
       ? brokerName.split(/\s+/).slice(0, 2).map((w) => w[0] ?? '').join('').toUpperCase()

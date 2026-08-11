@@ -187,16 +187,6 @@ function flagImgUrl(code: string): string {
 
 // ─── Platform helpers ─────────────────────────────────────────────────────────
 
-const PLATFORM_LABELS = ['MT4', 'MT5', 'cTrader', 'TradingView']
-
-function platformMatches(brokerPlatform: string, label: string): boolean {
-  if (label === 'MT4') return /metatrader\s*4/i.test(brokerPlatform) || brokerPlatform === 'MT4'
-  if (label === 'MT5') return /metatrader\s*5/i.test(brokerPlatform) || brokerPlatform === 'MT5'
-  if (label === 'cTrader') return /ctrader/i.test(brokerPlatform)
-  if (label === 'TradingView') return /tradingview/i.test(brokerPlatform)
-  return false
-}
-
 function shortenPlatform(p: string): string {
   return p
     .replace(/MetaTrader\s*4/i, 'MT4')
@@ -439,10 +429,16 @@ export default function SearchClient() {
     setOpenSections(prev => ({ ...prev, [key]: !prev[key] }))
   }
 
-  // ── Derived instrument list from API data ────────────────────────────────
+  // ── Derived instrument + platform lists from API data ────────────────────
   const allInstruments = useMemo(() => {
     const set = new Set<string>()
     brokers.forEach(b => b.instruments?.forEach(i => set.add(i)))
+    return Array.from(set).sort()
+  }, [brokers])
+
+  const allPlatforms = useMemo(() => {
+    const set = new Set<string>()
+    brokers.forEach(b => b.platforms?.forEach(p => set.add(p)))
     return Array.from(set).sort()
   }, [brokers])
 
@@ -466,9 +462,7 @@ export default function SearchClient() {
 
     if (selectedPlatforms.size > 0) {
       result = result.filter(b =>
-        b.platforms?.some(p =>
-          Array.from(selectedPlatforms).some(label => platformMatches(p, label))
-        )
+        b.platforms?.some(p => selectedPlatforms.has(p))
       )
     }
 
@@ -618,7 +612,7 @@ export default function SearchClient() {
                 )}
               </li>
 
-              {/* Platforms */}
+              {/* Platforms — dynamic from API */}
               <li className={`filters-item${openSections.platforms ? ' is-open' : ''}`}>
                 <button type="button" className="filters-row" onClick={() => toggleSection('platforms')}>
                   Platforms
@@ -626,7 +620,10 @@ export default function SearchClient() {
                 </button>
                 {openSections.platforms && (
                   <div className="filters-content">
-                    {PLATFORM_LABELS.map(label => (
+                    {allPlatforms.length === 0 && !loading && (
+                      <p style={{ fontSize: '0.85rem', color: '#888', margin: 0 }}>No platforms found.</p>
+                    )}
+                    {allPlatforms.map(label => (
                       <label key={label} className="filters-checkbox">
                         <input
                           type="checkbox"

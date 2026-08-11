@@ -223,10 +223,14 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
           <span>Licensed</span>
           <span></span>
         </div>
-        {brokers.map((b) => (
+        {brokers.map((b) => {
+          const btLive    = items.find(it => it.broker_id === b.broker_id)
+          const btUrl     = btLive?.affiliate_link ?? null
+          const btLogoUrl = btLive?.logos?.square_light ?? btLive?.logos?.square_dark ?? b.logo_url ?? null
+          return (
           <div key={b.broker_id} className="bb-broker-row">
             <div className="bb-broker-row__broker">
-              <BrokerLogo name={b.name} logoUrl={b.logo_url} className="bb-broker-row__logo" />
+              <BrokerLogo name={b.name} logoUrl={btLogoUrl} className="bb-broker-row__logo" />
               <span className="bb-broker-row__name">{b.name}</span>
             </div>
             <p className="bb-broker-row__rating">
@@ -236,14 +240,15 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
             <p className="bb-broker-row__stat">{b.min_spread || '—'}</p>
             <p className="bb-broker-row__stat">{b.is_regulated ? '✔' : '—'}</p>
             <div className="bb-broker-row__visit">
-              {b.visit_url
-                ? <a href={b.visit_url} className="btn btn--text" target="_blank" rel="noopener noreferrer nofollow">
+              {btUrl
+                ? <a href={btUrl} className="btn btn--text" target="_blank" rel="noopener noreferrer nofollow">
                     Visit Broker <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" />
                   </a>
                 : null}
             </div>
           </div>
-        ))}
+          )
+        })}
       </div>
     )
   }
@@ -292,6 +297,9 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
           const commission  = b.commission   || '—'
           const fractional  = b.fractional_shares ?? false
 
+          const bcLiveItem = b.broker_id ? items.find(it => it.broker_id === b.broker_id) : null
+          const bcVisitUrl = bcLiveItem?.affiliate_link ?? null
+          const bcLogoUrl  = bcLiveItem?.logos?.square_light ?? bcLiveItem?.logos?.square_dark ?? b.logo_url ?? null
           return (
           <div key={b.broker_id} className={`bb-comparison-card${i === 0 ? ' bb-comparison-card--pick' : ''}`}>
             <div className="bb-comparison-card__top">
@@ -299,7 +307,7 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
                 <span className="bb-comparison-card__rank">#{i + 1}</span>
                 <div className="bb-comparison-card__body">
                   <div className="bb-comparison-card__head">
-                    <BrokerLogo name={b.name} logoUrl={b.logo_url} className="bb-comparison-card__logo" />
+                    <BrokerLogo name={b.name} logoUrl={bcLogoUrl} className="bb-comparison-card__logo" />
                     <div>
                       {i === 0 && <span className="top10-card__badge">TOP PICK</span>}
                       <p className="bb-comparison-card__name">{b.name}</p>
@@ -310,9 +318,9 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
                 </div>
               </div>
               <div className="bb-comparison-card__ctas">
-                {b.visit_url
-                  ? <a href={b.visit_url} className={`btn ${i === 0 ? 'btn--secondary' : 'btn--primary'}`} target="_blank" rel="noopener noreferrer nofollow">Visit Broker</a>
-                  : <span className={`btn ${i === 0 ? 'btn--secondary' : 'btn--primary'}`}>Visit Broker</span>
+                {bcVisitUrl
+                  ? <a href={bcVisitUrl} className={`btn ${i === 0 ? 'btn--secondary' : 'btn--primary'}`} target="_blank" rel="noopener noreferrer nofollow">Visit Broker</a>
+                  : null
                 }
                 <a href={b.slug ? `/broker/${b.slug}` : '#'} className="btn btn--text">
                   Read Review <img src={arrowIcon} alt="" />
@@ -573,16 +581,20 @@ function renderContentBlocks(blocks: ContentBlock[], items: CollectionItem[]) {
                     <h4>{seg.sidebarTitle}</h4>
                     <p className="lead">{seg.sidebarDesc}</p>
                   </div>
-                  {seg.sidebar.map((b, j) => (
+                  {seg.sidebar.map((b, j) => {
+                    const sbLiveItem = items.find(it => it.broker_id === b.broker_id)
+                    const sbHref     = sbLiveItem?.affiliate_link ?? (b.slug ? `/broker/${b.slug}` : '#')
+                    const sbExternal = !!sbLiveItem?.affiliate_link
+                    return (
                     <a
                       key={b.broker_id}
-                      href={b.visit_url ?? '#'}
+                      href={sbHref}
                       className={`match-card${j === 0 ? ' match-card--active' : ''}`}
-                      target="_blank" rel="noopener noreferrer nofollow"
+                      {...(sbExternal ? { target: '_blank', rel: 'noopener noreferrer nofollow' } : {})}
                     >
                       <div className="match-card__info">
                         <span className="match-card__rank">#{j + 1}</span>
-                        <BrokerLogo name={b.name} logoUrl={b.logo_url} className="match-card__logo" />
+                        <BrokerLogo name={b.name} logoUrl={sbLiveItem?.logos?.square_light ?? sbLiveItem?.logos?.square_dark ?? b.logo_url ?? null} className="match-card__logo" />
                         <div className="match-card__text">
                           <p className="match-card__name">{b.name}</p>
                           {b.rating && (
@@ -596,7 +608,8 @@ function renderContentBlocks(blocks: ContentBlock[], items: CollectionItem[]) {
                         <img src="/assets/images/icon-arrow-up-right.svg" alt="" />
                       </span>
                     </a>
-                  ))}
+                    )
+                  })}
                   <a href="/find-broker" className="btn btn--secondary btn--block">Find Your Broker</a>
                 </div>
               </aside>
@@ -662,13 +675,17 @@ function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) 
 
           {/* ── Podium (top 3) — exact structure from best-broker.html ── */}
           <div className="top10-podium">
-            {rTop3.map((b, i) => (
+            {rTop3.map((b, i) => {
+              const liveItem = items.find(it => it.broker_id === b.broker_id)
+              const visitUrl = liveItem?.affiliate_link ?? null
+              const logoUrl  = liveItem?.logos?.square_light ?? liveItem?.logos?.square_dark ?? b.logo_url ?? null
+              return (
               <div key={b.broker_id} className={`top10-card${i === 0 ? ' top10-card--pick' : ''}`}>
                 <div className="top10-card__head">
                   <span className="top10-card__rank">#{i + 1}</span>
                   <div className="top10-card__body">
                     <div className="top10-card__logo-row">
-                      <BrokerLogo name={b.name} logoUrl={b.logo_url} className="top10-card__logo" />
+                      <BrokerLogo name={b.name} logoUrl={logoUrl} className="top10-card__logo" />
                       <div>
                         <span className="top10-card__badge" style={i !== 0 ? { visibility: 'hidden' } : undefined}>
                           TOP PICK
@@ -686,16 +703,17 @@ function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) 
                 </div>
                 <div className="top10-card__ctas">
                   {/* #1 → btn--secondary (teal), #2/#3 → btn--primary (purple) */}
-                  {b.visit_url
-                    ? <a href={b.visit_url} className={`btn ${i === 0 ? 'btn--secondary' : 'btn--primary'}`} target="_blank" rel="noopener noreferrer nofollow">Visit Broker</a>
-                    : <span className={`btn ${i === 0 ? 'btn--secondary' : 'btn--primary'}`}>Visit Broker</span>
+                  {visitUrl
+                    ? <a href={visitUrl} className={`btn ${i === 0 ? 'btn--secondary' : 'btn--primary'}`} target="_blank" rel="noopener noreferrer nofollow">Visit Broker</a>
+                    : null
                   }
                   <a href={b.slug ? `/broker/${b.slug}` : '#'} className="btn btn--text">
                     Read Review <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" />
                   </a>
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
 
           {/* ── Table (#4 onward) — exact structure from best-broker.html ── */}
@@ -707,27 +725,30 @@ function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) 
                 <span>Best For</span>
                 <span>Rating</span>
               </div>
-              {rRest.map((b, i) => (
+              {rRest.map((b, i) => {
+                const liveItem = items.find(it => it.broker_id === b.broker_id)
+                const visitUrl = liveItem?.affiliate_link ?? null
+                const logoUrl  = liveItem?.logos?.square_light ?? liveItem?.logos?.square_dark ?? b.logo_url ?? null
+                return (
                 <div key={b.broker_id} className="top10-row">
                   <span className="top10-row__rank">#{i + 4}</span>
                   <div className="top10-row__broker">
-                    <BrokerLogo name={b.name} logoUrl={b.logo_url} className="top10-row__logo" />
+                    <BrokerLogo name={b.name} logoUrl={logoUrl} className="top10-row__logo" />
                     <span className="top10-row__name">{b.name}</span>
                   </div>
                   <p className="top10-row__bestfor">{b.best_for || '—'}</p>
                   <StarRating rating={b.rating} className="top10-row__rating" />
                   <div className="top10-row__visit">
-                    {b.visit_url
-                      ? <a href={b.visit_url} className="btn btn--text" target="_blank" rel="noopener noreferrer nofollow">
+                    {visitUrl
+                      ? <a href={visitUrl} className="btn btn--text" target="_blank" rel="noopener noreferrer nofollow">
                           Visit Broker <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" />
                         </a>
-                      : <button type="button" className="btn btn--text" disabled>
-                          Visit Broker <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" />
-                        </button>
+                      : null
                     }
                   </div>
                 </div>
-              ))}
+                )
+              })}
             </div>
           )}
 

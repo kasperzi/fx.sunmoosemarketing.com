@@ -217,9 +217,11 @@ function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) 
     const brokers = (data.brokers as RankBroker[]) ?? []
     if (brokers.length === 0) return null
 
-    const subtitle    = data.subtitle    ? String(data.subtitle)    : null
-    const blockTitle  = data.title       ? String(data.title)       : null
-    const description = data.description ? String(data.description) : null
+    const subtitle      = data.subtitle      ? String(data.subtitle)      : null
+    const blockTitle    = data.title         ? String(data.title)         : null
+    const description   = data.description   ? String(data.description)   : null
+    const compareLabel  = data.compare_label ? String(data.compare_label) : null
+    const compareUrl    = data.compare_url   ? String(data.compare_url)   : null
     const rTop3 = brokers.slice(0, 3)
     const rRest = brokers.slice(3)
 
@@ -228,13 +230,18 @@ function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) 
         <div className="section-inner">
 
           {/* ── Header ─────────────────────────────────────────── */}
-          {(subtitle || blockTitle || description) && (
+          {(subtitle || blockTitle || description || compareLabel) && (
             <div className="bb-top10__head">
               <div className="bb-top10__head-copy">
                 {subtitle    && <p className="eyebrow">{subtitle}</p>}
                 {blockTitle  && <h2>{blockTitle}</h2>}
                 {description && <p className="lead">{description}</p>}
               </div>
+              {compareLabel && (
+                <a href={compareUrl ?? '#'} className="btn btn--text">
+                  {compareLabel} <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" />
+                </a>
+              )}
             </div>
           )}
 

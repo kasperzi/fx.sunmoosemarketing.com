@@ -291,19 +291,38 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
   }
 
   if (type === 'cta') {
-    const headline = String(data.headline   ?? '')
-    const ctaText  = String(data.text       ?? '')
-    const btnText  = String(data.button_text ?? 'Get Started')
-    const btnUrl   = String(data.button_url  ?? '/find-broker')
+    const badge    = String(data.badge        ?? '')
+    const headline = String(data.headline     ?? '')
+    const ctaText  = String(data.text         ?? '')
+    const btnText  = String(data.button_text  ?? 'Find Your Broker')
+    const btnUrl   = String(data.button_url   ?? '/find-broker')
+    const btn2Text = String(data.button2_text ?? '')
+    const btn2Url  = String(data.button2_url  ?? '/compare-brokers')
     const imgUrl   = data.image_url ? String(data.image_url) : '/assets/images/cta-find-broker.png'
     return (
       <div key={block.id} className="bb-cta">
-        <div className="bb-cta__copy">
-          {headline && <h3 className="bb-cta__headline">{headline}</h3>}
-          {ctaText  && <p className="bb-cta__text">{ctaText}</p>}
-          {btnText  && <a href={btnUrl} className="btn btn--primary">{btnText}</a>}
+        <div className="bb-cta__content">
+          <div className="bb-cta__copy">
+            {badge    && <p className="eyebrow">{badge}</p>}
+            {headline && <h4>{headline}</h4>}
+            {ctaText  && <p className="lead">{ctaText}</p>}
+          </div>
+          <div className="bb-cta__actions">
+            <div className="bb-cta__buttons">
+              {btnText  && <a href={btnUrl}  className="btn btn--secondary">{btnText}</a>}
+              {btn2Text && <a href={btn2Url} className="btn btn--text">{btn2Text} <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></a>}
+            </div>
+            <div className="bb-cta__trust">
+              <img src="/assets/images/icon-lock-outline.svg" alt="" />
+              <span>100% Secure</span>
+              <img src="/assets/images/icon-dot-filled.svg" alt="" />
+              <span>No spam</span>
+              <img src="/assets/images/icon-dot-filled.svg" alt="" />
+              <span>No obligations</span>
+            </div>
+          </div>
         </div>
-        <div className="bb-cta__image" aria-hidden="true">
+        <div className="bb-cta__image">
           <img src={imgUrl} alt="" />
         </div>
       </div>

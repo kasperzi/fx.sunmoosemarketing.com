@@ -206,7 +206,7 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
   }
 
   if (type === 'broker_table') {
-    interface TableBroker { broker_id: number; name: string; logo_url?: string | null; rating?: string; visit_url?: string; min_deposit?: number | null; is_regulated?: boolean }
+    interface TableBroker { broker_id: number; name: string; logo_url?: string | null; rating?: string; visit_url?: string; min_deposit?: number | null; min_spread?: string; is_regulated?: boolean }
     const brokers = (data.brokers as TableBroker[]) ?? []
     if (brokers.length === 0) return null
     return (
@@ -229,7 +229,7 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
               {b.rating ? <><img src="/assets/images/icon-star.svg" alt="" />{b.rating}</> : '—'}
             </p>
             <p className="bb-broker-row__stat">{b.min_deposit != null ? `$${b.min_deposit}` : '—'}</p>
-            <p className="bb-broker-row__stat">—</p>
+            <p className="bb-broker-row__stat">{b.min_spread || '—'}</p>
             <p className="bb-broker-row__stat">{b.is_regulated ? '✔' : '—'}</p>
             <div className="bb-broker-row__visit">
               {b.visit_url

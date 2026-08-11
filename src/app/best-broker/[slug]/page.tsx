@@ -206,7 +206,9 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
   }
 
   if (type === 'broker_table') {
-    const cols = (data.columns as string[]) ?? ['total_rating', 'min_deposit', 'max_leverage']
+    interface TableBroker { broker_id: number; name: string; logo_url?: string | null; rating?: string; visit_url?: string; min_deposit?: number | null; is_regulated?: boolean }
+    const brokers = (data.brokers as TableBroker[]) ?? []
+    if (brokers.length === 0) return null
     return (
       <div key={block.id} className="bb-broker-table">
         <div className="bb-broker-table__head">
@@ -217,23 +219,21 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
           <span>Licensed</span>
           <span></span>
         </div>
-        {items.map((item) => (
-          <div key={item.broker_id} className="bb-broker-row">
+        {brokers.map((b) => (
+          <div key={b.broker_id} className="bb-broker-row">
             <div className="bb-broker-row__broker">
-              <BrokerLogoImg item={item} className="bb-broker-row__logo" />
-              <span className="bb-broker-row__name">{item.name}</span>
+              <BrokerLogo name={b.name} logoUrl={b.logo_url} className="bb-broker-row__logo" />
+              <span className="bb-broker-row__name">{b.name}</span>
             </div>
             <p className="bb-broker-row__rating">
-              {item.total_rating != null
-                ? <><img src="/assets/images/icon-star.svg" alt="" />{Number(item.total_rating).toFixed(1)}/5</>
-                : '—'}
+              {b.rating ? <><img src="/assets/images/icon-star.svg" alt="" />{b.rating}</> : '—'}
             </p>
-            <p className="bb-broker-row__stat">{item.min_deposit != null ? `$${item.min_deposit}` : '—'}</p>
-            <p className="bb-broker-row__stat">{getBrokerProp(item, 'min_spread') != null ? `${getBrokerProp(item, 'min_spread')} pips` : '—'}</p>
-            <p className="bb-broker-row__stat">{item.is_regulated ? '✔' : '—'}</p>
+            <p className="bb-broker-row__stat">{b.min_deposit != null ? `$${b.min_deposit}` : '—'}</p>
+            <p className="bb-broker-row__stat">—</p>
+            <p className="bb-broker-row__stat">{b.is_regulated ? '✔' : '—'}</p>
             <div className="bb-broker-row__visit">
-              {item.affiliate_link
-                ? <a href={item.affiliate_link} className="btn btn--text" target="_blank" rel="noopener noreferrer nofollow">
+              {b.visit_url
+                ? <a href={b.visit_url} className="btn btn--text" target="_blank" rel="noopener noreferrer nofollow">
                     Visit Broker <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" />
                   </a>
                 : null}

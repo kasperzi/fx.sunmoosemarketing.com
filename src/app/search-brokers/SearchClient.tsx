@@ -332,6 +332,7 @@ export default function SearchClient() {
   const [countryOpen, setCountryOpen] = useState(false)
   const [countrySearch, setCountrySearch] = useState('')
   const countryRef = useRef<HTMLDivElement>(null)
+  const sortRef = useRef<HTMLDivElement>(null)
 
   // Accordion state
   const [openSections, setOpenSections] = useState({
@@ -368,6 +369,9 @@ export default function SearchClient() {
     function onMouseDown(e: MouseEvent) {
       if (countryRef.current && !countryRef.current.contains(e.target as Node)) {
         setCountryOpen(false)
+      }
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
+        setSortOpen(false)
       }
     }
     document.addEventListener('mousedown', onMouseDown)
@@ -422,12 +426,13 @@ export default function SearchClient() {
   }
 
   function resetFilters() {
-    setSelectedInstruments(new Set())
-    setSelectedPlatforms(new Set())
+    setSelectedInstruments(new Set<string>())
+    setSelectedPlatforms(new Set<string>())
     setMinDeposit(0)
     setMaxDeposit(500)
     setMinRating(0)
     setVisibleCount(PAGE_SIZE)
+    setSortOpen(false)
   }
 
   function toggleSection(key: keyof typeof openSections) {
@@ -774,7 +779,7 @@ export default function SearchClient() {
               </strong>
             </p>
             <span className="sb-sort-label">Sort by</span>
-            <div className="mini-dropdown" data-mini-dropdown="">
+            <div className="mini-dropdown" data-mini-dropdown="" ref={sortRef}>
               <button
                 type="button"
                 className="sb-sort-toggle mini-dropdown__toggle"

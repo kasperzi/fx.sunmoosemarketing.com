@@ -379,36 +379,38 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
         </div>
         <div className="bb-cta__image-wrap">
           <img src="/assets/images/cta2-bg.svg" alt="" className="bb-cta__shape" />
-          {(brokerLogo || brokerName || awardLabel || awardYear) && (
-            <div className="bb-cta__badge">
-              {brokerLogo
-                ? <img src={brokerLogo} alt={brokerName} className="bb-cta__badge-logo" />
-                : brokerName && (
-                  <span className="bb-cta__badge-logo" style={{
-                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                    background: `hsl(${badgeHue}, 55%, 45%)`, color: '#fff',
-                    fontWeight: 700, fontSize: 28,
-                  }}>
-                    {badgeInitials}
-                  </span>
-                )
-              }
-              {awardLabel && <span className="bb-cta__award-label">{awardLabel}</span>}
-              {(awardLabel || awardYear) && <div className="bb-cta__award-divider" />}
-              {awardYear  && <span className="bb-cta__award-year">{awardYear}</span>}
-            </div>
-          )}
-          {(scoreValue || scoreLabel) && (
-            <div className="bb-cta__score">
-              {scoreValue && (
-                <div className="bb-cta__score-row">
-                  <img src="/assets/images/icon-star.svg" alt="" />
-                  <span className="bb-cta__score-value">{scoreValue}</span>
-                </div>
-              )}
-              {scoreLabel && <span className="bb-cta__score-label">{scoreLabel}</span>}
-            </div>
-          )}
+          <div className="bb-cta__badge-group">
+            {(brokerLogo || brokerName || awardLabel || awardYear) && (
+              <div className="bb-cta__badge">
+                {brokerLogo
+                  ? <img src={brokerLogo} alt={brokerName} className="bb-cta__badge-logo" />
+                  : brokerName && (
+                    <span className="bb-cta__badge-logo" style={{
+                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                      background: `hsl(${badgeHue}, 55%, 45%)`, color: '#fff',
+                      fontWeight: 700, fontSize: 28,
+                    }}>
+                      {badgeInitials}
+                    </span>
+                  )
+                }
+                {awardLabel && <span className="bb-cta__award-label">{awardLabel}</span>}
+                {(awardLabel || awardYear) && <div className="bb-cta__award-divider" />}
+                {awardYear  && <span className="bb-cta__award-year">{awardYear}</span>}
+              </div>
+            )}
+            {(scoreValue || scoreLabel) && (
+              <div className="bb-cta__score-inner">
+                {scoreValue && (
+                  <div className="bb-cta__score-row">
+                    <img src="/assets/images/icon-star.svg" alt="" />
+                    <span className="bb-cta__score-value"><strong>{scoreValue.replace('/5', '')}</strong>/5</span>
+                  </div>
+                )}
+                {scoreLabel && <span className="bb-cta__score-label">{scoreLabel}</span>}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     )

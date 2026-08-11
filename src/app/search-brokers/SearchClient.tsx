@@ -738,7 +738,7 @@ export default function SearchClient() {
             <p className="search-results__count">
               Showing{' '}
               <strong>
-                {loading ? '…' : `${filtered.length} broker${filtered.length !== 1 ? 's' : ''}`}
+                {loading ? '…' : `${Math.min(visibleCount, filtered.length)} of ${filtered.length} broker${filtered.length !== 1 ? 's' : ''}`}
               </strong>
             </p>
             <span className="sb-sort-label">Sort by</span>

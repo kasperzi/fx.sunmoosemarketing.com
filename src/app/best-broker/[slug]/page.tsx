@@ -330,16 +330,18 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
   }
 
   if (type === 'cta_overlay') {
-    const badge      = String(data.badge        ?? '')
-    const headline   = String(data.headline     ?? '')
-    const checklist  = Array.isArray(data.checklist) ? (data.checklist as string[]).filter(Boolean) : []
-    const btnText    = String(data.button_text  ?? 'Find Your Broker')
-    const btnUrl     = String(data.button_url   ?? '/find-broker')
-    const btn2Text   = String(data.button2_text ?? '')
-    const btn2Url    = String(data.button2_url  ?? '/compare-brokers')
-    const photoUrl   = bmsMedia(String(data.photo_url ?? ''))
-    const scoreValue = String(data.score_value  ?? '')
-    const scoreLabel = String(data.score_label  ?? '')
+    const badge        = String(data.badge        ?? '')
+    const headline     = String(data.headline     ?? '')
+    const checklist    = Array.isArray(data.checklist) ? (data.checklist as string[]).filter(Boolean) : []
+    const btnText      = String(data.button_text  ?? 'Find Your Broker')
+    const btnUrl       = String(data.button_url   ?? '/find-broker')
+    const btn2Text     = String(data.button2_text ?? '')
+    const btn2Url      = String(data.button2_url  ?? '/compare-brokers')
+    const brokerLogo   = bmsMedia(String(data.broker_logo ?? ''))
+    const awardLabel   = String(data.award_label  ?? '')
+    const awardYear    = String(data.award_year   ?? '')
+    const scoreValue   = String(data.score_value  ?? '')
+    const scoreLabel   = String(data.score_label  ?? '')
     return (
       <div key={block.id} className="bb-cta bb-cta--overlay">
         <div className="bb-cta__content">
@@ -366,7 +368,14 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
         </div>
         <div className="bb-cta__image-wrap">
           <img src="/assets/images/cta2-bg.svg" alt="" className="bb-cta__shape" />
-          {photoUrl && <img src={photoUrl} alt="" className="bb-cta__photo" />}
+          {(brokerLogo || awardLabel || awardYear) && (
+            <div className="bb-cta__badge">
+              {brokerLogo && <img src={brokerLogo} alt="" className="bb-cta__badge-logo" />}
+              {awardLabel && <span className="bb-cta__award-label">{awardLabel}</span>}
+              {(awardLabel || awardYear) && <div className="bb-cta__award-divider" />}
+              {awardYear  && <span className="bb-cta__award-year">{awardYear}</span>}
+            </div>
+          )}
           {(scoreValue || scoreLabel) && (
             <div className="bb-cta__score">
               {scoreValue && (

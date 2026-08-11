@@ -1821,6 +1821,11 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 .bb-cta--overlay .bb-cta__image-wrap { position: absolute; inset: 0; }
 .bb-cta--overlay .bb-cta__shape { position: absolute; left: 409px; top: -0.88px; width: 423px; height: 392px; object-fit: fill; }
 .bb-cta--overlay .bb-cta__photo { position: absolute; top: 61.18px; left: 544.67px; width: 246.87px; height: 153.86px; border-radius: var(--radius-md); overflow: hidden; object-fit: cover; }
+.bb-cta__badge { position: absolute; top: 36px; left: 544.67px; width: 246.87px; display: flex; flex-direction: column; align-items: center; gap: 8px; color: #fff; }
+.bb-cta__badge-logo { width: 72px; height: 72px; border-radius: var(--radius-md); object-fit: contain; background: #1a1a2e; padding: 8px; }
+.bb-cta__award-label { font-size: 14px; font-weight: 600; text-align: center; color: #fff; }
+.bb-cta__award-divider { width: 60px; height: 1px; background: rgba(255,255,255,0.35); }
+.bb-cta__award-year { font-size: 13px; color: rgba(255,255,255,0.75); }
 .bb-cta__score {
   position: absolute;
   top: 232px;

@@ -2380,7 +2380,7 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 /* Search Brokers page */
 .hero__main--search-centered { align-items: center; text-align: center; gap: 24px; padding: 40px 88px 56px; }
 .hero__main--search-centered .breadcrumb { align-self: flex-start; }
-.search-hero__copy--centered { align-items: center; max-width: 900px; width: 100%; }
+.search-hero__copy--centered { align-items: center; max-width: 100%; width: 100%; }
 .search-hero__copy--centered .lead { width: 80%; }
 
 .search-pill-wrap { display: flex; flex-direction: column; gap: 12px; align-items: center; width: 100%; }

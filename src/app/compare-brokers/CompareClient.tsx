@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, Fragment } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { resolveCountry } from '@/lib/country'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -279,7 +280,11 @@ function BrokerColHeader({ state, isFirst }: { state: BrokerState; isFirst: bool
   )
 }
 
-function CompareTable({ stateA, stateB }: { stateA: BrokerState; stateB: BrokerState | null }) {
+function CompareTable({ stateA, stateB, countryAvailable }: {
+  stateA: BrokerState
+  stateB: BrokerState | null
+  countryAvailable: { country: string; slugs: Set<string> } | null
+}) {
   const dA = stateA.detail
   const dB = stateB?.detail ?? null
 
@@ -362,9 +367,41 @@ function CompareTable({ stateA, stateB }: { stateA: BrokerState; stateB: BrokerS
         <div className="cmp-group__head"><img src="/assets/images/rv-icon-chart-up-group.svg" alt="" /><span>Overall</span></div>
         {row('Overall rating', (_, b) => <RatingCell rating={b.total_rating} />)}
         {row('Founded', d => d.founded_year ? String(d.founded_year) : '—')}
-        {row('Min deposit', (d, b) => { const v = d.accounts.min_deposit ?? b.min_deposit; return v != null ? `$${v}` : '—' })}
-        {row('Max leverage', d => d.accounts.max_leverage || '—')}
-        {boolRow('Accepts US clients', d => d.accounts.accepts_us_clients, true)}
+        {/* Available in your country — uses IP-detected country */}
+        {(() => {
+          const avA = countryAvailable ? countryAvailable.slugs.has(stateA.basic.slug) : null
+          const avB = stateB && countryAvailable ? countryAvailable.slugs.has(stateB.basic.slug) : undefined
+          const label = countryAvailable ? `Available in your country` : 'Available in your country'
+          return (
+            <>
+              <div className="cmp-cell">{label}</div>
+              <div className="cmp-cell cmp-cell--value">
+                {avA === null ? <span style={{ opacity: 0.35 }}>…</span> : <CheckNode val={avA} />}
+              </div>
+              <div className="cmp-cell cmp-cell--value">
+                {avB === undefined ? '—' : avB === null ? <span style={{ opacity: 0.35 }}>…</span> : <CheckNode val={avB} />}
+              </div>
+            </>
+          )
+        })()}
+        {/* Min deposit — badge on the lower one */}
+        {(() => {
+          const depA = stateA.detail?.accounts.min_deposit ?? stateA.basic.min_deposit
+          const depB = stateB ? (stateB.detail?.accounts.min_deposit ?? stateB.basic.min_deposit) : undefined
+          const aLower = depA != null && depB != null && depA < depB
+          const bLower = depA != null && depB != null && depB < depA
+          return (
+            <>
+              <div className="cmp-cell cmp-cell--last">Min deposit</div>
+              <div className="cmp-cell cmp-cell--value cmp-cell--last">
+                {stateA.loading ? <span style={{ opacity: 0.35 }}>…</span> : depA != null ? <>{`$${depA}`}{aLower && <span className="top10-card__badge" style={{ marginLeft: 6 }}>Lower deposit</span>}</> : '—'}
+              </div>
+              <div className="cmp-cell cmp-cell--value cmp-cell--last">
+                {!stateB ? '—' : stateB.loading ? <span style={{ opacity: 0.35 }}>…</span> : depB != null ? <>{`$${depB}`}{bLower && <span className="top10-card__badge" style={{ marginLeft: 6 }}>Lower deposit</span>}</> : '—'}
+              </div>
+            </>
+          )
+        })()}
       </div>
 
       {/* Account features */}
@@ -531,6 +568,16 @@ export function CompareSelectorCard() {
 
 // ─── Export 2: Comparison table section (goes OUTSIDE hero) ──────────────────
 
+async function loadCountryBrokerSlugs(country: string): Promise<Set<string>> {
+  try {
+    const json = await fetch(`/api/brokers?per_page=500&page=1&country=${country}`).then(r => r.json())
+    const list: BrokerBasic[] = (json.data ?? json ?? [])
+    return new Set(list.map(b => b.slug))
+  } catch {
+    return new Set()
+  }
+}
+
 export function CompareTableSection() {
   const searchParams = useSearchParams()
   const slugA = searchParams.get('a')
@@ -539,6 +586,15 @@ export function CompareTableSection() {
   const [allBrokers, setAllBrokers] = useState<BrokerBasic[]>([])
   const [stateA, setStateA] = useState<BrokerState | null>(null)
   const [stateB, setStateB] = useState<BrokerState | null>(null)
+  const [countryAvailable, setCountryAvailable] = useState<{ country: string; slugs: Set<string> } | null>(null)
+
+  // Detect country + load country-filtered broker slugs
+  useEffect(() => {
+    resolveCountry().then(async country => {
+      const slugs = await loadCountryBrokerSlugs(country)
+      setCountryAvailable({ country, slugs })
+    })
+  }, [])
 
   // Load broker list for basic info (total_rating, min_spread)
   useEffect(() => {
@@ -550,7 +606,7 @@ export function CompareTableSection() {
   useEffect(() => {
     if (!slugA) { setStateA(null); return }
     const basic = allBrokers.find(b => b.slug === slugA)
-    if (!basic && allBrokers.length === 0) return // list not loaded yet
+    if (!basic && allBrokers.length === 0) return
     if (!basic) { setStateA(null); return }
     setStateA({ basic, detail: null, loading: true })
     loadDetail(slugA).then(detail => setStateA({ basic, detail, loading: false }))
@@ -571,7 +627,7 @@ export function CompareTableSection() {
   return (
     <section>
       <div className="section-inner">
-        <CompareTable stateA={stateA} stateB={stateB} />
+        <CompareTable stateA={stateA} stateB={stateB} countryAvailable={countryAvailable} />
       </div>
     </section>
   )

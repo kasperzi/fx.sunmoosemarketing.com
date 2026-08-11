@@ -157,64 +157,261 @@ function StarRating({ rating, className }: { rating?: string | null; className?:
   )
 }
 
-function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) {
+// ─── Article-level block items (rendered inside bb-article__main) ─────────────
+
+function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
   const { type, data } = block
 
   if (type === 'heading') {
     const level = String(data.level ?? 'h2')
     const text  = String(data.text ?? '')
     return (
-      <section key={block.id} className="bb-block bb-block--heading">
-        <div className="section-inner">
-          {level === 'h2' ? <h2>{text}</h2> : <h3>{text}</h3>}
-        </div>
-      </section>
+      <div key={block.id} className="bb-block">
+        {level === 'h2' ? <h2>{text}</h2> : <h3>{text}</h3>}
+      </div>
     )
   }
 
   if (type === 'text') {
     return (
-      <section key={block.id} className="bb-block bb-block--text">
-        <div className="section-inner">
-          <div
-            className="bb-prose"
-            dangerouslySetInnerHTML={{ __html: String(data.html ?? '') }}
-          />
-        </div>
-      </section>
+      <div key={block.id} className="bb-block">
+        <div className="bb-prose" dangerouslySetInnerHTML={{ __html: String(data.html ?? '') }} />
+      </div>
     )
   }
 
   if (type === 'video') {
     const url = String(data.url ?? '')
     if (!url) return null
-    const embedUrl = url
-      .replace('watch?v=', 'embed/')
-      .replace('youtu.be/', 'youtube.com/embed/')
-    const videoTitle    = String(data.title         ?? 'Video')
-    const thumbnailUrl  = data.thumbnail_url ? String(data.thumbnail_url) : null
-
+    const embedUrl     = url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')
+    const videoTitle   = String(data.title ?? 'Video')
+    const thumbnailUrl = data.thumbnail_url ? String(data.thumbnail_url) : null
     return (
-      <section key={block.id} className="bb-block bb-block--video">
-        <div className="section-inner">
-          {videoTitle && <p className="bb-video__title">{videoTitle}</p>}
-          {thumbnailUrl ? (
-            <VideoLightbox embedUrl={embedUrl} thumbnailUrl={thumbnailUrl} title={videoTitle} />
-          ) : (
-            <div className="bb-video__wrap" style={{ position: 'relative', paddingBottom: '56.25%', height: 0 }}>
-              <iframe
-                src={embedUrl}
-                title={videoTitle}
-                frameBorder="0"
-                allowFullScreen
-                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', borderRadius: 8 }}
-              />
+      <div key={block.id} className="bb-video">
+        {thumbnailUrl ? (
+          <VideoLightbox embedUrl={embedUrl} thumbnailUrl={thumbnailUrl} title={videoTitle} />
+        ) : (
+          <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0 }}>
+            <iframe src={embedUrl} title={videoTitle} frameBorder="0" allowFullScreen
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', borderRadius: 8 }} />
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  if (type === 'broker_table') {
+    const cols = (data.columns as string[]) ?? ['total_rating', 'min_deposit', 'max_leverage']
+    return (
+      <div key={block.id} className="bb-broker-table">
+        <div className="bb-broker-table__head">
+          <span>Broker</span>
+          <span>Ratings</span>
+          <span>Min.<br />Deposit</span>
+          <span>Spread</span>
+          <span>Licensed</span>
+          <span></span>
+        </div>
+        {items.map((item) => (
+          <div key={item.broker_id} className="bb-broker-row">
+            <div className="bb-broker-row__broker">
+              <BrokerLogoImg item={item} className="bb-broker-row__logo" />
+              <span className="bb-broker-row__name">{item.name}</span>
             </div>
-          )}
+            <p className="bb-broker-row__rating">
+              {item.total_rating != null
+                ? <><img src="/assets/images/icon-star.svg" alt="" />{Number(item.total_rating).toFixed(1)}/5</>
+                : '—'}
+            </p>
+            <p className="bb-broker-row__stat">{item.min_deposit != null ? `$${item.min_deposit}` : '—'}</p>
+            <p className="bb-broker-row__stat">{getBrokerProp(item, 'min_spread') != null ? `${getBrokerProp(item, 'min_spread')} pips` : '—'}</p>
+            <p className="bb-broker-row__stat">{item.is_regulated ? '✔' : '—'}</p>
+            <div className="bb-broker-row__visit">
+              {item.affiliate_link
+                ? <a href={item.affiliate_link} className="btn btn--text" target="_blank" rel="noopener noreferrer nofollow">
+                    Visit Broker <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" />
+                  </a>
+                : null}
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (type === 'broker_detail_cards') {
+    const attrs = (data.attributes as string[]) ?? ['total_rating', 'min_deposit', 'max_leverage']
+    return (
+      <div key={block.id} className="bb-detail-cards">
+        {items.slice(0, 10).map((item, i) => (
+          <div key={item.broker_id} className="bb-detail-card">
+            <div className="bb-detail-card__head">
+              <span className="bb-detail-card__rank">#{i + 1}</span>
+              <BrokerLogoImg item={item} className="bb-detail-card__logo" />
+            </div>
+            <div className="bb-detail-card__name">{item.name}</div>
+            {item.blurb && <p className="bb-detail-card__blurb">{item.blurb}</p>}
+            <div className="bb-detail-card__attrs">
+              {attrs.map((a) => (
+                <div key={a} className="bb-detail-card__attr">
+                  <span className="bb-detail-card__attr-label">{BROKER_TABLE_COLUMNS[a] ?? a}</span>
+                  <span className="bb-detail-card__attr-val">
+                    {a === 'is_regulated'                    ? (item.is_regulated ? 'Yes' : 'No')
+                    : a === 'has_negative_balance_protection' ? (item.has_negative_balance_protection ? 'Yes' : 'No')
+                    : a === 'min_deposit'                    ? (item.min_deposit != null ? `$${item.min_deposit}` : '—')
+                    : String(getBrokerProp(item, a) ?? '—')}
+                  </span>
+                </div>
+              ))}
+            </div>
+            {item.affiliate_link && (
+              <a href={item.affiliate_link} className="btn btn--primary btn--full mt-2" target="_blank" rel="noopener noreferrer nofollow">
+                Visit {item.name}
+              </a>
+            )}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (type === 'cta') {
+    const headline = String(data.headline   ?? '')
+    const ctaText  = String(data.text       ?? '')
+    const btnText  = String(data.button_text ?? 'Get Started')
+    const btnUrl   = String(data.button_url  ?? '/find-broker')
+    return (
+      <div key={block.id} className="bb-cta">
+        <div className="bb-cta__copy">
+          {headline && <h3 className="bb-cta__headline">{headline}</h3>}
+          {ctaText  && <p className="bb-cta__text">{ctaText}</p>}
+          {btnText  && <a href={btnUrl} className="btn btn--primary">{btnText}</a>}
+        </div>
+        <div className="bb-cta__image" aria-hidden="true">
+          <img src="/assets/images/cta-find-broker.png" alt="" />
+        </div>
+      </div>
+    )
+  }
+
+  if (type === 'cta_overlay') {
+    const topBroker   = items[0]
+    const headline    = String(data.headline   ?? '')
+    const overlayText = String(data.text       ?? '')
+    const badgeText   = String(data.badge_text ?? '')
+    return (
+      <div key={block.id} className="bb-cta-overlay">
+        <div className="bb-cta-overlay__copy">
+          {headline    && <h3>{headline}</h3>}
+          {overlayText && <p>{overlayText}</p>}
+        </div>
+        {topBroker && (
+          <div className="bb-cta-overlay__broker">
+            {badgeText && <span className="badge">{badgeText}</span>}
+            <BrokerLogoImg item={topBroker} className="overlay-broker-logo" />
+            {topBroker.affiliate_link && (
+              <a href={topBroker.affiliate_link} className="btn btn--primary btn--sm" target="_blank" rel="noopener noreferrer nofollow">
+                Visit {topBroker.name}
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  return null
+}
+
+// ─── Top-level content block renderer (groups article blocks + sidebar) ────────
+
+function renderContentBlocks(blocks: ContentBlock[], items: CollectionItem[]) {
+  interface SidebarBroker {
+    broker_id: number; name: string; slug?: string
+    logo_url?: string | null; rating?: string; visit_url?: string | null
+  }
+  type Segment =
+    | { kind: 'ranking'; block: ContentBlock }
+    | { kind: 'article'; blocks: ContentBlock[]; sidebar: SidebarBroker[]; sidebarTitle: string; sidebarDesc: string }
+
+  const segments: Segment[] = []
+  let lastRanking: SidebarBroker[] = []
+  let lastSidebarTitle = 'Top Brokers'
+  let lastSidebarDesc  = "Quick shortlist from this page’s ranked brokers."
+
+  for (const block of blocks) {
+    if (block.type === 'broker_ranking') {
+      lastRanking      = ((block.data?.brokers as SidebarBroker[]) ?? []).slice(0, 5)
+      lastSidebarTitle = block.data?.sidebar_title      ? String(block.data.sidebar_title)      : 'Top Brokers'
+      lastSidebarDesc  = block.data?.sidebar_description ? String(block.data.sidebar_description) : "Quick shortlist from this page’s ranked brokers."
+      segments.push({ kind: 'ranking', block })
+    } else {
+      const last = segments[segments.length - 1]
+      if (last?.kind === 'article') {
+        last.blocks.push(block)
+      } else {
+        segments.push({ kind: 'article', blocks: [block], sidebar: [...lastRanking], sidebarTitle: lastSidebarTitle, sidebarDesc: lastSidebarDesc })
+      }
+    }
+  }
+
+  return segments.map((seg, i) => {
+    if (seg.kind === 'ranking') {
+      return renderBlock(seg.block, items, i)
+    }
+    return (
+      <section key={`article-${i}`} className="bb-article">
+        <div className="section-inner" style={{ gap: 0 }}>
+          <div className="bb-article__layout">
+            <div className="bb-article__main">
+              {seg.blocks.map((b) => renderArticleItem(b, items))}
+            </div>
+            {seg.sidebar.length > 0 && (
+              <aside className="bb-article__sidebar">
+                <div className="bb-sidebar-card">
+                  <div className="bb-sidebar-card__head">
+                    <h4>{seg.sidebarTitle}</h4>
+                    <p className="lead">{seg.sidebarDesc}</p>
+                  </div>
+                  {seg.sidebar.map((b, j) => (
+                    <a
+                      key={b.broker_id}
+                      href={b.visit_url ?? '#'}
+                      className={`match-card${j === 0 ? ' match-card--active' : ''}`}
+                      target="_blank" rel="noopener noreferrer nofollow"
+                    >
+                      <div className="match-card__info">
+                        <span className="match-card__rank">#{j + 1}</span>
+                        <BrokerLogo name={b.name} logoUrl={b.logo_url} className="match-card__logo" />
+                        <div className="match-card__text">
+                          <p className="match-card__name">{b.name}</p>
+                          {b.rating && (
+                            <p className="match-card__rating">
+                              <img src="/assets/images/icon-star.svg" alt="" />{b.rating}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      <span className="icon-btn match-card__link">
+                        <img src="/assets/images/icon-arrow-up-right.svg" alt="" />
+                      </span>
+                    </a>
+                  ))}
+                  <a href="/find-broker" className="btn btn--secondary btn--block">Find Your Broker</a>
+                </div>
+              </aside>
+            )}
+          </div>
         </div>
       </section>
     )
-  }
+  })
+}
+
+// ─── broker_ranking full-width block ──────────────────────────────────────────
+
+function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) {
+  const { type, data } = block
 
   if (type === 'broker_ranking') {
     interface RankBroker {
@@ -328,152 +525,6 @@ function renderBlock(block: ContentBlock, items: CollectionItem[], idx: number) 
     )
   }
 
-  if (type === 'broker_table') {
-    const cols = (data.columns as string[]) ?? ['total_rating', 'min_deposit', 'max_leverage']
-    return (
-      <section key={block.id} className="bb-block bb-block--broker-table">
-        <div className="section-inner">
-          <div className="table-responsive">
-            <table className="bb-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Broker</th>
-                  {cols.map((c) => (
-                    <th key={c}>{BROKER_TABLE_COLUMNS[c] ?? c}</th>
-                  ))}
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((item, i) => (
-                  <tr key={item.broker_id}>
-                    <td className="rank-cell">#{i + 1}</td>
-                    <td>
-                      <div className="broker-name-cell">
-                        <BrokerLogoImg item={item} className="broker-table-logo" />
-                        <span>{item.name}</span>
-                      </div>
-                    </td>
-                    {cols.map((c) => (
-                      <td key={c}>
-                        {c === 'total_rating'                    ? String(getBrokerProp(item, c) ?? '—')
-                        : c === 'is_regulated'                   ? (item.is_regulated ? '✅' : '—')
-                        : c === 'has_negative_balance_protection' ? (item.has_negative_balance_protection ? '✅' : '—')
-                        : c === 'min_deposit'                    ? (item.min_deposit != null ? `$${item.min_deposit}` : '—')
-                        : String(getBrokerProp(item, c) ?? '—')}
-                      </td>
-                    ))}
-                    <td>
-                      {item.affiliate_link && (
-                        <a href={item.affiliate_link} className="btn btn--primary btn--sm" target="_blank" rel="noopener noreferrer nofollow">
-                          Visit
-                        </a>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-    )
-  }
-
-  if (type === 'broker_detail_cards') {
-    const attrs = (data.attributes as string[]) ?? ['total_rating', 'min_deposit', 'max_leverage']
-    return (
-      <section key={block.id} className="bb-block bb-block--detail-cards">
-        <div className="section-inner">
-          <div className="bb-detail-cards">
-            {items.slice(0, 10).map((item, i) => (
-              <div key={item.broker_id} className="bb-detail-card">
-                <div className="bb-detail-card__head">
-                  <span className="bb-detail-card__rank">#{i + 1}</span>
-                  <BrokerLogoImg item={item} className="bb-detail-card__logo" />
-                </div>
-                <div className="bb-detail-card__name">{item.name}</div>
-                {item.blurb && <p className="bb-detail-card__blurb">{item.blurb}</p>}
-                <div className="bb-detail-card__attrs">
-                  {attrs.map((a) => (
-                    <div key={a} className="bb-detail-card__attr">
-                      <span className="bb-detail-card__attr-label">{BROKER_TABLE_COLUMNS[a] ?? a}</span>
-                      <span className="bb-detail-card__attr-val">
-                        {a === 'is_regulated'                    ? (item.is_regulated ? 'Yes' : 'No')
-                        : a === 'has_negative_balance_protection' ? (item.has_negative_balance_protection ? 'Yes' : 'No')
-                        : a === 'min_deposit'                    ? (item.min_deposit != null ? `$${item.min_deposit}` : '—')
-                        : String(getBrokerProp(item, a) ?? '—')}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                {item.affiliate_link && (
-                  <a href={item.affiliate_link} className="btn btn--primary btn--full mt-2" target="_blank" rel="noopener noreferrer nofollow">
-                    Visit {item.name}
-                  </a>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    )
-  }
-
-  if (type === 'cta') {
-    const headline   = String(data.headline   ?? '')
-    const ctaText    = String(data.text       ?? '')
-    const btnText    = String(data.button_text ?? 'Get Started')
-    const btnUrl     = String(data.button_url  ?? '/find-broker')
-    return (
-      <section key={block.id} className="bb-block bb-block--cta">
-        <div className="section-inner">
-          <div className="bb-cta">
-            <div className="bb-cta__copy">
-              {headline && <h3 className="bb-cta__headline">{headline}</h3>}
-              {ctaText  && <p className="bb-cta__text">{ctaText}</p>}
-              {btnText  && <a href={btnUrl} className="btn btn--primary">{btnText}</a>}
-            </div>
-            <div className="bb-cta__image" aria-hidden="true">
-              <img src="/assets/images/cta-find-broker.png" alt="" />
-            </div>
-          </div>
-        </div>
-      </section>
-    )
-  }
-
-  if (type === 'cta_overlay') {
-    const topBroker  = items[0]
-    const headline   = String(data.headline   ?? '')
-    const overlayText = String(data.text      ?? '')
-    const badgeText  = String(data.badge_text ?? '')
-    return (
-      <section key={block.id} className="bb-block bb-block--cta-overlay">
-        <div className="section-inner">
-          <div className="bb-cta-overlay">
-            <div className="bb-cta-overlay__copy">
-              {headline    && <h3>{headline}</h3>}
-              {overlayText && <p>{overlayText}</p>}
-            </div>
-            {topBroker && (
-              <div className="bb-cta-overlay__broker">
-                {badgeText && <span className="badge">{badgeText}</span>}
-                <BrokerLogoImg item={topBroker} className="overlay-broker-logo" />
-                {topBroker.affiliate_link && (
-                  <a href={topBroker.affiliate_link} className="btn btn--primary btn--sm" target="_blank" rel="noopener noreferrer nofollow">
-                    Visit {topBroker.name}
-                  </a>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-    )
-  }
-
   return null
 }
 
@@ -553,9 +604,7 @@ export default async function BestBrokerPage({ params }: { params: Promise<{ slu
         )}
 
         {/* ── CONTENT BLOCKS (dynamic) ──────────────────────── */}
-        {(content.content_blocks ?? []).map((block, idx) =>
-          renderBlock(block, items, idx)
-        )}
+        {renderContentBlocks(content.content_blocks ?? [], items)}
 
         {/* ── ARTICLE BODY ──────────────────────────────────── */}
         {content.article_body && (

@@ -356,7 +356,7 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
               </div>
             </div>
 
-            <a href={b.compare_url || '/compare-brokers'} className="btn btn--text bb-comparison-card__compare">
+            <a href={(() => { const slug = live?.slug || b.slug; return slug ? `/compare-brokers?a=${slug}` : '/compare-brokers' })()} className="btn btn--text bb-comparison-card__compare">
               Compare Broker <img src={arrowIcon} alt="" />
             </a>
           </div>

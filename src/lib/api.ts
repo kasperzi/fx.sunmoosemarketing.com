@@ -51,6 +51,8 @@ export async function getBrokers(params: {
   if (params.per_page) qs.set('per_page', String(params.per_page))
   if (params.page)     qs.set('page',     String(params.page))
   if (params.language) qs.set('language', params.language)
+  const websiteId = process.env.BMS_WEBSITE_ID
+  if (websiteId) qs.set('website_id', websiteId)
 
   const url = `${BMS_API_URL}/api/v1/brokers${qs.toString() ? '?' + qs.toString() : ''}`
   const res = await fetch(url, {
@@ -67,7 +69,9 @@ export async function getBrokers(params: {
 export async function getBroker(slug: string): Promise<Broker | null> {
   const BMS_API_URL = process.env.BMS_API_URL
   const BMS_API_KEY = process.env.BMS_API_KEY
-  const res = await fetch(`${BMS_API_URL}/api/v1/brokers/${slug}`, {
+  const websiteId = process.env.BMS_WEBSITE_ID
+  const qs = websiteId ? `?website_id=${websiteId}` : ''
+  const res = await fetch(`${BMS_API_URL}/api/v1/brokers/${slug}${qs}`, {
     headers: { 'X-Api-Key': BMS_API_KEY! },
     next: { revalidate: 3600 },
   })

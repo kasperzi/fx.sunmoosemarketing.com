@@ -46,6 +46,8 @@ export async function GET(
 
   const { slug } = await params
   const { searchParams } = new URL(req.url)
+  const BMS_WEBSITE_ID = process.env.BMS_WEBSITE_ID
+  if (BMS_WEBSITE_ID && !searchParams.has('website_id')) searchParams.set('website_id', BMS_WEBSITE_ID)
   const qs = searchParams.toString()
   const url = `${BMS_API_URL}/api/v1/brokers/${slug}${qs ? `?${qs}` : ''}`
 

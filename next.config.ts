@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   env: {
     BMS_API_URL: BMS_ORIGIN,
     BMS_API_KEY: process.env.BMS_API_KEY ?? '',
+    BMS_WEBSITE_ID: process.env.BMS_WEBSITE_ID ?? '',
   },
   async rewrites() {
     return [

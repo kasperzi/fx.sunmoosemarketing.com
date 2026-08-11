@@ -267,11 +267,13 @@ function BrokerColHeader({ state, isFirst }: { state: BrokerState; isFirst: bool
         </div>
       </div>
       <div className="broker-card__ctas">
-        {affiliateLink
-          ? <a href={affiliateLink} className={`btn ${isFirst ? 'btn--secondary' : 'btn--primary'} btn--block`}
-              target="_blank" rel="noopener noreferrer nofollow">Visit Broker</a>
-          : <span />
-        }
+        <a
+          href={affiliateLink || '#'}
+          className={`btn ${isFirst ? 'btn--secondary' : 'btn--primary'} btn--block`}
+          {...(affiliateLink ? { target: '_blank', rel: 'noopener noreferrer nofollow' } : {})}
+        >
+          Visit Broker
+        </a>
         <a href={`/broker/${basic.slug}`} className="btn btn--text btn--text--px btn--center">
           Read Review <img src="/assets/images/icon-arrow-right.svg" alt="" />
         </a>

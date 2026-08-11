@@ -330,27 +330,55 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
   }
 
   if (type === 'cta_overlay') {
-    const topBroker   = items[0]
-    const headline    = String(data.headline   ?? '')
-    const overlayText = String(data.text       ?? '')
-    const badgeText   = String(data.badge_text ?? '')
+    const badge      = String(data.badge        ?? '')
+    const headline   = String(data.headline     ?? '')
+    const checklist  = Array.isArray(data.checklist) ? (data.checklist as string[]).filter(Boolean) : []
+    const btnText    = String(data.button_text  ?? 'Find Your Broker')
+    const btnUrl     = String(data.button_url   ?? '/find-broker')
+    const btn2Text   = String(data.button2_text ?? '')
+    const btn2Url    = String(data.button2_url  ?? '/compare-brokers')
+    const photoUrl   = bmsMedia(String(data.photo_url ?? ''))
+    const scoreValue = String(data.score_value  ?? '')
+    const scoreLabel = String(data.score_label  ?? '')
     return (
-      <div key={block.id} className="bb-cta-overlay">
-        <div className="bb-cta-overlay__copy">
-          {headline    && <h3>{headline}</h3>}
-          {overlayText && <p>{overlayText}</p>}
-        </div>
-        {topBroker && (
-          <div className="bb-cta-overlay__broker">
-            {badgeText && <span className="badge">{badgeText}</span>}
-            <BrokerLogoImg item={topBroker} className="overlay-broker-logo" />
-            {topBroker.affiliate_link && (
-              <a href={topBroker.affiliate_link} className="btn btn--primary btn--sm" target="_blank" rel="noopener noreferrer nofollow">
-                Visit {topBroker.name}
-              </a>
+      <div key={block.id} className="bb-cta bb-cta--overlay">
+        <div className="bb-cta__content">
+          <div className="bb-cta__top">
+            <div className="bb-cta__copy">
+              {badge    && <p className="eyebrow">{badge}</p>}
+              {headline && <h4>{headline}</h4>}
+            </div>
+            {checklist.length > 0 && (
+              <ul className="bb-cta__checklist">
+                {checklist.map((item, i) => (
+                  <li key={i}>
+                    <img src="/assets/images/icon-check-fill.svg" alt="" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
             )}
           </div>
-        )}
+          <div className="bb-cta__buttons">
+            {btnText  && <a href={btnUrl}  className="btn btn--secondary">{btnText}</a>}
+            {btn2Text && <a href={btn2Url} className="btn btn--text">{btn2Text} <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></a>}
+          </div>
+        </div>
+        <div className="bb-cta__image-wrap">
+          <img src="/assets/images/cta2-bg.svg" alt="" className="bb-cta__shape" />
+          {photoUrl && <img src={photoUrl} alt="" className="bb-cta__photo" />}
+          {(scoreValue || scoreLabel) && (
+            <div className="bb-cta__score">
+              {scoreValue && (
+                <div className="bb-cta__score-row">
+                  <img src="/assets/images/icon-star.svg" alt="" />
+                  <span className="bb-cta__score-value">{scoreValue}</span>
+                </div>
+              )}
+              {scoreLabel && <span className="bb-cta__score-label">{scoreLabel}</span>}
+            </div>
+          )}
+        </div>
       </div>
     )
   }

@@ -482,9 +482,9 @@ export default function SearchClient() {
     c.name.toLowerCase().includes(countrySearch.toLowerCase())
   )
 
-  // Deposit range fill percentages
-  const fillLeft = `${(minDeposit / 500) * 100}%`
-  const fillRight = `${100 - (maxDeposit / 500) * 100}%`
+  // Deposit range — same logic as script.js
+  const minPct = (minDeposit / 500) * 100
+  const maxPct = (maxDeposit / 500) * 100
 
   return (
     <section>
@@ -614,13 +614,17 @@ export default function SearchClient() {
                   <div className="filters-content">
                     <div className="filters-range">
                       <div className="filters-range__values">
-                        <span className="filters-range__value">{minDeposit > 0 ? `$${minDeposit}` : '$0'}</span>
-                        <span className="filters-range__value">{maxDeposit >= 500 ? '$500+' : `$${maxDeposit}`}</span>
+                        <span className="filters-range__value" style={{ left: `${minPct}%` }}>
+                          ${minDeposit}
+                        </span>
+                        <span className="filters-range__value" style={{ left: `${maxPct}%` }}>
+                          ${maxDeposit}+
+                        </span>
                       </div>
                       <div className="filters-range__track">
                         <div
                           className="filters-range__fill"
-                          style={{ left: fillLeft, right: fillRight }}
+                          style={{ left: `${minPct}%`, width: `${maxPct - minPct}%` }}
                         ></div>
                         <input
                           type="range"

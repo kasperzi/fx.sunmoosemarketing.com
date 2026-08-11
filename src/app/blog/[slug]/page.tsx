@@ -20,6 +20,8 @@ interface BlogArticle {
   content_blocks: ContentBlock[]
   published_at:   string | null
   created_at:     string
+  category_name:  string | null
+  category_slug:  string | null
 }
 
 interface SidebarBroker {
@@ -310,7 +312,9 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
 
               {/* Article header */}
               <div className="article-header">
-                <span className="top10-card__badge">BROKER NEWS</span>
+                {article.category_name && (
+                  <span className="top10-card__badge">{article.category_name.toUpperCase()}</span>
+                )}
                 <div className="article-header__meta">
                   <span className="lead" style={{ fontSize: 14 }}>{publishedDate}</span>
                 </div>

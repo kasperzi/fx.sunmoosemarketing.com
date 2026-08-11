@@ -35,9 +35,7 @@ interface SidebarBroker {
 async function fetchArticle(slug: string): Promise<BlogArticle | null> {
   const BMS_API_URL = process.env.BMS_API_URL
   const BMS_API_KEY = process.env.BMS_API_KEY
-
   if (!BMS_API_URL || !BMS_API_KEY) return null
-
   try {
     const res = await fetch(`${BMS_API_URL}/api/v1/blog/${slug}`, {
       headers: { 'X-Api-Key': BMS_API_KEY },
@@ -271,9 +269,9 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
 
   const blocks = article.content_blocks ?? []
 
-  // Extract sidebar_brokers block (first one wins) — rendered in sidebar
-  const sidebarBlock = blocks.find((b) => b.type === 'sidebar_brokers')
-  const mainBlocks   = blocks.filter((b) => b.type !== 'sidebar_brokers')
+  // Extract sidebar_brokers block (first one wins)
+  const sidebarBlock   = blocks.find((b) => b.type === 'sidebar_brokers')
+  const mainBlocks     = blocks.filter((b) => b.type !== 'sidebar_brokers')
 
   const sidebarTitle   = sidebarBlock ? String(sidebarBlock.data.title ?? 'Top Brokers') : 'Top Brokers'
   const sidebarDesc    = sidebarBlock ? String(sidebarBlock.data.description ?? '') : ''
@@ -281,32 +279,60 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
 
   const publishedDate = article.published_at
     ? new Date(article.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-    : null
+    : new Date(article.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 
   return (
     <>
       <Nav />
 
-      {/* Article hero */}
-      <section className="rv-article-hero">
-        <div className="section-inner">
-          <div className="rv-article-hero__inner">
-            <p className="eyebrow">Article</p>
-            <h1>{article.title}</h1>
-            {article.excerpt && <p className="lead">{article.excerpt}</p>}
-            {publishedDate && <p className="rv-article-hero__date">{publishedDate}</p>}
+      {/* Hero flush — breadcrumb only */}
+      <section className="hero hero--flush">
+        <div className="hero__border hero__border--flush hero__border--white">
+          <div className="hero__main" style={{ padding: '40px 112px 56px' }}>
+            <div className="breadcrumb">
+              <img src="/assets/images/icon-home-outline.svg" alt="" className="icon-24" />
+              <span>Home</span>
+              <img src="/assets/images/icon-chevron-right-rounded.svg" alt="" className="icon-24" />
+              <a href="/blog" style={{ color: 'var(--body-text)', textDecoration: 'none', fontSize: 14 }}>Blog</a>
+              <img src="/assets/images/icon-chevron-right-rounded.svg" alt="" className="icon-24" />
+              <span className="breadcrumb__current">{article.title}</span>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Article body */}
       <section className="rv-article">
-        <div className="section-inner">
+        <div className="section-inner" style={{ gap: 0, paddingTop: 56 }}>
           <div className="rv-article__layout">
 
             {/* Main content */}
             <div className="rv-article__main">
+
+              {/* Article header */}
+              <div className="article-header">
+                <span className="top10-card__badge">BROKER NEWS</span>
+                <div className="article-header__meta">
+                  <span className="lead" style={{ fontSize: 14 }}>{publishedDate}</span>
+                </div>
+                <h2>{article.title}</h2>
+                {article.excerpt && <p className="lead">{article.excerpt}</p>}
+              </div>
+
+              {/* Content blocks */}
               {mainBlocks.map((block) => renderMainBlock(block))}
+
+              {/* Share */}
+              <div className="article-share">
+                <span className="article-share__label">Share this article</span>
+                <div className="article-share__icons">
+                  <a href="#"><img src="/assets/images/icon-share-facebook.svg" alt="Facebook" /></a>
+                  <a href="#"><img src="/assets/images/icon-share-linkedin.svg" alt="LinkedIn" /></a>
+                  <a href="#"><img src="/assets/images/icon-share-twitter.svg" alt="Twitter" /></a>
+                  <a href="#"><img src="/assets/images/icon-share-link.svg" alt="Copy link" /></a>
+                </div>
+              </div>
+
             </div>
 
             {/* Sidebar */}
@@ -314,34 +340,35 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
               <aside className="rv-article__sidebar">
                 <div className="rv-side-card">
                   <div className="side-broker-card__heading">
-                    <h4>{sidebarTitle}</h4>
+                    <p className="side-broker-card__title">{sidebarTitle}</p>
                     {sidebarDesc && <p className="lead">{sidebarDesc}</p>}
                   </div>
                   {sidebarBrokers.map((b, idx) => (
-                    <a
-                      key={b.broker_id}
-                      href={b.slug ? `/broker/${b.slug}` : '#'}
-                      className={`side-broker-row${idx === 0 ? ' side-broker-row--active' : ''}`}
-                    >
-                      <span className="side-broker-row__rank">#{idx + 1}</span>
-                      <BrokerLogo
-                        name={b.name}
-                        logoUrl={b.logo_url}
-                        className="side-broker-row__logo"
-                      />
+                    <div key={b.broker_id} className={`side-broker-row${idx === 0 ? ' side-broker-row--top' : ''}`}>
+                      <div className="side-broker-row__rank"><span>#{idx + 1}</span></div>
                       <div className="side-broker-row__info">
-                        <p className="side-broker-row__name">{b.name}</p>
-                        {b.rating && (
-                          <p className="side-broker-row__rating">
-                            <img src="/assets/images/icon-star.svg" alt="" />
-                            {b.rating}
-                          </p>
-                        )}
+                        <BrokerLogo
+                          name={b.name}
+                          logoUrl={b.logo_url}
+                          className="side-broker-row__logo"
+                        />
+                        <div>
+                          <p className="side-broker-row__name">{b.name}</p>
+                          {b.rating && (
+                            <p className="side-broker-row__rating">
+                              <img src="/assets/images/icon-star.svg" alt="" />
+                              <span>{b.rating}</span>
+                            </p>
+                          )}
+                        </div>
                       </div>
-                      <span className="icon-btn side-broker-row__link">
+                      <a
+                        href={b.slug ? `/broker/${b.slug}` : '#'}
+                        className="side-broker-row__arrow"
+                      >
                         <img src="/assets/images/icon-arrow-up-right.svg" alt="" />
-                      </span>
-                    </a>
+                      </a>
+                    </div>
                   ))}
                   <a href="/find-broker" className="btn btn--secondary btn--block">Find Your Broker</a>
                 </div>

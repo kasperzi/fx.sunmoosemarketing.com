@@ -1736,6 +1736,12 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 .bb-block { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 .bb-block h3 { width: 100%; }
 .bb-block .lead { width: 100%; }
+.bb-block p { font-size: 20px; color: var(--body-text); line-height: 1.3; }
+.bb-block ul, .bb-block ol { padding-left: 1.5em; display: flex; flex-direction: column; gap: 8px; }
+.bb-block li { font-size: 20px; color: var(--body-text); line-height: 1.3; }
+.bb-block a { color: var(--primary); }
+.bb-block strong { font-weight: 700; }
+.bb-block em { font-style: italic; }
 
 .bb-video { width: 100%; border-radius: var(--radius-md); overflow: hidden; }
 .bb-video img { width: 100%; display: block; }

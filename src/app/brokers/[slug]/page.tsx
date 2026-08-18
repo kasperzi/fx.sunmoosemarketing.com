@@ -839,7 +839,7 @@ export default async function BrokerReviewPage(
             </div>
 
             <div className="broker-cards">
-              {related.map((b) => {
+              {related.slice(0, 3).map((b) => {
                 const bLogo = bmsUrl(b.logos?.square_light ?? b.logos?.square_dark)
                 const bRating = b.total_rating != null ? Math.round(b.total_rating * 10) / 10 : null
                 const bMinDeposit = b.min_deposit != null ? `$${b.min_deposit}` : '—'

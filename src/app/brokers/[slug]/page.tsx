@@ -1,3 +1,4 @@
+import React from 'react'
 import { notFound } from 'next/navigation'
 import { cookies } from 'next/headers'
 import type { Metadata } from 'next'
@@ -219,28 +220,29 @@ export default async function BrokerReviewPage(
 
   const pros         = (broker.pros_cons?.pros ?? []).map(extractText)
   const cons         = (broker.pros_cons?.cons ?? []).map(extractText)
-  const platforms    = broker.accounts.platforms.map((p) => p.title ?? p.name ?? '')
-  const regulators   = broker.regulation.regulators ?? []
+  const platforms    = (broker.accounts?.platforms ?? []).map((p) => p.title ?? p.name ?? '')
+  const regulators   = broker.regulation?.regulators ?? []
+  const accountTypes = broker.accounts?.account_types ?? []
   const payMethods   = broker.payment_methods ?? []
   const promos       = getActivePromotions(broker.promotions ?? [], country)
   const countryStatus = getCountryStatus(broker.countries ?? [], country)
   const affiliateLink = broker.affiliate_link ?? '#'
 
-  const minSpread = broker.accounts.account_types.length > 0
-    ? Math.min(...broker.accounts.account_types.map((at) => Number(at.spread ?? 99)).filter((n) => n < 99))
+  const minSpread = accountTypes.length > 0
+    ? Math.min(...accountTypes.map((at) => Number(at.spread ?? 99)).filter((n) => n < 99))
     : null
 
-  const minCommission = broker.accounts.account_types.find((at) => at.commission)?.commission ?? null
+  const minCommission = accountTypes.find((at) => at.commission)?.commission ?? null
 
-  const logoUrl = bmsUrl(broker.logos.rectangle_light ?? broker.logos.square_light)
+  const logoUrl = bmsUrl(broker.logos?.rectangle_light ?? broker.logos?.square_light)
 
   // ── Key facts ───────────────────────────────────────────────────────────────
   const keyFacts = [
-    { icon: 'rv-icon-wallet-outline.svg',      label: 'Min. Deposit',  value: broker.accounts.min_deposit != null ? `$${broker.accounts.min_deposit}` : 'N/A' },
+    { icon: 'rv-icon-wallet-outline.svg',      label: 'Min. Deposit',  value: broker.accounts?.min_deposit != null ? `$${broker.accounts.min_deposit}` : 'N/A' },
     { icon: 'rv-icon-shield-check-line.svg',   label: 'Regulations',   value: regulators.slice(0, 4).map((r) => r.name).join(', ') || 'N/A' },
     { icon: 'rv-icon-screen-pc-tower.svg',     label: 'Platforms',     value: platforms.slice(0, 4).join(', ') || 'N/A' },
-    { icon: 'rv-icon-chart-up-group.svg',      label: 'Max Leverage',  value: broker.accounts.max_leverage ?? 'N/A' },
-    { icon: 'icon-trading-pattern.svg',        label: 'Instruments',   value: broker.instruments.slice(0, 3).map((i) => i.title ?? i.name ?? '').join(', ') || 'N/A' },
+    { icon: 'rv-icon-chart-up-group.svg',      label: 'Max Leverage',  value: broker.accounts?.max_leverage ?? 'N/A' },
+    { icon: 'icon-trading-pattern.svg',        label: 'Instruments',   value: (broker.instruments ?? []).slice(0, 3).map((i) => i.title ?? i.name ?? '').join(', ') || 'N/A' },
     { icon: 'rv-icon-coin-group.svg',          label: 'Spread From',   value: minSpread != null && minSpread < 99 ? `${minSpread} pips` : 'N/A' },
     { icon: 'rv-icon-arrow-down-up.svg',       label: 'Commission',    value: minCommission ?? '$0' },
     { icon: 'rv-icon-users-outline-group.svg', label: 'Demo Account',  value: broker.accounts?.has_demo_accounts ? 'Available' : 'N/A' },
@@ -480,25 +482,25 @@ export default async function BrokerReviewPage(
                   ))}
                 </div>
 
-                {broker.accounts.account_types.length > 0 && (
+                {accountTypes.length > 0 && (
                   <div className="rv-fee-table">
                     <p className="rv-fee-table__head rv-fee-table__head--type">Account Type</p>
                     <p className="rv-fee-table__head rv-fee-table__head--value"><span className="rv-fee-table__head-full">Spread</span><span className="rv-fee-table__head-short">Spread</span></p>
                     <p className="rv-fee-table__head rv-fee-table__head--note">Commission</p>
-                    {broker.accounts.account_types.map((at, i) => {
-                      const last = i === broker.accounts.account_types.length - 1
+                    {accountTypes.map((at, i) => {
+                      const last = i === accountTypes.length - 1
                       return (
-                        <>
-                          <div key={`t-${at.name}`} className={`rv-fee-table__cell rv-fee-table__cell--type${last ? ' rv-fee-table__cell--last' : ''}`}>
+                        <React.Fragment key={at.name ?? i}>
+                          <div className={`rv-fee-table__cell rv-fee-table__cell--type${last ? ' rv-fee-table__cell--last' : ''}`}>
                             <img src="/assets/images/rv-icon-coin-group.svg" alt="" /><span>{at.name}</span>
                           </div>
-                          <div key={`v-${at.name}`} className={`rv-fee-table__cell rv-fee-table__cell--value${last ? ' rv-fee-table__cell--last' : ''}`}>
+                          <div className={`rv-fee-table__cell rv-fee-table__cell--value${last ? ' rv-fee-table__cell--last' : ''}`}>
                             <span>{at.spread != null ? `${at.spread} pips` : 'N/A'}</span>
                           </div>
-                          <div key={`n-${at.name}`} className={`rv-fee-table__cell rv-fee-table__cell--note${last ? ' rv-fee-table__cell--last' : ''}`}>
+                          <div className={`rv-fee-table__cell rv-fee-table__cell--note${last ? ' rv-fee-table__cell--last' : ''}`}>
                             <span>{at.commission ?? '$0'}</span>
                           </div>
-                        </>
+                        </React.Fragment>
                       )
                     })}
                   </div>

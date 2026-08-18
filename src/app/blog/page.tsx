@@ -2,57 +2,93 @@ import type { Metadata } from 'next'
 import Nav    from '@/components/Nav'
 import Footer from '@/components/Footer'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title:       'Forex Broker News & Trading Insights — FX Look Up',
   description: 'Read the latest forex broker news, trading platform updates, market insights, regulation changes, and practical broker comparison guides.',
 }
 
-// ─── Static category pills (will be dynamic later) ────────────────────────────
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-const PILLS = [
-  { label: 'All',           count: 156, active: true  },
-  { label: 'Broker News',   count: 64,  active: false },
-  { label: 'Broker Guides', count: 38,  active: false },
-  { label: 'Markets',       count: 27,  active: false },
-  { label: 'Regulation',    count: 17,  active: false },
-  { label: 'Platforms',     count: 10,  active: false },
-]
+interface Category {
+  id:            number
+  name:          string
+  slug:          string
+  article_count: number
+}
 
-// ─── Static blog cards (will be dynamic later) ────────────────────────────────
+interface Article {
+  id:            number
+  slug:          string
+  title:         string
+  excerpt:       string | null
+  published_at:  string | null
+  created_at:    string
+  category_name: string | null
+  category_slug: string | null
+}
 
-const BLOG_CARDS = [
-  {
-    image: '/assets/images/blog-img-1.png',
-    imageClass: 'blog-card__image--1',
-    tag: 'Broker Guides',
-    date: 'May 10, 2026',
-    title: 'Top 5 Forex Brokers with the Best Customer Support',
-    lead: 'Compare trusted brokers with responsive support, beginner-friendly tools, and reliable service.',
-    href: '#',
-  },
-  {
-    image: '/assets/images/blog-img-2.png',
-    imageClass: 'blog-card__image--2',
-    tag: 'Trading Platforms',
-    date: 'May 12, 2026',
-    title: 'MT4 vs MT5: Which Platform Should You Choose?',
-    lead: 'Learn the key differences between MetaTrader platforms and which brokers support each option.',
-    href: '#',
-  },
-  {
-    image: '/assets/images/blog-img-3.png',
-    imageClass: 'blog-card__image--3',
-    tag: 'Broker Comparison',
-    date: 'May 14, 2026',
-    title: 'Compare Broker Fees Before Signing Up',
-    lead: 'Understand spreads, commissions, deposit fees, and trading costs before choosing a broker.',
-    href: '#',
-  },
-]
+// ─── API helpers ──────────────────────────────────────────────────────────────
+
+const BMS_URL = (process.env.BMS_API_URL ?? 'https://bms.sunmoosemarketing.com').replace(/\/$/, '')
+const BMS_KEY = process.env.BMS_API_KEY ?? ''
+
+async function fetchCategories(): Promise<Category[]> {
+  try {
+    const res = await fetch(`${BMS_URL}/api/v1/blog/categories`, {
+      headers: { 'X-Api-Key': BMS_KEY },
+      next:    { revalidate: 60 },
+    })
+    if (!res.ok) return []
+    const json = await res.json()
+    return json.data ?? []
+  } catch {
+    return []
+  }
+}
+
+async function fetchArticles(categorySlug?: string): Promise<{ data: Article[]; total: number }> {
+  try {
+    const qs  = new URLSearchParams({ per_page: '13' })
+    if (categorySlug) qs.set('category', categorySlug)
+    const res = await fetch(`${BMS_URL}/api/v1/blog?${qs}`, {
+      headers: { 'X-Api-Key': BMS_KEY },
+      next:    { revalidate: 60 },
+    })
+    if (!res.ok) return { data: [], total: 0 }
+    const json = await res.json()
+    return { data: json.data?.data ?? [], total: json.data?.meta?.total ?? 0 }
+  } catch {
+    return { data: [], total: 0 }
+  }
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function formatDate(iso: string | null): string {
+  if (!iso) return ''
+  return new Date(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+}
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function BlogIndexPage() {
+export default async function BlogIndexPage({
+  searchParams,
+}: {
+  searchParams: { category?: string }
+}) {
+  const activeSlug  = searchParams.category ?? ''
+  const [categories, { data: articles, total }] = await Promise.all([
+    fetchCategories(),
+    fetchArticles(activeSlug || undefined),
+  ])
+
+  const featured   = articles[0] ?? null
+  const cardGroups = articles.slice(1)
+  const row1       = cardGroups.slice(0, 3)
+  const row2       = cardGroups.slice(3, 6)
+
   return (
     <>
       {/* ── HERO ──────────────────────────────────────────────────────────────── */}
@@ -84,43 +120,54 @@ export default function BlogIndexPage() {
 
             {/* Filter pills */}
             <div className="blog-filter-pills">
-              {PILLS.map((p) => (
-                <button
-                  key={p.label}
-                  type="button"
-                  className={`blog-filter-pill${p.active ? ' blog-filter-pill--active' : ''}`}
+              <a
+                href="/blog"
+                className={`blog-filter-pill${!activeSlug ? ' blog-filter-pill--active' : ''}`}
+              >
+                All
+                <span className="blog-filter-pill__count">{total}</span>
+              </a>
+              {categories.map((cat) => (
+                <a
+                  key={cat.id}
+                  href={`/blog?category=${cat.slug}`}
+                  className={`blog-filter-pill${activeSlug === cat.slug ? ' blog-filter-pill--active' : ''}`}
                 >
-                  {p.label}
-                  <span className="blog-filter-pill__count">{p.count}</span>
-                </button>
+                  {cat.name}
+                  <span className="blog-filter-pill__count">{cat.article_count}</span>
+                </a>
               ))}
             </div>
 
             {/* Featured article */}
-            <div className="blog-featured">
-              <div className="blog-featured__media">
-                <img src="/assets/images/blog-featured-img.png" alt="Interactive Brokers Expands Commission-Free Trading Access" />
-              </div>
-              <div className="blog-featured__content">
-                <div className="blog-featured__top">
-                  <div className="blog-featured__meta">
-                    <span className="top10-card__badge">BROKER NEWS</span>
-                    <span className="lead" style={{ fontSize: 14 }}>May 18, 2026</span>
-                  </div>
-                  <h2 className="blog-featured__title">Interactive Brokers Expands Commission-Free Trading Access</h2>
-                  <p className="lead">Dictumst vitae mauris nunc interdum massa amet praesent at cursus. Feugiat posuere pulvinar aliquam viverra diam consectetur eleifend nec.</p>
+            {featured && (
+              <div className="blog-featured">
+                <div className="blog-featured__media">
+                  <img src="/assets/images/blog-featured-img.png" alt={featured.title} />
                 </div>
-                <div className="blog-featured__bottom">
-                  <div className="blog-featured__readtime">
-                    <img src="/assets/images/rv-icon-time-line-group.svg" alt="" />
-                    <span>3 min read</span>
+                <div className="blog-featured__content">
+                  <div className="blog-featured__top">
+                    <div className="blog-featured__meta">
+                      {featured.category_name && (
+                        <span className="top10-card__badge">{featured.category_name.toUpperCase()}</span>
+                      )}
+                      <span className="lead" style={{ fontSize: 14 }}>{formatDate(featured.published_at ?? featured.created_at)}</span>
+                    </div>
+                    <h2 className="blog-featured__title">{featured.title}</h2>
+                    {featured.excerpt && <p className="lead">{featured.excerpt}</p>}
                   </div>
-                  <a href="/blog/interactive-brokers-expands-commission-free-trading-access" className="btn btn--text">
-                    Read More <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" />
-                  </a>
+                  <div className="blog-featured__bottom">
+                    <div className="blog-featured__readtime">
+                      <img src="/assets/images/rv-icon-time-line-group.svg" alt="" />
+                      <span>3 min read</span>
+                    </div>
+                    <a href={`/blog/${featured.slug}`} className="btn btn--text">
+                      Read More <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" />
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
           </div>
         </div>
@@ -134,54 +181,28 @@ export default function BlogIndexPage() {
             <p className="eyebrow">LATEST INSIGHTS</p>
             <h2>Latest Broker Guides &amp; Forex Insights</h2>
             <p className="lead">Explore recent broker guides, platform comparisons, and trading insights to help you make better broker decisions.</p>
-            <a href="#" className="btn btn--text">Browse All Articles <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
-            {/* Row 1 */}
-            <div className="blog-cards">
-              {BLOG_CARDS.map((card) => (
-                <article key={card.title} className="blog-card">
-                  <div className={`blog-card__image ${card.imageClass}`}>
-                    <img src={card.image} alt={card.title} />
-                  </div>
-                  <div className="blog-card__body">
-                    <div className="blog-card__text">
-                      <div className="blog-meta">
-                        <span className="tag">{card.tag}</span>
-                        <span className="lead">{card.date}</span>
-                      </div>
-                      <p className="blog-title">{card.title}</p>
-                      <p className="lead">{card.lead}</p>
-                    </div>
-                    <a href={card.href} className="btn btn--text">Read More <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
-                  </div>
-                </article>
-              ))}
+          {articles.length === 0 ? (
+            <p className="lead" style={{ textAlign: 'center', padding: '40px 0' }}>No articles found.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
+              {row1.length > 0 && (
+                <div className="blog-cards">
+                  {row1.map((card) => (
+                    <BlogCard key={card.id} card={card} />
+                  ))}
+                </div>
+              )}
+              {row2.length > 0 && (
+                <div className="blog-cards">
+                  {row2.map((card) => (
+                    <BlogCard key={card.id} card={card} />
+                  ))}
+                </div>
+              )}
             </div>
-
-            {/* Row 2 */}
-            <div className="blog-cards">
-              {BLOG_CARDS.map((card) => (
-                <article key={`r2-${card.title}`} className="blog-card">
-                  <div className={`blog-card__image ${card.imageClass}`}>
-                    <img src={card.image} alt={card.title} />
-                  </div>
-                  <div className="blog-card__body">
-                    <div className="blog-card__text">
-                      <div className="blog-meta">
-                        <span className="tag">{card.tag}</span>
-                        <span className="lead">{card.date}</span>
-                      </div>
-                      <p className="blog-title">{card.title}</p>
-                      <p className="lead">{card.lead}</p>
-                    </div>
-                    <a href={card.href} className="btn btn--text">Read More <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
+          )}
 
           {/* Newsletter CTA */}
           <div className="cta">
@@ -210,5 +231,30 @@ export default function BlogIndexPage() {
 
       <Footer />
     </>
+  )
+}
+
+// ─── Blog Card ────────────────────────────────────────────────────────────────
+
+function BlogCard({ card }: { card: Article }) {
+  return (
+    <article className="blog-card">
+      <div className="blog-card__image">
+        <img src="/assets/images/blog-img-1.png" alt={card.title} />
+      </div>
+      <div className="blog-card__body">
+        <div className="blog-card__text">
+          <div className="blog-meta">
+            {card.category_name && <span className="tag">{card.category_name}</span>}
+            <span className="lead">{formatDate(card.published_at ?? card.created_at)}</span>
+          </div>
+          <p className="blog-title">{card.title}</p>
+          {card.excerpt && <p className="lead">{card.excerpt}</p>}
+        </div>
+        <a href={`/blog/${card.slug}`} className="btn btn--text">
+          Read More <img src="/assets/images/icon-arrow-right.svg" alt="" />
+        </a>
+      </div>
+    </article>
   )
 }

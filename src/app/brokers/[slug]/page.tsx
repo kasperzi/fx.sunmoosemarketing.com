@@ -143,6 +143,19 @@ const COUNTRY_NAMES: Record<string, string> = {
   ID:'Indonesia', BR:'Brazil', MX:'Mexico', IT:'Italy', ES:'Spain', PT:'Portugal',
   BE:'Belgium', NZ:'New Zealand', JP:'Japan', HK:'Hong Kong', SE:'Sweden', NO:'Norway',
   DK:'Denmark', CH:'Switzerland', AT:'Austria', PL:'Poland', RO:'Romania', CZ:'Czechia',
+  // Balkans & Eastern Europe
+  BA:'Bosnia and Herzegovina', RS:'Serbia', HR:'Croatia', SI:'Slovenia', MK:'North Macedonia',
+  ME:'Montenegro', AL:'Albania', XK:'Kosovo', BG:'Bulgaria', SK:'Slovakia', HU:'Hungary',
+  UA:'Ukraine', BY:'Belarus', MD:'Moldova', GR:'Greece', TR:'Turkey', CY:'Cyprus',
+  // Middle East & Africa
+  SA:'Saudi Arabia', QA:'Qatar', KW:'Kuwait', BH:'Bahrain', OM:'Oman', EG:'Egypt',
+  MA:'Morocco', TN:'Tunisia', GH:'Ghana', TZ:'Tanzania', UG:'Uganda',
+  // Asia
+  PK:'Pakistan', BD:'Bangladesh', LK:'Sri Lanka', VN:'Vietnam', CN:'China', KR:'South Korea', TW:'Taiwan',
+  // Americas
+  AR:'Argentina', CO:'Colombia', CL:'Chile', PE:'Peru',
+  // Other
+  RU:'Russia', IR:'Iran', IQ:'Iraq',
 }
 
 function countryName(code: string): string {
@@ -236,7 +249,7 @@ export default async function BrokerReviewPage(
 
   const minCommission = accountTypes.find((at) => at.commission)?.commission ?? null
 
-  const logoUrl = bmsUrl(broker.logos?.rectangle_light ?? broker.logos?.square_light)
+  const logoUrl = bmsUrl(broker.logos?.square_light ?? broker.logos?.square_dark)
 
   // ── Key facts ───────────────────────────────────────────────────────────────
   const keyFacts = [

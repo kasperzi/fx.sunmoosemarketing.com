@@ -829,16 +829,20 @@ export default async function BrokerReviewPage(
       {related.length > 0 && (
         <section className="section section--brokers">
           <div className="section-inner">
-            <div className="section-head">
-              <div>
+            <div className="section-head section-head--split">
+              <div className="section-head__copy">
                 <p className="eyebrow">RELATED BROKERS</p>
                 <h2>Others Also Viewed These Brokers</h2>
                 <p className="lead">Explore similar forex brokers that traders compare with {broker.name}</p>
               </div>
-              <a href="/" className="btn btn--text btn--text--px">View All Brokers <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></a>
+              <div className="section-head__nav">
+                <button type="button" className="carousel-btn carousel-btn--prev" aria-label="Previous"><img src="/assets/images/icon-chevron-right-1.svg" alt="" /></button>
+                <button type="button" className="carousel-btn carousel-btn--next" aria-label="Next"><img src="/assets/images/icon-chevron-right-2.svg" alt="" /></button>
+                <a href="/" className="btn btn--text btn--text--px">View All Brokers <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
+              </div>
             </div>
 
-            <div className="broker-cards">
+            <div className="broker-grid">
               {related.slice(0, 3).map((b) => {
                 const bLogo = bmsUrl(b.logos?.square_light ?? b.logos?.square_dark)
                 const bRating = b.total_rating != null ? Math.round(b.total_rating * 10) / 10 : null

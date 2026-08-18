@@ -24,7 +24,7 @@ interface Promotion {
   id: number; bonus_type?: string|null; bonus_amount?: string|null
   description?: string|null; is_global: boolean; countries: string[]
 }
-interface BrokerCountry { country_code: string; type: 'allowed'|'restricted'|string }
+interface BrokerCountries { available: string[]; restricted: string[] }
 interface BrokerData {
   id: number; name: string; slug: string; brand_color?: string|null
   logos: BrokerLogos
@@ -35,7 +35,7 @@ interface BrokerData {
   pros_cons: { pros?: (string|{text:string})[]; cons?: (string|{text:string})[] }
   payment_methods: PaymentMethod[]
   promotions: Promotion[]
-  countries: BrokerCountry[]
+  countries: BrokerCountries|null
   content: { description?: string|null; short_description?: string|null; seo_title?: string|null; seo_meta_description?: string|null }
   affiliate_link?: string|null
 }
@@ -149,10 +149,12 @@ function countryName(code: string): string {
   return COUNTRY_NAMES[code.toUpperCase()] ?? code.toUpperCase()
 }
 
-function getCountryStatus(countries: BrokerCountry[], code: string): 'available'|'restricted'|'unknown' {
-  const entry = countries.find((c) => c.country_code.toUpperCase() === code.toUpperCase())
-  if (!entry) return countries.length === 0 ? 'available' : 'unknown'
-  return entry.type === 'restricted' ? 'restricted' : 'available'
+function getCountryStatus(countries: BrokerCountries|null, code: string): 'available'|'restricted'|'unknown' {
+  if (!countries) return 'unknown'
+  const cc = code.toUpperCase()
+  const restricted = (countries.restricted ?? []).map(c => c.toUpperCase())
+  if (restricted.includes(cc)) return 'restricted'
+  return 'available'
 }
 
 function getActivePromotions(promotions: Promotion[], country: string): Promotion[] {
@@ -225,7 +227,7 @@ export default async function BrokerReviewPage(
   const accountTypes = broker.accounts?.account_types ?? []
   const payMethods   = broker.payment_methods ?? []
   const promos       = getActivePromotions(broker.promotions ?? [], country)
-  const countryStatus = getCountryStatus(broker.countries ?? [], country)
+  const countryStatus = getCountryStatus(broker.countries ?? null, country)
   const affiliateLink = broker.affiliate_link ?? '#'
 
   const minSpread = accountTypes.length > 0

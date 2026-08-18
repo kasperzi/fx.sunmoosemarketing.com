@@ -1,41 +1,261 @@
+import { notFound } from 'next/navigation'
+import { cookies } from 'next/headers'
 import type { Metadata } from 'next'
 import Nav    from '@/components/Nav'
 import Footer from '@/components/Footer'
 
-export const metadata: Metadata = {
-  title:       'Pepperstone Broker Review 2026 — FX Look Up',
-  description: 'In-depth Pepperstone review covering fees, spreads, regulation, platforms, deposits, withdrawals, and safety. See if Pepperstone fits your trading style.',
+export const dynamic = 'force-dynamic'
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+interface BrokerLogos { square_light: string|null; square_dark: string|null; rectangle_light: string|null; rectangle_dark: string|null }
+interface Regulator   { name: string; country_code?: string; country?: string; note?: string }
+interface PlatformItem { title?: string; name?: string }
+interface AccountType  { name: string; spread?: number|null; commission?: string|null }
+interface PaymentMethod {
+  name: string; logo_url?: string|null; attribute_item_id?: number
+  for_deposit: boolean; for_withdrawal: boolean
+  deposit_fee?: string|null; withdrawal_fee?: string|null
+  processing_time_deposit?: string|null; processing_time_withdrawal?: string|null
+  countries?: string[]
+}
+interface Promotion {
+  id: number; bonus_type?: string|null; bonus_amount?: string|null
+  description?: string|null; is_global: boolean; countries: string[]
+}
+interface BrokerCountry { country_code: string; type: 'allowed'|'restricted'|string }
+interface BrokerData {
+  id: number; name: string; slug: string; brand_color?: string|null
+  logos: BrokerLogos
+  regulation: { is_regulated: boolean; has_negative_balance_protection: boolean; regulators: Regulator[] }
+  accounts: { min_deposit?: number|null; max_leverage?: string|null; platforms: PlatformItem[]; account_types: AccountType[]; has_demo_accounts?: boolean }
+  instruments: ({ title?: string; name?: string })[]
+  support: { has_24_7_support: boolean; channels: ({ title?: string })[] }
+  pros_cons: { pros?: (string|{text:string})[]; cons?: (string|{text:string})[] }
+  payment_methods: PaymentMethod[]
+  promotions: Promotion[]
+  countries: BrokerCountry[]
+  content: { description?: string|null; short_description?: string|null; seo_title?: string|null; seo_meta_description?: string|null }
+  affiliate_link?: string|null
+}
+interface Review {
+  written_by?: string|null; reviewed_by?: string|null; updated_label?: string|null
+  rating?: number|null; review_count?: number|null
+  taglines?: string[]
+  summary_text?: string|null; verdict?: string|null
+  faqs?: { q: string; a: string }[]
+}
+interface RelatedBroker {
+  id: number; name: string; slug: string; logos: BrokerLogos
+  total_rating?: number|null; min_deposit?: number|null; min_spread?: number|null
+  platforms?: string[]; promotion?: { bonus_type?: string|null } | null
+  affiliate_link?: string|null; users_count?: number|null
 }
 
-// ─── Static tabs config ───────────────────────────────────────────────────────
+// ─── Fetch helpers ────────────────────────────────────────────────────────────
+
+const BMS_URL = (process.env.BMS_API_URL ?? '').replace(/\/$/, '')
+const BMS_KEY = process.env.BMS_API_KEY ?? ''
+
+async function fetchBroker(slug: string, country: string): Promise<BrokerData|null> {
+  try {
+    const res = await fetch(
+      `${BMS_URL}/api/v1/brokers/${slug}?country=${country}`,
+      { headers: { 'X-Api-Key': BMS_KEY }, cache: 'no-store' }
+    )
+    if (!res.ok) return null
+    const json = await res.json()
+    return json.data ?? null
+  } catch { return null }
+}
+
+async function fetchReview(brokerSlug: string): Promise<Review|null> {
+  try {
+    const res = await fetch(
+      `${BMS_URL}/api/v1/broker-reviews/by-broker/${brokerSlug}`,
+      { headers: { 'X-Api-Key': BMS_KEY }, cache: 'no-store' }
+    )
+    if (!res.ok) return null
+    const json = await res.json()
+    return json.data ?? null
+  } catch { return null }
+}
+
+async function fetchRelatedBrokers(excludeSlug: string, country: string): Promise<RelatedBroker[]> {
+  try {
+    const res = await fetch(
+      `${BMS_URL}/api/v1/brokers?per_page=8&country=${country}`,
+      { headers: { 'X-Api-Key': BMS_KEY }, cache: 'no-store' }
+    )
+    if (!res.ok) return []
+    const json = await res.json()
+    const all: RelatedBroker[] = json.data ?? []
+    return all.filter((b) => b.slug !== excludeSlug).slice(0, 6)
+  } catch { return [] }
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function bmsUrl(path: string|null|undefined): string|null {
+  if (!path) return null
+  if (path.startsWith('http')) return path
+  return `${BMS_URL}${path.startsWith('/') ? path : '/' + path}`
+}
+
+function buildStars(rating: number): ('full'|'half'|'empty')[] {
+  const stars: ('full'|'half'|'empty')[] = []
+  for (let i = 1; i <= 5; i++) {
+    if (rating >= i) stars.push('full')
+    else if (rating >= i - 0.5) stars.push('half')
+    else stars.push('empty')
+  }
+  return stars
+}
+
+function Stars({ rating }: { rating: number }) {
+  return (
+    <>
+      {buildStars(rating).map((type, i) => (
+        <img
+          key={i}
+          src={type === 'half' ? '/assets/images/icon-star-half.svg' : '/assets/images/icon-star.svg'}
+          alt=""
+          style={type === 'empty' ? { opacity: 0.25 } : undefined}
+        />
+      ))}
+    </>
+  )
+}
+
+function extractText(v: string|{text:string}): string {
+  return typeof v === 'string' ? v : (v?.text ?? '')
+}
+
+function flagUrl(code: string): string {
+  return `https://flagcdn.com/w160/${code.toLowerCase()}.png`
+}
+
+const COUNTRY_NAMES: Record<string, string> = {
+  NL:'Netherlands', GB:'United Kingdom', US:'United States', DE:'Germany', FR:'France',
+  AU:'Australia', CA:'Canada', SG:'Singapore', AE:'United Arab Emirates', ZA:'South Africa',
+  NG:'Nigeria', KE:'Kenya', IN:'India', MY:'Malaysia', TH:'Thailand', PH:'Philippines',
+  ID:'Indonesia', BR:'Brazil', MX:'Mexico', IT:'Italy', ES:'Spain', PT:'Portugal',
+  BE:'Belgium', NZ:'New Zealand', JP:'Japan', HK:'Hong Kong', SE:'Sweden', NO:'Norway',
+  DK:'Denmark', CH:'Switzerland', AT:'Austria', PL:'Poland', RO:'Romania', CZ:'Czechia',
+}
+
+function countryName(code: string): string {
+  return COUNTRY_NAMES[code.toUpperCase()] ?? code.toUpperCase()
+}
+
+function getCountryStatus(countries: BrokerCountry[], code: string): 'available'|'restricted'|'unknown' {
+  const entry = countries.find((c) => c.country_code.toUpperCase() === code.toUpperCase())
+  if (!entry) return countries.length === 0 ? 'available' : 'unknown'
+  return entry.type === 'restricted' ? 'restricted' : 'available'
+}
+
+function getActivePromotions(promotions: Promotion[], country: string): Promotion[] {
+  return promotions.filter((p) =>
+    p.is_global || (Array.isArray(p.countries) && p.countries.map(c => c.toUpperCase()).includes(country.toUpperCase()))
+  )
+}
 
 const TABS = [
-  { href: '#overview',           icon: '/assets/images/rv-icon-home-outline.svg',           label: 'Overview' },
-  { href: '#pros-cons',          icon: '/assets/images/rv-icon-like-outline.svg',            label: 'Pros & Cons' },
-  { href: '#fees',               icon: '/assets/images/rv-icon-coin-group.svg',              label: 'Fees' },
-  { href: '#regulation',         icon: '/assets/images/rv-icon-shield-check-line.svg',       label: 'Regulation' },
-  { href: '#platforms',          icon: '/assets/images/rv-icon-monitor-outline.svg',         label: 'Platforms' },
-  { href: '#deposit-withdrawal', icon: '/assets/images/icon-card-outline.svg',               label: 'Deposit & Withdrawal' },
-  { href: '#countries',          icon: '/assets/images/rv-icon-language.svg',                label: 'Countries' },
-  { href: '#faq',                icon: '/assets/images/rv-icon-question-line-group.svg',     label: 'FAQ' },
+  { href: '#overview',           icon: '/assets/images/rv-icon-home-outline.svg',        label: 'Overview' },
+  { href: '#pros-cons',          icon: '/assets/images/rv-icon-like-outline.svg',         label: 'Pros & Cons' },
+  { href: '#fees',               icon: '/assets/images/rv-icon-coin-group.svg',           label: 'Fees' },
+  { href: '#regulation',         icon: '/assets/images/rv-icon-shield-check-line.svg',    label: 'Regulation' },
+  { href: '#platforms',          icon: '/assets/images/rv-icon-monitor-outline.svg',      label: 'Platforms' },
+  { href: '#deposit-withdrawal', icon: '/assets/images/icon-card-outline.svg',            label: 'Deposit & Withdrawal' },
+  { href: '#countries',          icon: '/assets/images/rv-icon-language.svg',             label: 'Countries' },
+  { href: '#faq',                icon: '/assets/images/rv-icon-question-line-group.svg',  label: 'FAQ' },
 ]
+
+// ─── Metadata ─────────────────────────────────────────────────────────────────
+
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string }> }
+): Promise<Metadata> {
+  const { slug } = await params
+  const broker = await fetchBroker(slug, 'NL')
+  if (!broker) return { title: 'Broker Not Found — FX Look Up' }
+  const review = await fetchReview(slug)
+  return {
+    title:       review?.summary_text ? `${broker.name} Review 2026 — FX Look Up` : `${broker.name} — FX Look Up`,
+    description: broker.content?.seo_meta_description ?? broker.content?.short_description ?? `In-depth ${broker.name} review: fees, regulation, platforms, and more.`,
+  }
+}
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function BrokerReviewPage() {
+export default async function BrokerReviewPage(
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  const { slug } = await params
+
+  // Detect country (same as layout)
+  const cookieStore = await cookies()
+  const manual = cookieStore.get('fx_country_pref')?.value?.toUpperCase()
+  const country = /^[A-Z]{2}$/.test(manual ?? '') ? manual! : 'NL'
+
+  const [broker, review, related] = await Promise.all([
+    fetchBroker(slug, country),
+    fetchReview(slug),
+    fetchRelatedBrokers(slug, country),
+  ])
+
+  if (!broker) notFound()
+
+  // ── Derived values ──────────────────────────────────────────────────────────
+  const rating        = review?.rating ?? null
+  const reviewCount   = review?.review_count ?? null
+  const writtenBy     = review?.written_by  ?? 'FX Look Up Editorial Team'
+  const reviewedBy    = review?.reviewed_by ?? 'Broker Research Team'
+  const updatedLabel  = review?.updated_label ?? null
+  const taglines      = review?.taglines ?? []
+  const summaryText   = review?.summary_text ?? broker.content?.short_description ?? broker.content?.description ?? null
+  const verdict       = review?.verdict ?? null
+  const faqs          = review?.faqs ?? []
+
+  const pros         = (broker.pros_cons?.pros ?? []).map(extractText)
+  const cons         = (broker.pros_cons?.cons ?? []).map(extractText)
+  const platforms    = broker.accounts.platforms.map((p) => p.title ?? p.name ?? '')
+  const regulators   = broker.regulation.regulators ?? []
+  const payMethods   = broker.payment_methods ?? []
+  const promos       = getActivePromotions(broker.promotions ?? [], country)
+  const countryStatus = getCountryStatus(broker.countries ?? [], country)
+  const affiliateLink = broker.affiliate_link ?? '#'
+
+  const minSpread = broker.accounts.account_types.length > 0
+    ? Math.min(...broker.accounts.account_types.map((at) => Number(at.spread ?? 99)).filter((n) => n < 99))
+    : null
+
+  const minCommission = broker.accounts.account_types.find((at) => at.commission)?.commission ?? null
+
+  const logoUrl = bmsUrl(broker.logos.rectangle_light ?? broker.logos.square_light)
+
+  // ── Key facts ───────────────────────────────────────────────────────────────
+  const keyFacts = [
+    { icon: 'rv-icon-wallet-outline.svg',      label: 'Min. Deposit',  value: broker.accounts.min_deposit != null ? `$${broker.accounts.min_deposit}` : 'N/A' },
+    { icon: 'rv-icon-shield-check-line.svg',   label: 'Regulations',   value: regulators.slice(0, 4).map((r) => r.name).join(', ') || 'N/A' },
+    { icon: 'rv-icon-screen-pc-tower.svg',     label: 'Platforms',     value: platforms.slice(0, 4).join(', ') || 'N/A' },
+    { icon: 'rv-icon-chart-up-group.svg',      label: 'Max Leverage',  value: broker.accounts.max_leverage ?? 'N/A' },
+    { icon: 'icon-trading-pattern.svg',        label: 'Instruments',   value: broker.instruments.slice(0, 3).map((i) => i.title ?? i.name ?? '').join(', ') || 'N/A' },
+    { icon: 'rv-icon-coin-group.svg',          label: 'Spread From',   value: minSpread != null && minSpread < 99 ? `${minSpread} pips` : 'N/A' },
+    { icon: 'rv-icon-arrow-down-up.svg',       label: 'Commission',    value: minCommission ?? '$0' },
+    { icon: 'rv-icon-users-outline-group.svg', label: 'Demo Account',  value: broker.accounts?.has_demo_accounts ? 'Available' : 'N/A' },
+  ] as { icon: string; label: string; value: string }[]
+
   return (
     <>
       {/* ── HERO ──────────────────────────────────────────────────────────────── */}
       <section className="hero hero--flush">
         <div className="hero__border">
-
           <div className="hero__bg" aria-hidden="true">
             <img src="/assets/images/hero-best-broker-bg.png" alt="" />
             <div className="hero__bg-gradient" />
           </div>
-
           <Nav />
-
           <div className="hero__main hero__main--search">
             <div className="bb-hero__title-block">
               <div className="breadcrumb">
@@ -44,40 +264,40 @@ export default function BrokerReviewPage() {
                 <img src="/assets/images/icon-chevron-right-rounded.svg" alt="" className="icon-24" />
                 <span>Broker Reviews</span>
                 <img src="/assets/images/icon-chevron-right-rounded.svg" alt="" className="icon-24" />
-                <span className="breadcrumb__current">Pepperstone Review</span>
+                <span className="breadcrumb__current">{broker.name} Review</span>
               </div>
-              <h1>Pepperstone Broker Review 2026</h1>
+              <h1>{broker.name} Broker Review 2026</h1>
             </div>
-
             <div className="bb-byline">
               <div className="bb-byline__item">
                 <span className="icon-btn"><img src="/assets/images/icon-user-outline.svg" alt="" /></span>
                 <div className="bb-byline__text">
                   <span className="bb-byline__label">Written By</span>
-                  <span className="bb-byline__value">FX Look Up Editorial Team</span>
+                  <span className="bb-byline__value">{writtenBy}</span>
                 </div>
               </div>
               <div className="bb-byline__item">
                 <span className="icon-btn"><img src="/assets/images/icon-shield-check-outline.svg" alt="" /></span>
                 <div className="bb-byline__text">
                   <span className="bb-byline__label">Reviewed By</span>
-                  <span className="bb-byline__value">Broker Research Team</span>
+                  <span className="bb-byline__value">{reviewedBy}</span>
                 </div>
               </div>
-              <div className="bb-byline__item">
-                <span className="icon-btn"><img src="/assets/images/icon-calendar.svg" alt="" /></span>
-                <div className="bb-byline__text">
-                  <span className="bb-byline__label">Updated:</span>
-                  <span className="bb-byline__value">May 2026</span>
+              {updatedLabel && (
+                <div className="bb-byline__item">
+                  <span className="icon-btn"><img src="/assets/images/icon-calendar.svg" alt="" /></span>
+                  <div className="bb-byline__text">
+                    <span className="bb-byline__label">Updated:</span>
+                    <span className="bb-byline__value">{updatedLabel}</span>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
-
         </div>
       </section>
 
-      {/* ── SECTION TABS ──────────────────────────────────────────────────────── */}
+      {/* ── TABS ──────────────────────────────────────────────────────────────── */}
       <nav className="rv-tabs">
         {TABS.map((t, i) => (
           <a key={t.href} href={t.href} className={`rv-tabs__link${i === 0 ? ' is-active' : ''}`}>
@@ -91,56 +311,93 @@ export default function BrokerReviewPage() {
         <div className="section-inner" style={{ gap: 0 }}>
           <div className="rv-article__layout">
 
-            {/* ── MAIN CONTENT ──────────────────────────────────────────────── */}
+            {/* ── MAIN ──────────────────────────────────────────────────────── */}
             <div className="rv-article__main">
 
               {/* Quick badges */}
-              <div className="rv-quick-badges">
-                <div className="rv-quick-badge"><span className="rv-quick-badge__icon"><img src="/assets/images/rv-icon-shield-check-line.svg" alt="" /></span>Regulated Broker</div>
-                <div className="rv-quick-badge"><span className="rv-quick-badge__icon"><img src="/assets/images/rv-icon-coin-group.svg" alt="" /></span>Low Spread Broker</div>
-                <div className="rv-quick-badge"><span className="rv-quick-badge__icon"><img src="/assets/images/rv-icon-chart-up-group.svg" alt="" /></span>Popular Platform</div>
-              </div>
+              {(broker.regulation.is_regulated || platforms.length > 0) && (
+                <div className="rv-quick-badges">
+                  {broker.regulation.is_regulated && (
+                    <div className="rv-quick-badge">
+                      <span className="rv-quick-badge__icon"><img src="/assets/images/rv-icon-shield-check-line.svg" alt="" /></span>
+                      Regulated Broker
+                    </div>
+                  )}
+                  {minSpread != null && minSpread < 1 && (
+                    <div className="rv-quick-badge">
+                      <span className="rv-quick-badge__icon"><img src="/assets/images/rv-icon-coin-group.svg" alt="" /></span>
+                      Low Spread Broker
+                    </div>
+                  )}
+                  {platforms.length > 0 && (
+                    <div className="rv-quick-badge">
+                      <span className="rv-quick-badge__icon"><img src="/assets/images/rv-icon-chart-up-group.svg" alt="" /></span>
+                      {platforms[0]}
+                    </div>
+                  )}
+                </div>
+              )}
 
-              {/* ── OVERVIEW ──────────────────────────────────────────────────── */}
+              {/* ── OVERVIEW ────────────────────────────────────────────────── */}
               <div className="rv-block" id="overview">
-                <h2>Pepperstone Overview</h2>
-                <p className="lead">A quick verdict on Pepperstone&rsquo;s rating, availability, and key review details.</p>
+                <h2>{broker.name} Overview</h2>
+                <p className="lead">A quick verdict on {broker.name}&rsquo;s rating, availability, and key review details.</p>
 
                 <div className="rv-score-card">
                   <div className="rv-score-card__side">
-                    <img src="/assets/images/logo-pepperstone.png" alt="" className="rv-score-card__logo" />
-                    <p className="rv-score-card__value">4.8/5</p>
-                    <p className="rv-score-card__stars">
-                      <img src="/assets/images/icon-star.svg" alt="" /><img src="/assets/images/icon-star.svg" alt="" /><img src="/assets/images/icon-star.svg" alt="" /><img src="/assets/images/icon-star.svg" alt="" /><img src="/assets/images/icon-star-half.svg" alt="" />
-                    </p>
-                    <p className="rv-score-card__reviews">Based on 1,250+ user reviews</p>
+                    {logoUrl
+                      ? <img src={logoUrl} alt={broker.name} className="rv-score-card__logo" />
+                      : <span style={{ fontWeight: 700, fontSize: 20 }}>{broker.name}</span>
+                    }
+                    {rating != null && (
+                      <>
+                        <p className="rv-score-card__value">{rating.toFixed(1)}/5</p>
+                        <p className="rv-score-card__stars"><Stars rating={rating} /></p>
+                        {reviewCount != null && (
+                          <p className="rv-score-card__reviews">Based on {reviewCount.toLocaleString()}+ user reviews</p>
+                        )}
+                      </>
+                    )}
                   </div>
                   <div className="rv-score-card__body">
                     <div className="rv-score-card__pills">
-                      <span className="rv-pill"><img src="/assets/images/rv-icon-star-alt.svg" alt="" />Best for Low-Cost Forex Trading</span>
-                      <span className="rv-pill"><img src="/assets/images/flag-netherlands.png" alt="" />Available in Netherlands</span>
+                      {taglines.map((t) => (
+                        <span key={t} className="rv-pill">
+                          <img src="/assets/images/rv-icon-star-alt.svg" alt="" />{t}
+                        </span>
+                      ))}
+                      <span className="rv-pill">
+                        <img src={flagUrl(country)} alt="" style={{ width: 20, height: 15, objectFit: 'cover' }} />
+                        {countryStatus === 'restricted' ? `Not available in ${countryName(country)}` : `Available in ${countryName(country)}`}
+                      </span>
                     </div>
-                    <p className="lead">Pepperstone is a popular forex and CFD broker known for competitive spreads, trusted regulation, and support for MT4, MT5, and cTrader.</p>
+                    {summaryText && <p className="lead">{summaryText}</p>}
                     <div className="rv-score-card__chips">
-                      <span className="rv-chip"><span className="rv-chip__icon"><img src="/assets/images/icon-shield-check-outline.svg" alt="" /></span>Regulated Broker</span>
-                      <span className="rv-chip"><span className="rv-chip__icon"><img src="/assets/images/icon-card-outline.svg" alt="" /></span>Low Spread Broker</span>
-                      <span className="rv-chip"><span className="rv-chip__icon"><img src="/assets/images/rv-icon-chart-up-group.svg" alt="" /></span>Popular Platform</span>
+                      {broker.regulation.is_regulated && (
+                        <span className="rv-chip">
+                          <span className="rv-chip__icon"><img src="/assets/images/icon-shield-check-outline.svg" alt="" /></span>
+                          Regulated Broker
+                        </span>
+                      )}
+                      {minSpread != null && minSpread < 1 && (
+                        <span className="rv-chip">
+                          <span className="rv-chip__icon"><img src="/assets/images/icon-card-outline.svg" alt="" /></span>
+                          Low Spread
+                        </span>
+                      )}
+                      {platforms.slice(0, 2).map((p) => (
+                        <span key={p} className="rv-chip">
+                          <span className="rv-chip__icon"><img src="/assets/images/rv-icon-chart-up-group.svg" alt="" /></span>
+                          {p}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 </div>
 
                 <h3>Key Facts</h3>
                 <div className="rv-facts-grid">
-                  {[
-                    { icon: 'rv-icon-wallet-outline.svg',       label: 'Min. Deposit',       value: '$0' },
-                    { icon: 'rv-icon-shield-check-line.svg',    label: 'Regulations',        value: 'FCA, ASIC' },
-                    { icon: 'rv-icon-screen-pc-tower.svg',      label: 'Platforms',          value: 'MT4, MT5, cTrader' },
-                    { icon: 'rv-icon-device-mobile-star.svg',   label: 'Mobile App Rating',  value: '4.8/5' },
-                    { icon: 'rv-icon-chart-up-group.svg',       label: 'Leverage',           value: 'Up to 1:500' },
-                    { icon: 'icon-trading-pattern.svg',         label: 'Instruments',        value: 'Forex, CFDs, Indices' },
-                    { icon: 'rv-icon-coin-group.svg',           label: 'Commission',         value: 'From $0' },
-                    { icon: 'rv-icon-users-outline-group.svg',  label: 'Copy Trading',       value: 'Available' },
-                  ].map((f) => (
+                  {keyFacts.map((f) => (
                     <div key={f.label} className="rv-fact-card">
                       <span className="rv-fact-card__icon"><img src={`/assets/images/${f.icon}`} alt="" /></span>
                       <p className="rv-fact-card__label">{f.label}</p>
@@ -148,15 +405,12 @@ export default function BrokerReviewPage() {
                     </div>
                   ))}
                 </div>
-
-                <p className="lead">One of our highest rated brokers, Pepperstone is well-regulated and is globally renowned for its low trading costs and choice of trading platforms. Pepperstone keeps costs low with some of the tightest spreads we&rsquo;ve seen, averaging 1.00 pips (EUR/USD) on its Standard Account. For those who prefer classic ECN trading, the Razor Account has low commissions and spreads averaging just 0.17 pips on the EUR/USD. Neither account has a required minimum deposit.</p>
-                <p className="lead">More experienced traders will appreciate Pepperstone&rsquo;s trading platform options, including a web-based platform, MT4, MT5, cTrader, and TradingView. All are available on desktop and mobile devices. Pepperstone&rsquo;s education section is not the most extensive we&rsquo;ve seen, but it is competent and well-structured, making it a good place to start for beginner traders.</p>
               </div>
 
-              {/* ── PROS & CONS ───────────────────────────────────────────────── */}
+              {/* ── PROS & CONS ─────────────────────────────────────────────── */}
               <div className="rv-block" id="pros-cons">
-                <h2>Pepperstone Pros &amp; Cons</h2>
-                <p className="lead">A quick look at where Pepperstone performs well and where beginners may want to compare alternatives.</p>
+                <h2>{broker.name} Pros &amp; Cons</h2>
+                <p className="lead">A quick look at where {broker.name} performs well and where traders may want to compare alternatives.</p>
 
                 <div className="rv-proscons-toggle">
                   <button type="button" className="rv-proscons-toggle__btn is-active" data-proscons-target="pros">Pros</button>
@@ -168,53 +422,53 @@ export default function BrokerReviewPage() {
                     <div className="rv-proscons__col is-active" data-proscons-panel="pros">
                       <p className="rv-proscons__heading">Pros</p>
                       <ul className="rv-proscons__list">
-                        {['Lorem ipsum dolor sit amet consectetur.','Aliquam in nibh libero habitant nulla massa.','Sagittis vitae ipsum dolor imperdiet.','Mauris in orci feugiat fringilla massa.','Adipiscing pretium sit vitae mattis facilisis.'].map((t) => (
-                          <li key={t}><img src="/assets/images/icon-check-fill.svg" alt="" />{t}</li>
-                        ))}
+                        {pros.length > 0
+                          ? pros.map((t) => (
+                              <li key={t}><img src="/assets/images/icon-check-fill.svg" alt="" />{t}</li>
+                            ))
+                          : <li><img src="/assets/images/icon-check-fill.svg" alt="" />Regulated and trusted broker</li>
+                        }
                       </ul>
                     </div>
                     <div className="rv-proscons__col rv-proscons__col--cons" data-proscons-panel="cons">
                       <p className="rv-proscons__heading">Cons</p>
                       <ul className="rv-proscons__list">
-                        {['Lacus nulla laoreet porta ultrices.','Justo iaculis vitae sem faucibus id viverra.','Porttitor et at orci cursus rutrum cras at at.','Phasellus cursus eget massa dolor cras ultrices.','Pulvinar aliquet purus volutpat integer.'].map((t) => (
+                        {cons.map((t) => (
                           <li key={t}><img src="/assets/images/rv-icon-negative-outline.svg" alt="" />{t}</li>
                         ))}
                       </ul>
                     </div>
                   </div>
 
-                  <div className="rv-callout">
-                    <span className="icon-btn"><img src="/assets/images/rv-icon-info-outline.svg" alt="" /></span>
-                    <div className="rv-callout__text">
-                      <p className="rv-callout__title">Quick Verdict</p>
-                      <p className="lead">Ornare ultrices diam nulla convallis. Mauris nisl consectetur turpis et. Enim natoque laoreet ullamcorper mi non a senectus et. Porta amet dignissim est tempor facilisis lacinia. Ac id nibh odio consectetur vulputate vulputate.</p>
+                  {verdict && (
+                    <div className="rv-callout">
+                      <span className="icon-btn"><img src="/assets/images/rv-icon-info-outline.svg" alt="" /></span>
+                      <div className="rv-callout__text">
+                        <p className="rv-callout__title">Quick Verdict</p>
+                        <p className="lead">{verdict}</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   <div className="rv-cta-row">
-                    <a href="#" className="btn btn--secondary rv-cta-row__desktop">Visit Broker</a>
-                    <button type="button" className="btn btn--text btn--text--px rv-cta-row__desktop">Compare Broker <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></button>
-                    <a href="#" className="btn btn--secondary rv-cta-row__mobile">Find Your Broker</a>
-                    <button type="button" className="btn btn--text rv-cta-row__mobile">Compare Brokers <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></button>
+                    <a href={affiliateLink} className="btn btn--secondary rv-cta-row__desktop" target="_blank" rel="noopener noreferrer nofollow">Visit Broker</a>
+                    <a href="/compare-brokers" className="btn btn--text btn--text--px rv-cta-row__desktop">Compare Broker <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></a>
+                    <a href={affiliateLink} className="btn btn--secondary rv-cta-row__mobile" target="_blank" rel="noopener noreferrer nofollow">Find Your Broker</a>
+                    <a href="/compare-brokers" className="btn btn--text rv-cta-row__mobile">Compare Brokers <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></a>
                   </div>
                 </div>
               </div>
 
-              {/* ── FEES ──────────────────────────────────────────────────────── */}
+              {/* ── FEES ────────────────────────────────────────────────────── */}
               <div className="rv-block" id="fees">
-                <h2>Pepperstone Fees &amp; Trading Costs</h2>
-                <p className="lead">Review Pepperstone&rsquo;s key trading fee, spreads, commissions, and non-trading costs before opening an account.</p>
-
-                <div className="rv-proscons-toggle rv-fee-toggle">
-                  <button type="button" className="rv-proscons-toggle__btn is-active" data-fee-target="cost">Cost</button>
-                  <button type="button" className="rv-proscons-toggle__btn" data-fee-target="note">Note</button>
-                </div>
+                <h2>{broker.name} Fees &amp; Trading Costs</h2>
+                <p className="lead">Review {broker.name}&rsquo;s key trading fees, spreads, commissions, and non-trading costs before opening an account.</p>
 
                 <div className="rv-facts-grid rv-facts-grid--3 rv-cta-row__desktop">
                   {[
-                    { icon: 'rv-icon-arrow-down-up.svg', label: 'Spread From',   value: '0.0 pips' },
-                    { icon: 'rv-icon-coin-group.svg',    label: 'Commission',    value: 'From $0' },
-                    { icon: 'icon-card-outline.svg',     label: 'Min. Deposit',  value: '$0' },
+                    { icon: 'rv-icon-arrow-down-up.svg', label: 'Spread From',  value: minSpread != null && minSpread < 99 ? `${minSpread} pips` : 'N/A' },
+                    { icon: 'rv-icon-coin-group.svg',    label: 'Commission',   value: minCommission ?? '$0' },
+                    { icon: 'icon-card-outline.svg',     label: 'Min. Deposit', value: broker.accounts.min_deposit != null ? `$${broker.accounts.min_deposit}` : 'N/A' },
                   ].map((f) => (
                     <div key={f.label} className="rv-fact-card rv-fact-card--row">
                       <span className="rv-fact-card__icon"><img src={`/assets/images/${f.icon}`} alt="" /></span>
@@ -226,88 +480,89 @@ export default function BrokerReviewPage() {
                   ))}
                 </div>
 
-                <div className="rv-fee-table">
-                  <p className="rv-fee-table__head rv-fee-table__head--type">Fee Type</p>
-                  <p className="rv-fee-table__head rv-fee-table__head--value"><span className="rv-fee-table__head-full">Pepperstone Cost</span><span className="rv-fee-table__head-short">Cost</span></p>
-                  <p className="rv-fee-table__head rv-fee-table__head--note">Beginner note</p>
-
-                  {[
-                    { icon: 'rv-icon-currency-exchange-group.svg', label: 'EUR/USD Spread', value: 'From 0.0 pips', note: 'Phasellus fusce vestibulum id blandit velit nunc aliquam.', last: false },
-                    { icon: 'rv-icon-coin-group.svg',              label: 'Commission',     value: 'From $0',       note: 'Senectus sapien viverra neque congue eget amet sit.',     last: false },
-                    { icon: 'icon-card-outline.svg',               label: 'Min. Deposit',   value: '$0',            note: 'Gravida gravida accumsan elementum id erat accumsan.',    last: false },
-                    { icon: 'rv-icon-time-line-group.svg',         label: 'Inactivity Fee', value: 'No',            note: 'Lorem nisl in velit porttitor odio nibh morbi elit.',     last: false },
-                    { icon: 'rv-icon-money-deposit.svg',           label: 'Deposit Fee',    value: '$0',            note: 'Congue libero sodales faucibus mi nibh pharetra eu id cras.', last: false },
-                    { icon: 'rv-icon-money-withdraw.svg',          label: 'Withdrawal Fee', value: '$0',            note: 'Neque ipsum facilisi dolor neque ultrices pulvinar in pretium.', last: true },
-                  ].map((row) => (
-                    <>
-                      <div key={`t-${row.label}`} className={`rv-fee-table__cell rv-fee-table__cell--type${row.last ? ' rv-fee-table__cell--last' : ''}`}><img src={`/assets/images/${row.icon}`} alt="" /><span>{row.label}</span></div>
-                      <div key={`v-${row.label}`} className={`rv-fee-table__cell rv-fee-table__cell--value${row.last ? ' rv-fee-table__cell--last' : ''}`}><span>{row.value}</span></div>
-                      <div key={`n-${row.label}`} className={`rv-fee-table__cell rv-fee-table__cell--note${row.last ? ' rv-fee-table__cell--last' : ''}`}><span>{row.note}</span></div>
-                    </>
-                  ))}
-                </div>
-
-                <div className="rv-callout">
-                  <span className="icon-btn"><img src="/assets/images/rv-icon-info-outline.svg" alt="" /></span>
-                  <div className="rv-callout__text">
-                    <p className="rv-callout__title">Fee Takeaway</p>
-                    <p className="lead">Ornare ultrices diam nulla convallis. Mauris nisl consectetur turpis et. Enim natoque laoreet ullamcorper mi non a senectus et. Porta amet dignissim est tempor facilisis lacinia. Ac id nibh odio consectetur vulputate vulputate.</p>
+                {broker.accounts.account_types.length > 0 && (
+                  <div className="rv-fee-table">
+                    <p className="rv-fee-table__head rv-fee-table__head--type">Account Type</p>
+                    <p className="rv-fee-table__head rv-fee-table__head--value"><span className="rv-fee-table__head-full">Spread</span><span className="rv-fee-table__head-short">Spread</span></p>
+                    <p className="rv-fee-table__head rv-fee-table__head--note">Commission</p>
+                    {broker.accounts.account_types.map((at, i) => {
+                      const last = i === broker.accounts.account_types.length - 1
+                      return (
+                        <>
+                          <div key={`t-${at.name}`} className={`rv-fee-table__cell rv-fee-table__cell--type${last ? ' rv-fee-table__cell--last' : ''}`}>
+                            <img src="/assets/images/rv-icon-coin-group.svg" alt="" /><span>{at.name}</span>
+                          </div>
+                          <div key={`v-${at.name}`} className={`rv-fee-table__cell rv-fee-table__cell--value${last ? ' rv-fee-table__cell--last' : ''}`}>
+                            <span>{at.spread != null ? `${at.spread} pips` : 'N/A'}</span>
+                          </div>
+                          <div key={`n-${at.name}`} className={`rv-fee-table__cell rv-fee-table__cell--note${last ? ' rv-fee-table__cell--last' : ''}`}>
+                            <span>{at.commission ?? '$0'}</span>
+                          </div>
+                        </>
+                      )
+                    })}
                   </div>
-                </div>
+                )}
 
                 <div className="rv-cta-row">
-                  <a href="#" className="btn btn--secondary rv-cta-row__desktop">Visit Broker</a>
-                  <button type="button" className="btn btn--text btn--text--px rv-cta-row__desktop">Compare Broker <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></button>
-                  <a href="#" className="btn btn--secondary rv-cta-row__mobile">Find Your Broker</a>
-                  <button type="button" className="btn btn--text rv-cta-row__mobile">Compare Brokers <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></button>
+                  <a href={affiliateLink} className="btn btn--secondary rv-cta-row__desktop" target="_blank" rel="noopener noreferrer nofollow">Visit Broker</a>
+                  <a href="/compare-brokers" className="btn btn--text btn--text--px rv-cta-row__desktop">Compare Broker <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></a>
+                  <a href={affiliateLink} className="btn btn--secondary rv-cta-row__mobile" target="_blank" rel="noopener noreferrer nofollow">Find Your Broker</a>
+                  <a href="/compare-brokers" className="btn btn--text rv-cta-row__mobile">Compare Brokers <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></a>
                 </div>
               </div>
 
-              {/* ── REGULATION ────────────────────────────────────────────────── */}
+              {/* ── REGULATION ──────────────────────────────────────────────── */}
               <div className="rv-block" id="regulation">
-                <h2>Is Pepperstone Safe and Regulated?</h2>
-                <p className="lead">Review Pepperstone&rsquo;s regulatory licenses, investor protection details, and trust signals before choosing a broker.</p>
+                <h2>Is {broker.name} Safe and Regulated?</h2>
+                <p className="lead">Review {broker.name}&rsquo;s regulatory licenses, investor protection details, and trust signals before choosing a broker.</p>
 
                 <div className="rv-callout rv-callout--lg">
                   <span className="icon-btn icon-btn--lg"><img src="/assets/images/rv-icon-shield-check-line-big.svg" alt="" /></span>
                   <div className="rv-callout__text">
-                    <p className="rv-callout__title rv-callout__title--lg">Trust verdict: regulated by multiple authorities</p>
-                    <p className="lead">Ornare ultrices diam nulla convallis. Mauris nisl consectetur turpis et. Enim natoque laoreet ullamcorper mi non a senectus et. Porta amet dignissim est tempor facilisis lacinia.</p>
+                    <p className="rv-callout__title rv-callout__title--lg">
+                      {broker.regulation.is_regulated
+                        ? `Trust verdict: regulated by ${regulators.length > 1 ? 'multiple authorities' : regulators[0]?.name ?? 'a financial authority'}`
+                        : 'Trust verdict: check regulation details carefully'
+                      }
+                    </p>
+                    {summaryText && <p className="lead">{summaryText}</p>}
                   </div>
                 </div>
 
-                <div className="rv-facts-grid">
-                  {[
-                    { name: 'FCA',   country: 'United Kingdom',  note: 'Strong investor protection' },
-                    { name: 'ASIC',  country: 'Australia',       note: 'Established financial regulator' },
-                    { name: 'CySEC', country: 'European Union',  note: 'EU regulatory oversight' },
-                    { name: 'DFSA',  country: 'Dubai',           note: 'Regional financial authority' },
-                  ].map((r) => (
-                    <div key={r.name} className="rv-reg-card">
-                      <span className="rv-fact-card__icon"><img src="/assets/images/rv-icon-shield-check-line.svg" alt="" /></span>
-                      <div>
-                        <p className="rv-reg-card__name">{r.name}</p>
-                        <p className="rv-reg-card__country">{r.country}</p>
-                        <p className="rv-reg-card__note">{r.note}</p>
+                {regulators.length > 0 && (
+                  <div className="rv-facts-grid">
+                    {regulators.map((r) => (
+                      <div key={r.name} className="rv-reg-card">
+                        <span className="rv-fact-card__icon"><img src="/assets/images/rv-icon-shield-check-line.svg" alt="" /></span>
+                        <div>
+                          <p className="rv-reg-card__name">{r.name}</p>
+                          <p className="rv-reg-card__country">{r.country ?? r.country_code ?? ''}</p>
+                          {r.note && <p className="rv-reg-card__note">{r.note}</p>}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
 
                 <div className="rv-panel">
                   <p className="rv-proscons__heading rv-proscons__heading--safety">What we check for safety</p>
                   <div className="rv-proscons rv-proscons--safety">
                     <div className="rv-proscons__col">
                       <ul className="rv-proscons__list">
-                        {['Lorem ipsum dolor sit amet consectetur.','Aliquam in nibh libero habitant nulla massa.','Sagittis vitae ipsum dolor imperdiet.'].map((t) => (
-                          <li key={t}><img src="/assets/images/icon-check-fill.svg" alt="" />{t}</li>
+                        {[
+                          broker.regulation.is_regulated && `Regulated by ${regulators[0]?.name ?? 'a financial authority'}`,
+                          broker.regulation.has_negative_balance_protection && 'Negative balance protection',
+                          broker.accounts?.has_demo_accounts && 'Demo account available',
+                        ].filter(Boolean).map((t) => (
+                          <li key={String(t)}><img src="/assets/images/icon-check-fill.svg" alt="" />{t}</li>
                         ))}
                       </ul>
                     </div>
                     <div className="rv-proscons__col">
                       <ul className="rv-proscons__list">
-                        {['Mauris in orci feugiat fringilla massa.','Adipiscing pretium sit vitae mattis facilisis.','Adipiscing pretium sit vitae mattis facilisis.'].map((t) => (
-                          <li key={t}><img src="/assets/images/icon-check-fill.svg" alt="" />{t}</li>
+                        {regulators.slice(1).map((r) => (
+                          <li key={r.name}><img src="/assets/images/icon-check-fill.svg" alt="" />Licensed by {r.name} ({r.country ?? r.country_code})</li>
                         ))}
                       </ul>
                     </div>
@@ -315,96 +570,94 @@ export default function BrokerReviewPage() {
                 </div>
               </div>
 
-              {/* ── PLATFORMS ─────────────────────────────────────────────────── */}
+              {/* ── PLATFORMS ───────────────────────────────────────────────── */}
               <div className="rv-block" id="platforms">
-                <h2>Pepperstone Trading Platforms</h2>
-                <p className="lead">Pepperstone supports several popular trading platforms, giving traders access to forex, CFDs, charts, indicators, and order management tools.</p>
+                <h2>{broker.name} Trading Platforms</h2>
+                <p className="lead">{broker.name} supports {platforms.length > 0 ? platforms.join(', ') : 'various'} trading platforms, giving traders access to forex, CFDs, charts, indicators, and order management tools.</p>
 
-                <div className="rv-platform-row">
-                  {[
-                    { logo: 'rv-logo-mt4.png',         name: 'MT4',         desc: 'Forex Trading' },
-                    { logo: 'rv-logo-mt5.png',         name: 'MT5',         desc: 'Multi-Asset Tools' },
-                    { logo: 'rv-logo-ctrader.png',     name: 'cTrader',     desc: 'Advance Execution' },
-                    { logo: 'rv-logo-tradingview.png', name: 'TradingView', desc: 'Charting and Analysis' },
-                  ].map((p) => (
-                    <div key={p.name} className="rv-platform-card">
-                      <img src={`/assets/images/${p.logo}`} alt="" className="rv-platform-card__logo" />
-                      <p className="rv-platform-card__name">{p.name}</p>
-                      <p className="rv-platform-card__desc">{p.desc}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="rv-callout">
-                  <span className="icon-btn"><img src="/assets/images/rv-icon-info-outline.svg" alt="" /></span>
-                  <div className="rv-callout__text">
-                    <p className="rv-callout__title">Takeaway</p>
-                    <p className="lead">Beginner may prefer MT5 or TradingView, while MT4 and cTrader suit traders who want more platform control</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* ── DEPOSIT & WITHDRAWAL ──────────────────────────────────────── */}
-              <div className="rv-block" id="deposit-withdrawal">
-                <h2>Pepperstone Deposit &amp; Withdrawal</h2>
-                <p className="lead">Review the available payment methods, fees, processing times, and supported base currencies. Availability may vary by country and broker entity.</p>
-
-                <div className="rv-panel">
-                  <div className="rv-pay-grid">
-                    {[
-                      { logo: 'icon-card-outline.svg',     name: 'Credit/Debit Card' },
-                      { logo: 'icon-bank.svg',             name: 'Bank Transfer' },
-                      { logo: 'rv-icon-paypal-mark.png',   name: 'Paypal' },
-                      { logo: 'rv-logo-skrill.png',        name: 'Skrill' },
-                    ].map((pm) => (
-                      <div key={pm.name} className="rv-pay-card">
-                        <div className="rv-pay-card__head">
-                          <span className="rv-pay-card__logo"><img src={`/assets/images/${pm.logo}`} alt="" /></span>
-                          <p className="rv-pay-card__name">{pm.name}</p>
-                        </div>
-                        <div className="rv-pay-card__cols">
-                          <div className="rv-pay-card__col">
-                            <p className="rv-pay-card__label">Deposit</p>
-                            <p className="rv-pay-card__meta">Fee: <strong>Free</strong></p>
-                            <p className="rv-pay-card__meta">Processing Time:</p>
-                            <p className="rv-pay-card__meta rv-pay-card__meta--strong">Instant</p>
-                          </div>
-                          <div className="rv-pay-card__col">
-                            <p className="rv-pay-card__label">Withdrawal</p>
-                            <p className="rv-pay-card__meta">Fee: <strong>$0</strong></p>
-                            <p className="rv-pay-card__meta">Processing Time:</p>
-                            <p className="rv-pay-card__meta rv-pay-card__meta--strong">1-3 Business Days</p>
-                          </div>
-                        </div>
-                        <div className="rv-pay-card__currencies"><span>Currencies:</span><em>USD</em><em>EUR</em><em>GBP</em><em>AUD</em></div>
+                {platforms.length > 0 && (
+                  <div className="rv-platform-row">
+                    {platforms.map((p) => (
+                      <div key={p} className="rv-platform-card">
+                        <p className="rv-platform-card__name">{p}</p>
+                        <p className="rv-platform-card__desc">Trading Platform</p>
                       </div>
                     ))}
                   </div>
+                )}
+              </div>
 
-                  <div className="rv-callout">
-                    <span className="icon-btn"><img src="/assets/images/rv-icon-info-outline.svg" alt="" /></span>
-                    <div className="rv-callout__text">
-                      <p className="rv-callout__title">Payment Takeaway</p>
-                      <p className="lead">Elementum vel justo vel malesuada lectus elit laoreet penatibus egestas. Auctor tortor at cursus quis pretium imperdiet sit.</p>
+              {/* ── DEPOSIT & WITHDRAWAL ────────────────────────────────────── */}
+              <div className="rv-block" id="deposit-withdrawal">
+                <h2>{broker.name} Deposit &amp; Withdrawal</h2>
+                <p className="lead">Review the available payment methods, fees, and processing times. Availability may vary by country and broker entity.</p>
+
+                <div className="rv-panel">
+                  {payMethods.length > 0 ? (
+                    <div className="rv-pay-grid">
+                      {payMethods.map((pm, i) => {
+                        const pmLogo = bmsUrl(pm.logo_url)
+                        return (
+                          <div key={i} className="rv-pay-card">
+                            <div className="rv-pay-card__head">
+                              <span className="rv-pay-card__logo">
+                                {pmLogo
+                                  ? <img src={pmLogo} alt="" />
+                                  : <img src="/assets/images/icon-card-outline.svg" alt="" />
+                                }
+                              </span>
+                              <p className="rv-pay-card__name">{pm.name}</p>
+                            </div>
+                            <div className="rv-pay-card__cols">
+                              {pm.for_deposit && (
+                                <div className="rv-pay-card__col">
+                                  <p className="rv-pay-card__label">Deposit</p>
+                                  <p className="rv-pay-card__meta">Fee: <strong>{pm.deposit_fee ?? 'Free'}</strong></p>
+                                  {pm.processing_time_deposit && (
+                                    <>
+                                      <p className="rv-pay-card__meta">Processing Time:</p>
+                                      <p className="rv-pay-card__meta rv-pay-card__meta--strong">{pm.processing_time_deposit}</p>
+                                    </>
+                                  )}
+                                </div>
+                              )}
+                              {pm.for_withdrawal && (
+                                <div className="rv-pay-card__col">
+                                  <p className="rv-pay-card__label">Withdrawal</p>
+                                  <p className="rv-pay-card__meta">Fee: <strong>{pm.withdrawal_fee ?? '$0'}</strong></p>
+                                  {pm.processing_time_withdrawal && (
+                                    <>
+                                      <p className="rv-pay-card__meta">Processing Time:</p>
+                                      <p className="rv-pay-card__meta rv-pay-card__meta--strong">{pm.processing_time_withdrawal}</p>
+                                    </>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )
+                      })}
                     </div>
-                  </div>
+                  ) : (
+                    <p className="lead text-center py-3">Payment method details not available. Visit the broker&rsquo;s website for the latest information.</p>
+                  )}
                 </div>
               </div>
 
               {/* Video placeholder */}
               <div className="rv-video"><img src="/assets/images/rv-video-placeholder.png" alt="" /></div>
 
-              {/* ── COUNTRIES ─────────────────────────────────────────────────── */}
+              {/* ── COUNTRIES & PROMOTIONS ──────────────────────────────────── */}
               <div className="rv-block" id="countries">
-                <h2>Pepperstone Countries &amp; Promotions</h2>
-                <p className="lead">Check whether Pepperstone is available in your country and review any country-specific promotions, restrictions, or account notes.</p>
+                <h2>{broker.name} Countries &amp; Promotions</h2>
+                <p className="lead">Check whether {broker.name} is available in your country and review any country-specific promotions, restrictions, or account notes.</p>
 
                 <div className="rv-panel">
                   <p className="rv-panel__heading">Your selected country</p>
                   <div className="country-select" id="reviewCountrySelect">
                     <button type="button" className="select-row country-toggle">
-                      <img src="/assets/images/flag-netherlands.png" alt="" className="flag" />
-                      <span className="select-value" id="reviewCountryValue">Netherlands</span>
+                      <img src={flagUrl(country)} alt="" className="flag" style={{ width: 20, height: 15, objectFit: 'cover' }} />
+                      <span className="select-value" id="reviewCountryValue">{countryName(country)}</span>
                       <img src="/assets/images/rv-icon-chevron-down-filled.svg" alt="" className="icon-24 select-chevron" />
                     </button>
                     <div className="country-dropdown" hidden>
@@ -413,8 +666,17 @@ export default function BrokerReviewPage() {
                         <input type="text" placeholder="Search country..." autoComplete="off" />
                       </div>
                       <ul className="country-list" role="listbox">
-                        <li className="country-option country-option--selected" role="option" data-flag="🇳🇱" data-name="Netherlands"><span className="flag-emoji">🇳🇱</span>Netherlands</li>
-                        <li className="country-option" role="option" data-flag="🇬🇧" data-name="United Kingdom"><span className="flag-emoji">🇬🇧</span>United Kingdom</li>
+                        {Object.entries(COUNTRY_NAMES).map(([code, name]) => (
+                          <li
+                            key={code}
+                            className={`country-option${code === country ? ' country-option--selected' : ''}`}
+                            role="option"
+                            data-code={code}
+                            data-name={name}
+                          >
+                            {name}
+                          </li>
+                        ))}
                       </ul>
                       <p className="country-empty" hidden>No countries found.</p>
                     </div>
@@ -422,59 +684,92 @@ export default function BrokerReviewPage() {
                   <p className="rv-note">Detected automatically. You can change it anytime.</p>
 
                   <div className="rv-info-list">
-                    <div className="rv-info-list__row"><span className="rv-fact-card__icon"><img src="/assets/images/rv-icon-language.svg" alt="" /></span><span className="rv-info-list__label">Availability</span><span className="rv-info-list__value">Available</span></div>
-                    <div className="rv-info-list__row"><span className="rv-fact-card__icon"><img src="/assets/images/icon-gift.svg" alt="" /></span><span className="rv-info-list__label">Welcome Bonus</span><span className="rv-info-list__value">No Active Deposit Bonus</span></div>
-                    <div className="rv-info-list__row"><span className="rv-fact-card__icon"><img src="/assets/images/rv-icon-shield-warning-outline.svg" alt="" /></span><span className="rv-info-list__label">Restrictions</span><span className="rv-info-list__value">Entity-Specific terms may apply</span></div>
+                    <div className="rv-info-list__row">
+                      <span className="rv-fact-card__icon"><img src="/assets/images/rv-icon-language.svg" alt="" /></span>
+                      <span className="rv-info-list__label">Availability</span>
+                      <span className="rv-info-list__value">
+                        {countryStatus === 'restricted'
+                          ? `Not available in ${countryName(country)}`
+                          : countryStatus === 'available'
+                            ? `Available in ${countryName(country)}`
+                            : 'Check website for availability'
+                        }
+                      </span>
+                    </div>
+                    <div className="rv-info-list__row">
+                      <span className="rv-fact-card__icon"><img src="/assets/images/icon-gift.svg" alt="" /></span>
+                      <span className="rv-info-list__label">Welcome Bonus</span>
+                      <span className="rv-info-list__value">
+                        {promos.length > 0
+                          ? `${promos[0].bonus_type ?? 'Active bonus'}${promos[0].bonus_amount ? `: ${promos[0].bonus_amount}` : ''}`
+                          : 'No Active Deposit Bonus'
+                        }
+                      </span>
+                    </div>
+                    <div className="rv-info-list__row">
+                      <span className="rv-fact-card__icon"><img src="/assets/images/rv-icon-shield-warning-outline.svg" alt="" /></span>
+                      <span className="rv-info-list__label">Restrictions</span>
+                      <span className="rv-info-list__value">
+                        {countryStatus === 'restricted'
+                          ? `Trading restricted in ${countryName(country)}`
+                          : 'Entity-specific terms may apply'
+                        }
+                      </span>
+                    </div>
                   </div>
 
                   <p className="rv-note">Availability, promotions, restrictions, and affiliate links may vary depending on your selected country and the broker entity you register with.</p>
-                  <button type="button" className="btn btn--text btn--text--px">View brokers available in Netherlands <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></button>
+                  <a href={`/?country=${country}`} className="btn btn--text btn--text--px">View brokers available in {countryName(country)} <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></a>
                 </div>
               </div>
 
-              {/* ── FAQ ───────────────────────────────────────────────────────── */}
+              {/* ── FAQ ─────────────────────────────────────────────────────── */}
               <div className="rv-block" id="faq">
-                <h2>Pepperstone Frequently Asked Questions</h2>
-                <p className="lead">Find quick answers about Pepperstone&rsquo;s fees, safety, platforms, deposits, withdrawals, and country availability.</p>
+                <h2>{broker.name} Frequently Asked Questions</h2>
+                <p className="lead">Find quick answers about {broker.name}&rsquo;s fees, safety, platforms, deposits, withdrawals, and country availability.</p>
 
-                <div className="faq-grid rv-faq-grid">
-                  <div className="faq-col">
-                    {[
-                      { q: 'Is Pepperstone good for beginners?',           a: 'FX Look Up compares brokers using key factors such as fees, spreads, platforms, regulations, deposit requirements, payment methods, and country availability.' },
-                      { q: 'Is Pepperstone regulated?',                    a: 'Yes. Pepperstone is regulated by multiple authorities including the FCA (UK), ASIC (Australia), CySEC (EU), and DFSA (Dubai), giving traders strong investor protection across regions.' },
-                      { q: "What is Pepperstone's minimum deposit?",       a: 'Pepperstone has no required minimum deposit, so you can open a Standard or Razor account and fund it with an amount that suits your budget.' },
-                      { q: 'Which platforms does Pepperstone support?',    a: 'Pepperstone supports MT4, MT5, cTrader, and TradingView, all available on desktop and mobile devices.' },
-                      { q: 'Does Pepperstone offer a welcome bonus?',      a: 'There is currently no active deposit bonus, though country-specific promotions may vary depending on the broker entity you register with.' },
-                    ].map((faq, i) => (
-                      <div key={faq.q} className={`faq-item${i === 0 ? ' is-open' : ''}`}>
-                        <button type="button" className="faq-question">
-                          {faq.q}<img src="/assets/images/rv-icon-chevron-down-filled.svg" alt="" />
-                        </button>
-                        <div className="faq-answer"><p className="lead">{faq.a}</p></div>
-                      </div>
-                    ))}
+                {faqs.length > 0 && (
+                  <div className="faq-grid rv-faq-grid">
+                    <div className="faq-col">
+                      {faqs.map((faq, i) => (
+                        <div key={i} className={`faq-item${i === 0 ? ' is-open' : ''}`}>
+                          <button type="button" className="faq-question">
+                            {faq.q}<img src="/assets/images/rv-icon-chevron-down-filled.svg" alt="" />
+                          </button>
+                          <div className="faq-answer"><p className="lead">{faq.a}</p></div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
-                <button type="button" className="btn btn--text btn--text--px">Compare Pepperstone with other brokers <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></button>
+                <a href="/compare-brokers" className="btn btn--text btn--text--px">Compare {broker.name} with other brokers <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></a>
               </div>
 
             </div>{/* /rv-article__main */}
 
-            {/* ── SIDEBAR ───────────────────────────────────────────────────── */}
+            {/* ── SIDEBAR ─────────────────────────────────────────────────── */}
             <aside className="rv-article__sidebar">
               <div className="rv-side-card">
                 <div className="rv-side-card__head">
-                  <img src="/assets/images/logo-pepperstone.png" alt="" className="rv-side-card__logo" />
-                  <p className="rv-side-card__name">Pepperstone</p>
+                  {logoUrl
+                    ? <img src={logoUrl} alt={broker.name} className="rv-side-card__logo" />
+                    : null
+                  }
+                  <p className="rv-side-card__name">{broker.name}</p>
                 </div>
-                <p className="rv-side-card__stars">
-                  <img src="/assets/images/icon-star.svg" alt="" /><img src="/assets/images/icon-star.svg" alt="" /><img src="/assets/images/icon-star.svg" alt="" /><img src="/assets/images/icon-star.svg" alt="" /><img src="/assets/images/icon-star-half.svg" alt="" />
-                  <span>4.8/5</span>
+                {rating != null && (
+                  <p className="rv-side-card__stars">
+                    <Stars rating={rating} />
+                    <span>{rating.toFixed(1)}/5</span>
+                  </p>
+                )}
+                <p className="rv-side-card__flag">
+                  <img src={flagUrl(country)} alt="" style={{ width: 20, height: 15, objectFit: 'cover' }} />
+                  {countryStatus === 'restricted' ? `Not available in ${countryName(country)}` : `Available in ${countryName(country)}`}
                 </p>
-                <p className="rv-side-card__flag"><img src="/assets/images/flag-netherlands.png" alt="" />Available in Netherlands</p>
-                <a href="#" className="btn btn--secondary btn--block">Visit Broker</a>
-                <button type="button" className="btn btn--text btn--text--px btn--center">Compare Broker <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></button>
+                <a href={affiliateLink} className="btn btn--secondary btn--block" target="_blank" rel="noopener noreferrer nofollow">Visit Broker</a>
+                <a href="/compare-brokers" className="btn btn--text btn--text--px btn--center">Compare Broker <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></a>
               </div>
 
               <nav className="rv-side-card rv-onpage">
@@ -492,88 +787,97 @@ export default function BrokerReviewPage() {
       </section>
 
       {/* ── RELATED BROKERS ───────────────────────────────────────────────────── */}
-      <section className="rv-related">
-        <div className="rv-related__head">
-          <div className="rv-related__copy">
-            <p className="eyebrow">RELATED BROKERS</p>
-            <h2>Others Also Viewed These Brokers</h2>
-            <p className="lead">Explore similar forex brokers that traders compare with Pepperstone</p>
-          </div>
-          <div className="rv-related__nav">
-            <button type="button" className="rv-related__arrow" aria-label="Previous"><img src="/assets/images/rv-icon-chevron-round-left.svg" alt="" /></button>
-            <button type="button" className="rv-related__arrow" aria-label="Next"><img src="/assets/images/rv-icon-chevron-round-right.svg" alt="" /></button>
-            <a href="#" className="btn btn--text btn--text--px">View All Brokers <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></a>
-          </div>
-        </div>
-
-        <div className="rv-related__cards" id="relatedCarousel">
-          {[
-            { photo: 'rv-photo-icmarkets.png', name: 'IC Markets', rating: '4.8/5', bonus: 'No deposit bonus',    bonusClass: '' },
-            { photo: 'rv-photo-etoro.png',     name: 'eToro',      rating: '4.8/5', bonus: 'Deposit bonus',       bonusClass: 'rv-related-card__bonus--accent' },
-            { photo: 'rv-photo-avatrade.png',  name: 'AvaTrade',   rating: '4.8/5', bonus: 'No deposit bonus',    bonusClass: '' },
-          ].map((b) => (
-            <div key={b.name} className="rv-related-card">
-              <div className="rv-related-card__top">
-                <img src={`/assets/images/${b.photo}`} alt="" className="rv-related-card__photo" />
-                <div>
-                  <p className="rv-related-card__name">{b.name}</p>
-                  <p className="rv-related-card__rating"><img src="/assets/images/icon-star.svg" alt="" />{b.rating}</p>
-                </div>
-              </div>
-              <p className="rv-related-card__available"><img src="/assets/images/icon-check-circle.svg" alt="" />Available in your country</p>
-              <div className="rv-related-card__stats">
-                <div className="rv-related-card__stat"><img src="/assets/images/icon-users.svg" alt="" /><span>12,540 users</span></div>
-                <div className="rv-related-card__stat"><img src="/assets/images/icon-swap.svg" alt="" /><span className="rv-related-card__stat-label">Min. spread</span><strong>0.0 pips</strong></div>
-                <div className="rv-related-card__stat"><img src="/assets/images/icon-card-outline.svg" alt="" /><span className="rv-related-card__stat-label">Min. deposit</span><strong>$0</strong></div>
-                <div className="rv-related-card__platform">
-                  <div className="rv-related-card__stat"><img src="/assets/images/icon-pc-check.svg" alt="" /><span className="rv-related-card__stat-label">Platform</span></div>
-                  <div className="rv-related-card__tags"><span>MT4</span><span>MT5</span><span>cTrader</span></div>
-                </div>
-                <div className="rv-related-card__stat"><img src="/assets/images/icon-gift-light.svg" alt="" /><span className="rv-related-card__stat-label">Bonus</span><strong className={b.bonusClass || undefined}>{b.bonus}</strong></div>
-              </div>
-              <div className="rv-related-card__ctas">
-                <a href="#" className="btn btn--primary">Visit Broker</a>
-                <button type="button" className="btn btn--text btn--text--px btn--center">Read Review <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></button>
-              </div>
+      {related.length > 0 && (
+        <section className="rv-related">
+          <div className="rv-related__head">
+            <div className="rv-related__copy">
+              <p className="eyebrow">RELATED BROKERS</p>
+              <h2>Others Also Viewed These Brokers</h2>
+              <p className="lead">Explore similar forex brokers that traders compare with {broker.name}</p>
             </div>
-          ))}
-        </div>
-      </section>
+            <div className="rv-related__nav">
+              <button type="button" className="rv-related__arrow" aria-label="Previous"><img src="/assets/images/rv-icon-chevron-round-left.svg" alt="" /></button>
+              <button type="button" className="rv-related__arrow" aria-label="Next"><img src="/assets/images/rv-icon-chevron-round-right.svg" alt="" /></button>
+              <a href="/" className="btn btn--text btn--text--px">View All Brokers <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></a>
+            </div>
+          </div>
 
-      {/* ── BLOG + CTA ────────────────────────────────────────────────────────── */}
+          <div className="rv-related__cards" id="relatedCarousel">
+            {related.map((b) => {
+              const bLogo = bmsUrl(b.logos?.rectangle_light ?? b.logos?.square_light)
+              const bRating = b.total_rating
+              const bPromotion = b.promotion
+              return (
+                <div key={b.id} className="rv-related-card">
+                  <div className="rv-related-card__top">
+                    {bLogo
+                      ? <img src={bLogo} alt="" className="rv-related-card__photo" style={{ maxHeight: 40, objectFit: 'contain' }} />
+                      : <span style={{ fontWeight: 700 }}>{b.name}</span>
+                    }
+                    <div>
+                      <p className="rv-related-card__name">{b.name}</p>
+                      {bRating != null && (
+                        <p className="rv-related-card__rating">
+                          <img src="/assets/images/icon-star.svg" alt="" />{bRating.toFixed(1)}/5
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <p className="rv-related-card__available"><img src="/assets/images/icon-check-circle.svg" alt="" />Available in your country</p>
+                  <div className="rv-related-card__stats">
+                    {b.users_count != null && (
+                      <div className="rv-related-card__stat">
+                        <img src="/assets/images/icon-users.svg" alt="" />
+                        <span>{b.users_count.toLocaleString()} users</span>
+                      </div>
+                    )}
+                    <div className="rv-related-card__stat">
+                      <img src="/assets/images/icon-swap.svg" alt="" />
+                      <span className="rv-related-card__stat-label">Min. spread</span>
+                      <strong>{b.min_spread != null ? `${b.min_spread} pips` : 'N/A'}</strong>
+                    </div>
+                    <div className="rv-related-card__stat">
+                      <img src="/assets/images/icon-card-outline.svg" alt="" />
+                      <span className="rv-related-card__stat-label">Min. deposit</span>
+                      <strong>{b.min_deposit != null ? `$${b.min_deposit}` : 'N/A'}</strong>
+                    </div>
+                    {(b.platforms?.length ?? 0) > 0 && (
+                      <div className="rv-related-card__platform">
+                        <div className="rv-related-card__stat">
+                          <img src="/assets/images/icon-pc-check.svg" alt="" />
+                          <span className="rv-related-card__stat-label">Platform</span>
+                        </div>
+                        <div className="rv-related-card__tags">
+                          {(b.platforms ?? []).slice(0, 3).map((p: string) => <span key={p}>{p}</span>)}
+                        </div>
+                      </div>
+                    )}
+                    <div className="rv-related-card__stat">
+                      <img src="/assets/images/icon-gift-light.svg" alt="" />
+                      <span className="rv-related-card__stat-label">Bonus</span>
+                      <strong className={bPromotion ? 'rv-related-card__bonus--accent' : undefined}>
+                        {bPromotion?.bonus_type ?? 'No deposit bonus'}
+                      </strong>
+                    </div>
+                  </div>
+                  <div className="rv-related-card__ctas">
+                    <a href={b.affiliate_link ?? '#'} className="btn btn--primary" target="_blank" rel="noopener noreferrer nofollow">Visit Broker</a>
+                    <a href={`/brokers/${b.slug}`} className="btn btn--text btn--text--px btn--center">Read Review <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></a>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* ── NEWSLETTER CTA ────────────────────────────────────────────────────── */}
       <section className="section section--blogs">
         <div className="section-bg-decor" aria-hidden="true">
           <img src="/assets/images/blogs-bg.png" alt="" />
           <div className="section-bg-decor__fade" />
         </div>
         <div className="section-inner">
-          <div className="section-head section-head--center">
-            <p className="eyebrow">LATEST INSIGHTS</p>
-            <h2>Latest Broker Guides &amp; Forex Insights</h2>
-            <p className="lead">Explore recent broker guides, platform comparisons, and trading insights to help you make better broker decisions.</p>
-            <a href="/blog" className="btn btn--text">View All Posts <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
-          </div>
-
-          <div className="blog-cards">
-            {[
-              { img: 'blog-img-1.png', cls: 'blog-card__image--1', tag: 'Broker Guides',    date: 'May 10, 2026', title: 'Top 5 Forex Brokers with the Best Customer Support', lead: 'Compare trusted brokers with responsive support, beginner-friendly tools, and reliable service.' },
-              { img: 'blog-img-2.png', cls: 'blog-card__image--2', tag: 'Trading Platforms', date: 'May 12, 2026', title: 'MT4 vs MT5: Which Platform Should You Choose?', lead: 'Learn the key differences between MetaTrader platforms and which brokers support each option.' },
-              { img: 'blog-img-3.png', cls: 'blog-card__image--3', tag: 'Broker Comparison', date: 'May 14, 2026', title: 'Compare Broker Fees Before Signing Up', lead: 'Understand spreads, commissions, deposit fees, and trading costs before choosing a broker.' },
-            ].map((c) => (
-              <article key={c.title} className="blog-card">
-                <div className={`blog-card__image ${c.cls}`}><img src={`/assets/images/${c.img}`} alt="" /></div>
-                <div className="blog-card__body">
-                  <div className="blog-card__text">
-                    <div className="blog-meta"><span className="tag">{c.tag}</span><span className="lead">{c.date}</span></div>
-                    <p className="blog-title">{c.title}</p>
-                    <p className="lead">{c.lead}</p>
-                  </div>
-                  <a href="#" className="btn btn--text">Read More <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
-                </div>
-              </article>
-            ))}
-          </div>
-
           <div className="cta">
             <img src="/assets/images/cta-bg.png" alt="" className="cta__bg" />
             <div className="cta__content">

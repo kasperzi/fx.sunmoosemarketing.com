@@ -10,9 +10,9 @@ export const dynamic = 'force-dynamic'
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface BrokerLogos { square_light: string|null; square_dark: string|null; rectangle_light: string|null; rectangle_dark: string|null }
-interface Regulator   { name: string; country_code?: string; country?: string; note?: string }
+interface Regulator   { title?: string; name?: string; country_code?: string; country?: string; note?: string }
 interface PlatformItem { title?: string; name?: string }
-interface AccountType  { name: string; spread?: number|null; commission?: string|null }
+interface AccountType  { account_type?: string; name?: string; spread?: number|string|null; commission?: string|null }
 interface PaymentMethod {
   name: string; logo_url?: string|null; attribute_item_id?: number
   for_deposit: boolean; for_withdrawal: boolean
@@ -30,7 +30,7 @@ interface BrokerData {
   logos: BrokerLogos
   regulation: { is_regulated: boolean; has_negative_balance_protection: boolean; regulators: Regulator[] }
   accounts: { min_deposit?: number|null; max_leverage?: string|null; platforms: PlatformItem[]; account_types: AccountType[]; has_demo_accounts?: boolean }
-  instruments: ({ title?: string; name?: string })[]
+  instruments: ({ instrument?: string; title?: string; name?: string })[]
   support: { has_24_7_support: boolean; channels: ({ title?: string })[] }
   pros_cons: { pros?: (string|{text:string})[]; cons?: (string|{text:string})[] }
   payment_methods: PaymentMethod[]
@@ -254,12 +254,12 @@ export default async function BrokerReviewPage(
   // ── Key facts ───────────────────────────────────────────────────────────────
   const keyFacts = [
     { icon: 'rv-icon-wallet-outline.svg',      label: 'Min. Deposit',  value: broker.accounts?.min_deposit != null ? `$${broker.accounts.min_deposit}` : 'N/A' },
-    { icon: 'rv-icon-shield-check-line.svg',   label: 'Regulations',   value: regulators.slice(0, 4).map((r) => r.name).join(', ') || 'N/A' },
+    { icon: 'rv-icon-shield-check-line.svg',   label: 'Regulations',   value: regulators.slice(0, 4).map((r) => r.title ?? r.name ?? '').filter(Boolean).join(', ') || 'N/A' },
     { icon: 'rv-icon-screen-pc-tower.svg',     label: 'Platforms',     value: platforms.slice(0, 4).join(', ') || 'N/A' },
     { icon: 'rv-icon-chart-up-group.svg',      label: 'Max Leverage',  value: broker.accounts?.max_leverage ?? 'N/A' },
-    { icon: 'icon-trading-pattern.svg',        label: 'Instruments',   value: (broker.instruments ?? []).slice(0, 3).map((i) => i.title ?? i.name ?? '').join(', ') || 'N/A' },
+    { icon: 'icon-trading-pattern.svg',        label: 'Instruments',   value: (broker.instruments ?? []).slice(0, 3).map((i) => i.instrument ?? i.title ?? i.name ?? '').filter(Boolean).join(', ') || 'N/A' },
     { icon: 'rv-icon-coin-group.svg',          label: 'Spread From',   value: minSpread != null && minSpread < 99 ? `${minSpread} pips` : 'N/A' },
-    { icon: 'rv-icon-arrow-down-up.svg',       label: 'Commission',    value: minCommission ?? '$0' },
+    { icon: 'rv-icon-arrow-down-up.svg',       label: 'Commission',    value: minCommission != null ? `$${minCommission}` : '$0' },
     { icon: 'rv-icon-users-outline-group.svg', label: 'Demo Account',  value: broker.accounts?.has_demo_accounts ? 'Available' : 'N/A' },
   ] as { icon: string; label: string; value: string }[]
 
@@ -505,9 +505,9 @@ export default async function BrokerReviewPage(
                     {accountTypes.map((at, i) => {
                       const last = i === accountTypes.length - 1
                       return (
-                        <React.Fragment key={at.name ?? i}>
+                        <React.Fragment key={at.account_type ?? at.name ?? i}>
                           <div className={`rv-fee-table__cell rv-fee-table__cell--type${last ? ' rv-fee-table__cell--last' : ''}`}>
-                            <img src="/assets/images/rv-icon-coin-group.svg" alt="" /><span>{at.name}</span>
+                            <img src="/assets/images/rv-icon-coin-group.svg" alt="" /><span>{at.account_type ?? at.name}</span>
                           </div>
                           <div className={`rv-fee-table__cell rv-fee-table__cell--value${last ? ' rv-fee-table__cell--last' : ''}`}>
                             <span>{at.spread != null ? `${at.spread} pips` : 'N/A'}</span>
@@ -539,7 +539,7 @@ export default async function BrokerReviewPage(
                   <div className="rv-callout__text">
                     <p className="rv-callout__title rv-callout__title--lg">
                       {broker.regulation.is_regulated
-                        ? `Trust verdict: regulated by ${regulators.length > 1 ? 'multiple authorities' : regulators[0]?.name ?? 'a financial authority'}`
+                        ? `Trust verdict: regulated by ${regulators.length > 1 ? 'multiple authorities' : regulators[0]?.title ?? regulators[0]?.name ?? 'a financial authority'}`
                         : 'Trust verdict: check regulation details carefully'
                       }
                     </p>
@@ -550,10 +550,10 @@ export default async function BrokerReviewPage(
                 {regulators.length > 0 && (
                   <div className="rv-facts-grid">
                     {regulators.map((r) => (
-                      <div key={r.name} className="rv-reg-card">
+                      <div key={r.title ?? r.name} className="rv-reg-card">
                         <span className="rv-fact-card__icon"><img src="/assets/images/rv-icon-shield-check-line.svg" alt="" /></span>
                         <div>
-                          <p className="rv-reg-card__name">{r.name}</p>
+                          <p className="rv-reg-card__name">{r.title ?? r.name}</p>
                           <p className="rv-reg-card__country">{r.country ?? r.country_code ?? ''}</p>
                           {r.note && <p className="rv-reg-card__note">{r.note}</p>}
                         </div>
@@ -568,7 +568,7 @@ export default async function BrokerReviewPage(
                     <div className="rv-proscons__col">
                       <ul className="rv-proscons__list">
                         {[
-                          broker.regulation.is_regulated && `Regulated by ${regulators[0]?.name ?? 'a financial authority'}`,
+                          broker.regulation.is_regulated && `Regulated by ${regulators[0]?.title ?? regulators[0]?.name ?? 'a financial authority'}`,
                           broker.regulation.has_negative_balance_protection && 'Negative balance protection',
                           broker.accounts?.has_demo_accounts && 'Demo account available',
                         ].filter(Boolean).map((t) => (
@@ -579,7 +579,7 @@ export default async function BrokerReviewPage(
                     <div className="rv-proscons__col">
                       <ul className="rv-proscons__list">
                         {regulators.slice(1).map((r) => (
-                          <li key={r.name}><img src="/assets/images/icon-check-fill.svg" alt="" />Licensed by {r.name} ({r.country ?? r.country_code})</li>
+                          <li key={r.title ?? r.name}><img src="/assets/images/icon-check-fill.svg" alt="" />Licensed by {r.title ?? r.name} ({r.country ?? r.country_code})</li>
                         ))}
                       </ul>
                     </div>

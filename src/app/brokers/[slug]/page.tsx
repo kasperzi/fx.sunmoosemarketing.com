@@ -14,7 +14,7 @@ interface Regulator   { title?: string; name?: string; country_code?: string; co
 interface PlatformItem { title?: string; name?: string }
 interface AccountType  { account_type?: string; name?: string; spread?: number|string|null; commission?: string|null }
 interface PaymentMethod {
-  name: string; logo_url?: string|null; attribute_item_id?: number
+  method?: string; name?: string; logo_url?: string|null; attribute_item_id?: number
   for_deposit: boolean; for_withdrawal: boolean
   deposit_fee?: string|null; withdrawal_fee?: string|null
   processing_time_deposit?: string|null; processing_time_withdrawal?: string|null
@@ -645,13 +645,13 @@ export default async function BrokerReviewPage(
                                   : <img src="/assets/images/icon-card-outline.svg" alt="" />
                                 }
                               </span>
-                              <p className="rv-pay-card__name">{pm.name}</p>
+                              <p className="rv-pay-card__name">{pm.method ?? pm.name}</p>
                             </div>
                             <div className="rv-pay-card__cols">
                               {pm.for_deposit && (
                                 <div className="rv-pay-card__col">
                                   <p className="rv-pay-card__label">Deposit</p>
-                                  <p className="rv-pay-card__meta">Fee: <strong>{pm.deposit_fee ?? 'Free'}</strong></p>
+                                  <p className="rv-pay-card__meta">Fee: <strong>{pm.deposit_fee && pm.deposit_fee !== '0' ? `$${pm.deposit_fee}` : '$0'}</strong></p>
                                   {pm.processing_time_deposit && (
                                     <>
                                       <p className="rv-pay-card__meta">Processing Time:</p>
@@ -663,7 +663,7 @@ export default async function BrokerReviewPage(
                               {pm.for_withdrawal && (
                                 <div className="rv-pay-card__col">
                                   <p className="rv-pay-card__label">Withdrawal</p>
-                                  <p className="rv-pay-card__meta">Fee: <strong>{pm.withdrawal_fee ?? '$0'}</strong></p>
+                                  <p className="rv-pay-card__meta">Fee: <strong>{pm.withdrawal_fee && pm.withdrawal_fee !== '0' ? `$${pm.withdrawal_fee}` : '$0'}</strong></p>
                                   {pm.processing_time_withdrawal && (
                                     <>
                                       <p className="rv-pay-card__meta">Processing Time:</p>

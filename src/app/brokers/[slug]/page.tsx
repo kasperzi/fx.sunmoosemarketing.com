@@ -497,27 +497,49 @@ export default async function BrokerReviewPage(
                   ))}
                 </div>
 
-                {accountTypes.length > 0 && (
-                  <div className="rv-fee-table">
-                    <p className="rv-fee-table__head rv-fee-table__head--type">Account Type</p>
-                    <p className="rv-fee-table__head rv-fee-table__head--value"><span className="rv-fee-table__head-full">Spread</span><span className="rv-fee-table__head-short">Spread</span></p>
-                    <p className="rv-fee-table__head rv-fee-table__head--note">Commission</p>
-                    {accountTypes.map((at, i) => {
-                      const last = i === accountTypes.length - 1
-                      return (
-                        <React.Fragment key={at.account_type ?? at.name ?? i}>
-                          <div className={`rv-fee-table__cell rv-fee-table__cell--type${last ? ' rv-fee-table__cell--last' : ''}`}>
-                            <img src="/assets/images/rv-icon-coin-group.svg" alt="" /><span>{at.account_type ?? at.name}</span>
-                          </div>
-                          <div className={`rv-fee-table__cell rv-fee-table__cell--value${last ? ' rv-fee-table__cell--last' : ''}`}>
-                            <span>{at.spread != null ? `${at.spread} pips` : 'N/A'}</span>
-                          </div>
-                          <div className={`rv-fee-table__cell rv-fee-table__cell--note${last ? ' rv-fee-table__cell--last' : ''}`}>
-                            <span>{at.commission ?? '$0'}</span>
-                          </div>
-                        </React.Fragment>
-                      )
-                    })}
+                {(() => {
+                  const depositFeeVal  = payMethods.filter(pm => pm.for_deposit).some(pm => pm.deposit_fee && pm.deposit_fee !== '0') ? 'Varies' : '$0'
+                  const withdrawFeeVal = payMethods.filter(pm => pm.for_withdrawal).some(pm => pm.withdrawal_fee && pm.withdrawal_fee !== '0') ? 'Varies' : '$0'
+                  const feeRows = [
+                    { icon: 'rv-icon-currency-exchange-group.svg', label: 'EUR/USD Spread', value: minSpread != null && minSpread < 99 ? `From ${minSpread} pips` : 'N/A' },
+                    { icon: 'rv-icon-coin-group.svg',               label: 'Commission',     value: minCommission != null ? `From $${minCommission}` : '$0' },
+                    { icon: 'icon-card-outline.svg',                label: 'Min. Deposit',   value: broker.accounts?.min_deposit != null ? `$${broker.accounts.min_deposit}` : 'N/A' },
+                    { icon: 'rv-icon-money-deposit.svg',            label: 'Deposit Fee',    value: depositFeeVal },
+                    { icon: 'rv-icon-money-withdraw.svg',           label: 'Withdrawal Fee', value: withdrawFeeVal },
+                  ]
+                  return (
+                    <div className="rv-fee-table">
+                      <p className="rv-fee-table__head rv-fee-table__head--type">Fee Type</p>
+                      <p className="rv-fee-table__head rv-fee-table__head--value">
+                        <span className="rv-fee-table__head-full">{broker.name} Cost</span>
+                        <span className="rv-fee-table__head-short">Cost</span>
+                      </p>
+                      <p className="rv-fee-table__head rv-fee-table__head--note" />
+                      {feeRows.map((row, i) => {
+                        const last = i === feeRows.length - 1
+                        return (
+                          <React.Fragment key={row.label}>
+                            <div className={`rv-fee-table__cell rv-fee-table__cell--type${last ? ' rv-fee-table__cell--last' : ''}`}>
+                              <img src={`/assets/images/${row.icon}`} alt="" /><span>{row.label}</span>
+                            </div>
+                            <div className={`rv-fee-table__cell rv-fee-table__cell--value${last ? ' rv-fee-table__cell--last' : ''}`}>
+                              <span>{row.value}</span>
+                            </div>
+                            <div className={`rv-fee-table__cell rv-fee-table__cell--note${last ? ' rv-fee-table__cell--last' : ''}`} />
+                          </React.Fragment>
+                        )
+                      })}
+                    </div>
+                  )
+                })()}
+
+                {summaryText && (
+                  <div className="rv-callout">
+                    <span className="icon-btn"><img src="/assets/images/rv-icon-info-outline.svg" alt="" /></span>
+                    <div className="rv-callout__text">
+                      <p className="rv-callout__title">Fee Takeaway</p>
+                      <p className="lead">{summaryText}</p>
+                    </div>
                   </div>
                 )}
 

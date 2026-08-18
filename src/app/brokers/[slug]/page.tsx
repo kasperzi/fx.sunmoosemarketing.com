@@ -827,85 +827,87 @@ export default async function BrokerReviewPage(
 
       {/* ── RELATED BROKERS ───────────────────────────────────────────────────── */}
       {related.length > 0 && (
-        <section className="rv-related">
-          <div className="rv-related__head">
-            <div className="rv-related__copy">
-              <p className="eyebrow">RELATED BROKERS</p>
-              <h2>Others Also Viewed These Brokers</h2>
-              <p className="lead">Explore similar forex brokers that traders compare with {broker.name}</p>
-            </div>
-            <div className="rv-related__nav">
-              <button type="button" className="rv-related__arrow" aria-label="Previous"><img src="/assets/images/rv-icon-chevron-round-left.svg" alt="" /></button>
-              <button type="button" className="rv-related__arrow" aria-label="Next"><img src="/assets/images/rv-icon-chevron-round-right.svg" alt="" /></button>
+        <section className="section section--brokers">
+          <div className="section-inner">
+            <div className="section-head">
+              <div>
+                <p className="eyebrow">RELATED BROKERS</p>
+                <h2>Others Also Viewed These Brokers</h2>
+                <p className="lead">Explore similar forex brokers that traders compare with {broker.name}</p>
+              </div>
               <a href="/" className="btn btn--text btn--text--px">View All Brokers <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></a>
             </div>
-          </div>
 
-          <div className="rv-related__cards" id="relatedCarousel">
-            {related.map((b) => {
-              const bLogo = bmsUrl(b.logos?.rectangle_light ?? b.logos?.square_light)
-              const bRating = b.total_rating
-              const bPromotion = b.promotion
-              return (
-                <div key={b.id} className="rv-related-card">
-                  <div className="rv-related-card__top">
-                    {bLogo
-                      ? <img src={bLogo} alt="" className="rv-related-card__photo" style={{ maxHeight: 40, objectFit: 'contain' }} />
-                      : <span style={{ fontWeight: 700 }}>{b.name}</span>
-                    }
-                    <div>
-                      <p className="rv-related-card__name">{b.name}</p>
-                      {bRating != null && (
-                        <p className="rv-related-card__rating">
-                          <img src="/assets/images/icon-star.svg" alt="" />{bRating.toFixed(1)}/5
-                        </p>
+            <div className="broker-cards">
+              {related.map((b) => {
+                const bLogo = bmsUrl(b.logos?.square_light ?? b.logos?.square_dark)
+                const bRating = b.total_rating != null ? Math.round(b.total_rating * 10) / 10 : null
+                const bMinDeposit = b.min_deposit != null ? `$${b.min_deposit}` : '—'
+                const bMinSpread = b.min_spread != null ? `${b.min_spread} pips` : '—'
+                return (
+                  <article key={b.id} className="broker-card">
+                    <div className="broker-card__head">
+                      {bLogo
+                        ? <img src={bLogo} alt={b.name} className="broker-logo" loading="lazy" />
+                        : <span className="broker-logo-placeholder">{b.name.charAt(0)}</span>
+                      }
+                      <div>
+                        <p className="broker-name">{b.name}</p>
+                        {bRating != null && (
+                          <span className="rating-badge">
+                            <img src="/assets/images/icon-star.svg" alt="" />{bRating}/5
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="availability-badge">
+                      <img src="/assets/images/icon-check-circle.svg" alt="" />Available in your country
+                    </div>
+
+                    <ul className="broker-facts">
+                      {b.users_count != null && (
+                        <li>
+                          <img src="/assets/images/icon-users.svg" alt="" />{b.users_count.toLocaleString('en-US')} users
+                        </li>
                       )}
+                      <li>
+                        <img src="/assets/images/icon-swap.svg" alt="" />
+                        <span>Min. spread</span>
+                        <strong>{bMinSpread}</strong>
+                      </li>
+                      <li>
+                        <img src="/assets/images/icon-card.svg" alt="" />
+                        <span>Min. deposit</span>
+                        <strong>{bMinDeposit}</strong>
+                      </li>
+                      {(b.platforms?.length ?? 0) > 0 && (
+                        <li className="broker-facts__platform">
+                          <span><img src="/assets/images/icon-pc-check.svg" alt="" />Platform</span>
+                          <div className="tag-row">
+                            {(b.platforms ?? []).map((p: string) => <span key={p} className="tag">{p}</span>)}
+                          </div>
+                        </li>
+                      )}
+                      {b.promotion?.bonus_type && (
+                        <li>
+                          <img src="/assets/images/icon-gift-light.svg" alt="" />
+                          <span>Bonus</span>
+                          <strong>{b.promotion.bonus_type}</strong>
+                        </li>
+                      )}
+                    </ul>
+
+                    <div className="broker-card__ctas">
+                      {b.affiliate_link && (
+                        <a href={b.affiliate_link} className="btn btn--primary btn--block" target="_blank" rel="noopener noreferrer nofollow">Visit Broker</a>
+                      )}
+                      <a href={`/brokers/${b.slug}`} className="btn btn--text btn--text--px btn--center">Read Review <img src="/assets/images/icon-arrow-right.svg" alt="" /></a>
                     </div>
-                  </div>
-                  <p className="rv-related-card__available"><img src="/assets/images/icon-check-circle.svg" alt="" />Available in your country</p>
-                  <div className="rv-related-card__stats">
-                    {b.users_count != null && (
-                      <div className="rv-related-card__stat">
-                        <img src="/assets/images/icon-users.svg" alt="" />
-                        <span>{b.users_count.toLocaleString()} users</span>
-                      </div>
-                    )}
-                    <div className="rv-related-card__stat">
-                      <img src="/assets/images/icon-swap.svg" alt="" />
-                      <span className="rv-related-card__stat-label">Min. spread</span>
-                      <strong>{b.min_spread != null ? `${b.min_spread} pips` : 'N/A'}</strong>
-                    </div>
-                    <div className="rv-related-card__stat">
-                      <img src="/assets/images/icon-card-outline.svg" alt="" />
-                      <span className="rv-related-card__stat-label">Min. deposit</span>
-                      <strong>{b.min_deposit != null ? `$${b.min_deposit}` : 'N/A'}</strong>
-                    </div>
-                    {(b.platforms?.length ?? 0) > 0 && (
-                      <div className="rv-related-card__platform">
-                        <div className="rv-related-card__stat">
-                          <img src="/assets/images/icon-pc-check.svg" alt="" />
-                          <span className="rv-related-card__stat-label">Platform</span>
-                        </div>
-                        <div className="rv-related-card__tags">
-                          {(b.platforms ?? []).slice(0, 3).map((p: string) => <span key={p}>{p}</span>)}
-                        </div>
-                      </div>
-                    )}
-                    <div className="rv-related-card__stat">
-                      <img src="/assets/images/icon-gift-light.svg" alt="" />
-                      <span className="rv-related-card__stat-label">Bonus</span>
-                      <strong className={bPromotion ? 'rv-related-card__bonus--accent' : undefined}>
-                        {bPromotion?.bonus_type ?? 'No deposit bonus'}
-                      </strong>
-                    </div>
-                  </div>
-                  <div className="rv-related-card__ctas">
-                    <a href={b.affiliate_link ?? '#'} className="btn btn--primary" target="_blank" rel="noopener noreferrer nofollow">Visit Broker</a>
-                    <a href={`/brokers/${b.slug}`} className="btn btn--text btn--text--px btn--center">Read Review <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></a>
-                  </div>
-                </div>
-              )
-            })}
+                  </article>
+                )
+              })}
+            </div>
           </div>
         </section>
       )}

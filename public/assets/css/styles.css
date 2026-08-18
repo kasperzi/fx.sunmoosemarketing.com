@@ -2521,7 +2521,7 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 
 /* Blog Index page */
 .blog-filter-pills { display: flex; gap: 8px; align-items: center; justify-content: center; flex-wrap: wrap; width: 100%; }
-.blog-filter-pill { display: flex; align-items: center; gap: 10px; height: 40px; padding: 8px 12px; border-radius: var(--radius-pill); border: 1px solid var(--gray); background: var(--white); font-size: 14px; color: var(--text); cursor: pointer; font-family: inherit; }
+.blog-filter-pill { display: flex; align-items: center; gap: 10px; height: 40px; padding: 8px 12px; border-radius: var(--radius-pill); border: 1px solid var(--gray); background: var(--white); font-size: 14px; color: var(--text); cursor: pointer; font-family: inherit; text-decoration: none; }
 .blog-filter-pill__count { background: var(--light-blue); border-radius: var(--radius-pill); padding: 0 8px; font-weight: 600; color: var(--primary); font-size: 14px; }
 .blog-filter-pill:hover { border-color: var(--primary); color: var(--primary); }
 .blog-filter-pill--active { background: var(--primary); border-color: var(--primary); color: var(--white); }

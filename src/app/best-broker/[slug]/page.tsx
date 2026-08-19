@@ -257,47 +257,46 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
 
   if (type === 'comparison_table') {
     interface CmpBroker { broker_id: number; name: string }
-    const blockBrokers = (data.brokers as CmpBroker[]) ?? []
+    const blockBrokers   = (data.brokers as CmpBroker[]) ?? []
+    const selectedCols   = (data.columns as string[]) ?? ['min_deposit','min_withdrawal_fee','max_leverage','min_lot_size','min_spread','has_demo_accounts']
     if (blockBrokers.length === 0) return null
 
-    // Fixed column definitions — values auto-pulled from live collection items
-    const CMP_COLS = [
-      { key: 'min_deposit',       label: 'Min Deposit',      format: (v: CollectionItem) => v.min_deposit   != null ? `$${v.min_deposit}`                  : '—' },
-      { key: 'min_withdrawal_fee',label: 'Withdrawal Fee',   format: (v: CollectionItem) => v.min_withdrawal_fee != null ? (v.min_withdrawal_fee === 0 ? 'Free' : `$${v.min_withdrawal_fee}`) : '—' },
-      { key: 'max_leverage',      label: 'Max Leverage',     format: (v: CollectionItem) => v.max_leverage   != null ? `1:${v.max_leverage}`                : '—' },
-      { key: 'min_lot_size',      label: 'Min Lot Size',     format: (v: CollectionItem) => v.min_lot_size   != null ? String(v.min_lot_size)               : '—' },
-      { key: 'min_spread',        label: 'Min Spread',       format: (v: CollectionItem) => v.min_spread     != null ? `${v.min_spread} pips`               : '—' },
-      { key: 'has_demo_accounts', label: 'Demo Account',     format: (v: CollectionItem) => v.has_demo_accounts ? '✔' : '✘',
-        className: (v: CollectionItem) => v.has_demo_accounts ? 'cmp-cell--yes' : 'cmp-cell--no' },
-    ] as const
+    // All possible column definitions — values auto-pulled from live collection items
+    const ALL_CMP_COLS = [
+      { key: 'min_deposit',        label: 'Min Deposit',    render: (v: CollectionItem) => <>{v.min_deposit   != null ? `$${v.min_deposit}`   : '—'}</> },
+      { key: 'min_withdrawal_fee', label: 'Withdrawal Fee', render: (v: CollectionItem) => <>{v.min_withdrawal_fee != null ? (v.min_withdrawal_fee === 0 ? 'Free' : `$${v.min_withdrawal_fee}`) : '—'}</> },
+      { key: 'max_leverage',       label: 'Max Leverage',   render: (v: CollectionItem) => <>{v.max_leverage   != null ? `1:${v.max_leverage}` : '—'}</> },
+      { key: 'min_lot_size',       label: 'Min Lot Size',   render: (v: CollectionItem) => <>{v.min_lot_size   != null ? String(v.min_lot_size) : '—'}</> },
+      { key: 'min_spread',         label: 'Min Spread',     render: (v: CollectionItem) => <>{v.min_spread     != null ? `${v.min_spread} pips` : '—'}</> },
+      { key: 'has_demo_accounts',  label: 'Demo Account',   render: (v: CollectionItem) => v.has_demo_accounts
+          ? <img src="/assets/images/icon-check-mark.svg" alt="Yes" style={{ width: 22, height: 22 }} />
+          : <img src="/assets/images/icon-xcircle.svg"    alt="No"  style={{ width: 22, height: 22 }} /> },
+    ]
+    const activeCols = ALL_CMP_COLS.filter(c => selectedCols.includes(c.key))
 
     return (
       <div key={block.id} className="bb-cmp-table-wrap">
-        <div className="bb-cmp-table" style={{ overflowX: 'auto' }}>
-          <table className="bb-cmp-tbl">
-            <thead>
-              <tr>
-                <th className="bb-cmp-tbl__broker-col">Broker</th>
-                {CMP_COLS.map(col => <th key={col.key}>{col.label}</th>)}
-              </tr>
-            </thead>
-            <tbody>
-              {blockBrokers.map(b => {
-                const live = items.find(it => it.broker_id === b.broker_id)
-                return (
-                  <tr key={b.broker_id}>
-                    <td className="bb-cmp-tbl__broker-name">{b.name}</td>
-                    {CMP_COLS.map(col => {
-                      const val  = live ? col.format(live) : '—'
-                      const cls  = live && 'className' in col ? (col as { className: (v: CollectionItem) => string }).className(live) : ''
-                      return <td key={col.key} className={cls}>{val}</td>
-                    })}
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
+        <table className="bb-cmp-tbl">
+          <thead>
+            <tr>
+              <th className="bb-cmp-tbl__broker-col">Broker</th>
+              {activeCols.map(col => <th key={col.key}>{col.label}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {blockBrokers.map(b => {
+              const live = items.find(it => it.broker_id === b.broker_id)
+              return (
+                <tr key={b.broker_id}>
+                  <td className="bb-cmp-tbl__broker-name">{b.name}</td>
+                  {activeCols.map(col => (
+                    <td key={col.key}>{live ? col.render(live) : '—'}</td>
+                  ))}
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
       </div>
     )
   }

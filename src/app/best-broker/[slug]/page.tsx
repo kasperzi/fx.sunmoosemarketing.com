@@ -211,7 +211,7 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
   }
 
   if (type === 'broker_table') {
-    interface TableBroker { broker_id: number; name: string; logo_url?: string | null; rating?: string; visit_url?: string; min_deposit?: number | null; min_spread?: string; is_regulated?: boolean }
+    interface TableBroker { broker_id: number; name: string; logo_url?: string | null; rating?: string; min_deposit?: number | null; is_regulated?: boolean }
     const brokers = (data.brokers as TableBroker[]) ?? []
     if (brokers.length === 0) return null
     return (
@@ -237,9 +237,9 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
             <p className="bb-broker-row__rating">
               {b.rating ? <><img src="/assets/images/icon-star.svg" alt="" />{b.rating}</> : '—'}
             </p>
-            <p className="bb-broker-row__stat">{b.min_deposit != null ? `$${b.min_deposit}` : '—'}</p>
-            <p className="bb-broker-row__stat">{b.min_spread || '—'}</p>
-            <p className="bb-broker-row__stat">{b.is_regulated ? '✔' : '—'}</p>
+            <p className="bb-broker-row__stat">{btLive?.min_deposit != null ? `$${btLive.min_deposit}` : b.min_deposit != null ? `$${b.min_deposit}` : '—'}</p>
+            <p className="bb-broker-row__stat">{btLive?.min_spread != null ? `${btLive.min_spread} pips` : '—'}</p>
+            <p className="bb-broker-row__stat">{(btLive?.is_regulated ?? b.is_regulated) ? '✔' : '—'}</p>
             <div className="bb-broker-row__visit">
               {btUrl
                 ? <a href={btUrl} className="btn btn--text" target="_blank" rel="noopener noreferrer nofollow">

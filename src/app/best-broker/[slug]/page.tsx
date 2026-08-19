@@ -3,7 +3,6 @@ import type { Metadata } from 'next'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import VideoLightbox from '@/components/VideoLightbox'
-import ComparisonTable from '@/components/ComparisonTable'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,11 +24,13 @@ interface CollectionItem {
   }
   min_deposit:                      number | null
   max_leverage:                     string | null
+  min_lot_size:                     number | null
   is_regulated:                     boolean
   has_negative_balance_protection:  boolean
   has_demo_accounts:                boolean
   us_stock_fee:                     number | null
   min_spread:                       number | null
+  min_withdrawal_fee:               number | null
   total_rating:                     number | null
   mobile_app_rating:                number | null
   affiliate_link:                   string | null
@@ -256,11 +257,49 @@ function renderArticleItem(block: ContentBlock, items: CollectionItem[]) {
 
   if (type === 'comparison_table') {
     interface CmpBroker { broker_id: number; name: string }
-    interface CmpColumn { id: string; label: string }
-    const brokers = (data.brokers as CmpBroker[]) ?? []
-    const columns = (data.columns as CmpColumn[]) ?? []
-    const cells   = (data.cells as Record<string, string>) ?? {}
-    return <ComparisonTable key={block.id} brokers={brokers} columns={columns} cells={cells} />
+    const blockBrokers = (data.brokers as CmpBroker[]) ?? []
+    if (blockBrokers.length === 0) return null
+
+    // Fixed column definitions — values auto-pulled from live collection items
+    const CMP_COLS = [
+      { key: 'min_deposit',       label: 'Min Deposit',      format: (v: CollectionItem) => v.min_deposit   != null ? `$${v.min_deposit}`                  : '—' },
+      { key: 'min_withdrawal_fee',label: 'Withdrawal Fee',   format: (v: CollectionItem) => v.min_withdrawal_fee != null ? (v.min_withdrawal_fee === 0 ? 'Free' : `$${v.min_withdrawal_fee}`) : '—' },
+      { key: 'max_leverage',      label: 'Max Leverage',     format: (v: CollectionItem) => v.max_leverage   != null ? `1:${v.max_leverage}`                : '—' },
+      { key: 'min_lot_size',      label: 'Min Lot Size',     format: (v: CollectionItem) => v.min_lot_size   != null ? String(v.min_lot_size)               : '—' },
+      { key: 'min_spread',        label: 'Min Spread',       format: (v: CollectionItem) => v.min_spread     != null ? `${v.min_spread} pips`               : '—' },
+      { key: 'has_demo_accounts', label: 'Demo Account',     format: (v: CollectionItem) => v.has_demo_accounts ? '✔' : '✘',
+        className: (v: CollectionItem) => v.has_demo_accounts ? 'cmp-cell--yes' : 'cmp-cell--no' },
+    ] as const
+
+    return (
+      <div key={block.id} className="bb-cmp-table-wrap">
+        <div className="bb-cmp-table" style={{ overflowX: 'auto' }}>
+          <table className="bb-cmp-tbl">
+            <thead>
+              <tr>
+                <th className="bb-cmp-tbl__broker-col">Broker</th>
+                {CMP_COLS.map(col => <th key={col.key}>{col.label}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {blockBrokers.map(b => {
+                const live = items.find(it => it.broker_id === b.broker_id)
+                return (
+                  <tr key={b.broker_id}>
+                    <td className="bb-cmp-tbl__broker-name">{b.name}</td>
+                    {CMP_COLS.map(col => {
+                      const val  = live ? col.format(live) : '—'
+                      const cls  = live && 'className' in col ? (col as { className: (v: CollectionItem) => string }).className(live) : ''
+                      return <td key={col.key} className={cls}>{val}</td>
+                    })}
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    )
   }
 
   if (type === 'broker_comparison') {

@@ -1810,6 +1810,20 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 .bb-broker-row__flags span { font-size: 14px; color: var(--text); }
 .bb-broker-row .btn--text { padding: 12px 24px; justify-self: end; }
 
+/* ── Comparison Table block ─────────────────────────────────────── */
+.bb-cmp-table-wrap { width: 100%; overflow-x: auto; border: 1px solid var(--gray); border-radius: var(--radius-md); background: var(--white); box-shadow: var(--shadow-sm); }
+.bb-cmp-tbl { width: 100%; border-collapse: collapse; font-size: 14px; }
+.bb-cmp-tbl thead tr { border-bottom: 2px solid var(--gray); }
+.bb-cmp-tbl th { padding: 14px 20px; font-weight: 600; color: var(--text); text-align: left; white-space: nowrap; background: var(--light-blue); }
+.bb-cmp-tbl th:not(:first-child) { text-align: center; }
+.bb-cmp-tbl td { padding: 14px 20px; border-bottom: 1px solid var(--gray); color: var(--text); }
+.bb-cmp-tbl tr:last-child td { border-bottom: none; }
+.bb-cmp-tbl td:not(:first-child) { text-align: center; }
+.bb-cmp-tbl__broker-col { min-width: 160px; }
+.bb-cmp-tbl__broker-name { font-weight: 600; }
+.cmp-cell--yes { color: #00c48c; font-weight: 700; }
+.cmp-cell--no  { color: #ff4d4f; font-weight: 700; }
+
 .bb-mini-table { display: flex; flex-direction: column; width: 100%; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--gray); }
 .bb-mini-table__row { display: flex; width: 100%; }
 .bb-mini-table__row + .bb-mini-table__row { border-top: 1px solid var(--gray); }

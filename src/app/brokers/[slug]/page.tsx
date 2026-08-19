@@ -31,6 +31,7 @@ interface Promotion {
 interface BrokerCountries { available: string[]; restricted: string[] }
 interface BrokerData {
   id: number; name: string; slug: string; brand_color?: string|null
+  total_rating?: number|null
   logos: BrokerLogos
   regulation: { is_regulated: boolean; has_negative_balance_protection: boolean; regulators: Regulator[] }
   accounts: { min_deposit?: number|null; max_leverage?: string|null; platforms: PlatformItem[]; account_types: AccountType[]; has_demo_accounts?: boolean }

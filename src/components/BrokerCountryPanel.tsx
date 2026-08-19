@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { COUNTRY_NAMES, countryName, flagUrl } from '@/lib/countries'
+import { COUNTRIES, countryName, flagUrl, flagUrlSmall } from '@/lib/countries'
 
 interface BrokerCountries { available: string[]; restricted: string[] }
 interface Promotion {
@@ -74,7 +74,7 @@ export default function BrokerCountryPanel({ initialCountry, brokerCountries, pr
     document.cookie = `fx_country_pref=${code};max-age=31536000;path=/;SameSite=Lax`
   }
 
-  const entries = Object.entries(COUNTRY_NAMES).filter(([code, name]) => {
+  const entries = COUNTRIES.filter(({ code, name }) => {
     const q = search.toLowerCase()
     return name.toLowerCase().includes(q) || code.toLowerCase().includes(q)
   })
@@ -102,7 +102,7 @@ export default function BrokerCountryPanel({ initialCountry, brokerCountries, pr
             />
           </div>
           <ul className="country-list" role="listbox">
-            {entries.map(([code, name]) => (
+            {entries.map(({ code, name }) => (
               <li
                 key={code}
                 className={`country-option${code === country ? ' country-option--selected' : ''}`}
@@ -111,6 +111,7 @@ export default function BrokerCountryPanel({ initialCountry, brokerCountries, pr
                 data-name={name}
                 onClick={() => select(code)}
               >
+                <img src={flagUrlSmall(code)} width={20} height={15} alt="" className="flag-emoji" />
                 {name}
               </li>
             ))}

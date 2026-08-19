@@ -6,6 +6,7 @@ import Nav    from '@/components/Nav'
 import Footer from '@/components/Footer'
 import { detectServerCountry } from '@/lib/detect-country.server'
 import BrokerCountryPanel from '@/components/BrokerCountryPanel'
+import BrokerAvailabilityBadge from '@/components/BrokerAvailabilityBadge'
 import { countryName, flagUrl as sharedFlagUrl } from '@/lib/countries'
 
 export const dynamic = 'force-dynamic'
@@ -364,8 +365,11 @@ export default async function BrokerReviewPage(
                         </span>
                       ))}
                       <span className="rv-pill">
-                        <img src={flagUrl(country)} alt="" style={{ width: 20, height: 15, objectFit: 'cover' }} />
-                        {countryStatus === 'restricted' ? `Not available in ${countryName(country)}` : `Available in ${countryName(country)}`}
+                        <BrokerAvailabilityBadge
+                          initialCountry={country}
+                          brokerCountries={broker.countries ?? null}
+                          imgStyle={{ width: 20, height: 15, objectFit: 'cover' }}
+                        />
                       </span>
                     </div>
                     {summaryText && <p className="lead">{summaryText}</p>}
@@ -720,8 +724,11 @@ export default async function BrokerReviewPage(
                   </p>
                 )}
                 <p className="rv-side-card__flag">
-                  <img src={flagUrl(country)} alt="" style={{ width: 20, height: 15, objectFit: 'cover' }} />
-                  {countryStatus === 'restricted' ? `Not available in ${countryName(country)}` : `Available in ${countryName(country)}`}
+                  <BrokerAvailabilityBadge
+                    initialCountry={country}
+                    brokerCountries={broker.countries ?? null}
+                    imgStyle={{ width: 20, height: 15, objectFit: 'cover' }}
+                  />
                 </p>
                 <a href={affiliateLink} className="btn btn--secondary btn--block" target="_blank" rel="noopener noreferrer nofollow">Visit Broker</a>
                 <a href="/compare-brokers" className="btn btn--text btn--text--px btn--center">Compare Broker <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></a>

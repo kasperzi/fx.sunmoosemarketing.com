@@ -13,15 +13,14 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
 
-  // Manual user preference (cookie) takes priority over IP detection
+  // Always detect raw IP country (used client-side to detect IP changes)
+  const ipCountry = await detectServerCountry() ?? 'NL'
+  // Manual user preference (cookie) takes priority
   const manualCountry = cookieStore.get('fx_country_pref')?.value?.toUpperCase()
-  const detectedCountry = /^[A-Z]{2}$/.test(manualCountry ?? '')
-    ? manualCountry!
-    : await detectServerCountry()
-  const country = detectedCountry ?? 'NL'
+  const country = /^[A-Z]{2}$/.test(manualCountry ?? '') ? manualCountry! : ipCountry
 
   return (
-    <html lang="en" data-country={country}>
+    <html lang="en" data-country={country} data-ip-country={ipCountry}>
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />

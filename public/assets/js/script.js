@@ -110,9 +110,22 @@ initCountrySelect(document.getElementById('reviewCountrySelect'));
   try { sessionStorage.removeItem('fx_country'); } catch(e) {}
 
   var code = document.documentElement.dataset.country;
+  var ipCountry = document.documentElement.dataset.ipCountry;
 
   function isValidCode(c) {
     return c && c.length === 2 && /^[A-Z]{2}$/.test(c);
+  }
+
+  // If IP changed since manual selection — clear the override and use real IP
+  if (isValidCode(ipCountry)) {
+    var ipAtSelection = null;
+    try { ipAtSelection = localStorage.getItem('fx_ip_at_selection'); } catch(e) {}
+    if (ipAtSelection && ipAtSelection !== ipCountry) {
+      try { localStorage.removeItem('fx_country_pref'); } catch(e) {}
+      try { localStorage.removeItem('fx_ip_at_selection'); } catch(e) {}
+      document.cookie = 'fx_country_pref=;max-age=0;path=/;SameSite=Lax';
+      code = ipCountry;
+    }
   }
 
   if (isValidCode(code)) {
@@ -339,7 +352,10 @@ function initHoverPinWidget({ widget, toggle, panel, onOpen, onClose }) {
     confirmBtn.addEventListener('click', function() {
       var code = panelCountryCtrl ? panelCountryCtrl.getSelectedCode() : null;
       if (code) {
+        var currentIp = document.documentElement.dataset.ipCountry;
         try { localStorage.setItem('fx_country_pref', code); } catch(e) {}
+        // Remember which IP was active so we can detect when IP changes
+        if (currentIp) { try { localStorage.setItem('fx_ip_at_selection', currentIp); } catch(e) {} }
         // Cookie so server renders the correct country on next request
         document.cookie = 'fx_country_pref=' + code + ';max-age=31536000;path=/;SameSite=Lax';
         window.dispatchEvent(new CustomEvent('fx:countryChange', { detail: code }));

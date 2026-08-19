@@ -5,6 +5,8 @@ import type { Metadata } from 'next'
 import Nav    from '@/components/Nav'
 import Footer from '@/components/Footer'
 import { detectServerCountry } from '@/lib/detect-country.server'
+import BrokerCountryPanel from '@/components/BrokerCountryPanel'
+import { countryName, flagUrl as sharedFlagUrl } from '@/lib/countries'
 
 export const dynamic = 'force-dynamic'
 
@@ -133,35 +135,8 @@ function extractText(v: string|{text:string}): string {
   return typeof v === 'string' ? v : (v?.text ?? '')
 }
 
-function flagUrl(code: string): string {
-  return `https://flagcdn.com/w160/${code.toLowerCase()}.png`
-}
-
-const COUNTRY_NAMES: Record<string, string> = {
-  NL:'Netherlands', GB:'United Kingdom', US:'United States', DE:'Germany', FR:'France',
-  AU:'Australia', CA:'Canada', SG:'Singapore', AE:'United Arab Emirates', ZA:'South Africa',
-  NG:'Nigeria', KE:'Kenya', IN:'India', MY:'Malaysia', TH:'Thailand', PH:'Philippines',
-  ID:'Indonesia', BR:'Brazil', MX:'Mexico', IT:'Italy', ES:'Spain', PT:'Portugal',
-  BE:'Belgium', NZ:'New Zealand', JP:'Japan', HK:'Hong Kong', SE:'Sweden', NO:'Norway',
-  DK:'Denmark', CH:'Switzerland', AT:'Austria', PL:'Poland', RO:'Romania', CZ:'Czechia',
-  // Balkans & Eastern Europe
-  BA:'Bosnia and Herzegovina', RS:'Serbia', HR:'Croatia', SI:'Slovenia', MK:'North Macedonia',
-  ME:'Montenegro', AL:'Albania', XK:'Kosovo', BG:'Bulgaria', SK:'Slovakia', HU:'Hungary',
-  UA:'Ukraine', BY:'Belarus', MD:'Moldova', GR:'Greece', TR:'Turkey', CY:'Cyprus',
-  // Middle East & Africa
-  SA:'Saudi Arabia', QA:'Qatar', KW:'Kuwait', BH:'Bahrain', OM:'Oman', EG:'Egypt',
-  MA:'Morocco', TN:'Tunisia', GH:'Ghana', TZ:'Tanzania', UG:'Uganda',
-  // Asia
-  PK:'Pakistan', BD:'Bangladesh', LK:'Sri Lanka', VN:'Vietnam', CN:'China', KR:'South Korea', TW:'Taiwan',
-  // Americas
-  AR:'Argentina', CO:'Colombia', CL:'Chile', PE:'Peru',
-  // Other
-  RU:'Russia', IR:'Iran', IQ:'Iraq',
-}
-
-function countryName(code: string): string {
-  return COUNTRY_NAMES[code.toUpperCase()] ?? code.toUpperCase()
-}
+// countryName, flagUrl, COUNTRY_NAMES are imported from @/lib/countries
+function flagUrl(code: string): string { return sharedFlagUrl(code) }
 
 function getCountryStatus(countries: BrokerCountries|null, code: string): 'available'|'restricted'|'unknown' {
   if (!countries) return 'unknown'
@@ -696,75 +671,11 @@ export default async function BrokerReviewPage(
                 <h2>{broker.name} Countries &amp; Promotions</h2>
                 <p className="lead">Check whether {broker.name} is available in your country and review any country-specific promotions, restrictions, or account notes.</p>
 
-                <div className="rv-panel">
-                  <p className="rv-panel__heading">Your selected country</p>
-                  <div className="country-select" id="reviewCountrySelect">
-                    <button type="button" className="select-row country-toggle">
-                      <img src={flagUrl(country)} alt="" className="flag" style={{ width: 20, height: 15, objectFit: 'cover' }} />
-                      <span className="select-value" id="reviewCountryValue">{countryName(country)}</span>
-                      <img src="/assets/images/rv-icon-chevron-down-filled.svg" alt="" className="icon-24 select-chevron" />
-                    </button>
-                    <div className="country-dropdown" hidden>
-                      <div className="country-search">
-                        <img src="/assets/images/icon-search.svg" alt="" />
-                        <input type="text" placeholder="Search country..." autoComplete="off" />
-                      </div>
-                      <ul className="country-list" role="listbox">
-                        {Object.entries(COUNTRY_NAMES).map(([code, name]) => (
-                          <li
-                            key={code}
-                            className={`country-option${code === country ? ' country-option--selected' : ''}`}
-                            role="option"
-                            data-code={code}
-                            data-name={name}
-                          >
-                            {name}
-                          </li>
-                        ))}
-                      </ul>
-                      <p className="country-empty" hidden>No countries found.</p>
-                    </div>
-                  </div>
-                  <p className="rv-note">Detected automatically. You can change it anytime.</p>
-
-                  <div className="rv-info-list">
-                    <div className="rv-info-list__row">
-                      <span className="rv-fact-card__icon"><img src="/assets/images/rv-icon-language.svg" alt="" /></span>
-                      <span className="rv-info-list__label">Availability</span>
-                      <span className="rv-info-list__value">
-                        {countryStatus === 'restricted'
-                          ? `Not available in ${countryName(country)}`
-                          : countryStatus === 'available'
-                            ? `Available in ${countryName(country)}`
-                            : 'Check website for availability'
-                        }
-                      </span>
-                    </div>
-                    <div className="rv-info-list__row">
-                      <span className="rv-fact-card__icon"><img src="/assets/images/icon-gift.svg" alt="" /></span>
-                      <span className="rv-info-list__label">Welcome Bonus</span>
-                      <span className="rv-info-list__value">
-                        {promos.length > 0
-                          ? `${promos[0].bonus_type ?? 'Active bonus'}${promos[0].bonus_amount ? `: ${promos[0].bonus_amount}` : ''}`
-                          : 'No Active Deposit Bonus'
-                        }
-                      </span>
-                    </div>
-                    <div className="rv-info-list__row">
-                      <span className="rv-fact-card__icon"><img src="/assets/images/rv-icon-shield-warning-outline.svg" alt="" /></span>
-                      <span className="rv-info-list__label">Restrictions</span>
-                      <span className="rv-info-list__value">
-                        {countryStatus === 'restricted'
-                          ? `Trading restricted in ${countryName(country)}`
-                          : 'Entity-specific terms may apply'
-                        }
-                      </span>
-                    </div>
-                  </div>
-
-                  <p className="rv-note">Availability, promotions, restrictions, and affiliate links may vary depending on your selected country and the broker entity you register with.</p>
-                  <a href={`/?country=${country}`} className="btn btn--text btn--text--px">View brokers available in {countryName(country)} <img src="/assets/images/icon-arrow-right-duotone.svg" alt="" /></a>
-                </div>
+                <BrokerCountryPanel
+                  initialCountry={country}
+                  brokerCountries={broker.countries ?? null}
+                  promotions={broker.promotions ?? []}
+                />
               </div>
 
               {/* ── FAQ ─────────────────────────────────────────────────────── */}

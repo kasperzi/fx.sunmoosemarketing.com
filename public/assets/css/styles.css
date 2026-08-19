@@ -1812,13 +1812,16 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 
 .bb-mini-table { display: flex; flex-direction: column; width: 100%; border-radius: var(--radius-md); overflow: visible; border: 1px solid var(--gray); }
 .bb-mini-table__row { display: flex; width: 100%; }
-.bb-mini-table__row:first-child { border-radius: var(--radius-md) var(--radius-md) 0 0; overflow: hidden; }
-.bb-mini-table__row:last-child  { border-radius: 0 0 var(--radius-md) var(--radius-md); overflow: hidden; }
 .bb-mini-table__row + .bb-mini-table__row { border-top: 1px solid var(--gray); }
 .bb-mini-table__cell { flex: 1; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 20px 24px; font-size: 14px; }
 .bb-mini-table__cell:nth-child(n+2) { border-left: 1px solid var(--gray); }
 .bb-mini-table__cell--head { font-weight: 600; color: var(--text); justify-content: flex-start; }
-.bb-mini-table__cell--dropdown { padding: 8px 24px; overflow: visible; }
+.bb-mini-table__cell--dropdown { padding: 8px 24px; position: relative; z-index: 201; }
+/* Rounded corners on cells instead of rows (rows must stay overflow:visible for dropdown) */
+.bb-mini-table__row:first-child .bb-mini-table__cell:first-child  { border-radius: var(--radius-md) 0 0 0; }
+.bb-mini-table__row:first-child .bb-mini-table__cell:last-child   { border-radius: 0 var(--radius-md) 0 0; }
+.bb-mini-table__row:last-child  .bb-mini-table__cell:first-child  { border-radius: 0 0 0 var(--radius-md); }
+.bb-mini-table__row:last-child  .bb-mini-table__cell:last-child   { border-radius: 0 0 var(--radius-md) 0; }
 .mini-dropdown { position: relative; width: 100%; }
 .bb-mini-table__dropdown { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 24px; border: 1px solid var(--gray); border-radius: 8px; background: rgba(0, 80, 219, 0.05); font-family: inherit; font-size: 14px; font-weight: 600; color: var(--text); cursor: pointer; }
 .bb-mini-table__dropdown img { width: 13.75px; height: 7.5px; margin-left: auto; transition: transform 0.15s ease; }

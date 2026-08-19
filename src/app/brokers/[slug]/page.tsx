@@ -4,6 +4,7 @@ import { cookies } from 'next/headers'
 import type { Metadata } from 'next'
 import Nav    from '@/components/Nav'
 import Footer from '@/components/Footer'
+import { detectServerCountry } from '@/lib/detect-country.server'
 
 export const dynamic = 'force-dynamic'
 
@@ -209,10 +210,14 @@ export default async function BrokerReviewPage(
 ) {
   const { slug } = await params
 
-  // Detect country (same as layout)
+  // Detect country — same priority as layout + client-side:
+  // 1. Manual cookie preference (user picked explicitly)
+  // 2. Cloudflare IP detection (cf-ipcountry via detectServerCountry)
+  // 3. Fallback 'NL'
   const cookieStore = await cookies()
   const manual = cookieStore.get('fx_country_pref')?.value?.toUpperCase()
-  const country = /^[A-Z]{2}$/.test(manual ?? '') ? manual! : 'NL'
+  const ipCountry = /^[A-Z]{2}$/.test(manual ?? '') ? null : await detectServerCountry()
+  const country = /^[A-Z]{2}$/.test(manual ?? '') ? manual! : (ipCountry ?? 'NL')
 
   const [broker, review, related] = await Promise.all([
     fetchBroker(slug, country),

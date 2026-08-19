@@ -85,7 +85,7 @@ export default function BrokerCountryPanel({ initialCountry, brokerCountries, pr
 
       <div className={`country-select${isOpen ? ' is-open' : ''}`} ref={rootRef}>
         <button type="button" className="select-row country-toggle" onClick={() => setIsOpen(o => !o)}>
-          <img src={flagUrl(country)} alt="" className="flag" style={{ width: 20, height: 15, objectFit: 'cover' }} />
+          <img src={flagUrl(country)} alt="" className="flag" />
           <span className="select-value">{label}</span>
           <img src="/assets/images/rv-icon-chevron-down-filled.svg" alt="" className="icon-24 select-chevron" />
         </button>

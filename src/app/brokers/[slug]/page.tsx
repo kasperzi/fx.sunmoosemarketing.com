@@ -204,7 +204,7 @@ export default async function BrokerReviewPage(
   if (!broker) notFound()
 
   // ── Derived values ──────────────────────────────────────────────────────────
-  const rating        = review?.rating ?? null
+  const rating        = review?.rating ?? broker.total_rating ?? null
   const reviewCount   = review?.review_count ?? null
   const writtenBy     = review?.written_by  ?? 'FX Look Up Editorial Team'
   const reviewedBy    = review?.reviewed_by ?? 'Broker Research Team'

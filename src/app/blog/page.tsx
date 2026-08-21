@@ -106,7 +106,7 @@ export default async function BlogIndexPage({
             {/* Breadcrumb */}
             <div className="breadcrumb" style={{ alignSelf: 'flex-start' }}>
               <img src="/assets/images/icon-home-outline.svg" alt="" className="icon-24" />
-              <span>Home</span>
+              <a href="/">Home</a>
               <img src="/assets/images/icon-chevron-right-rounded.svg" alt="" className="icon-24" />
               <span className="breadcrumb__current">Blog</span>
             </div>

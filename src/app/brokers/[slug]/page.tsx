@@ -259,7 +259,7 @@ export default async function BrokerReviewPage(
             <div className="bb-hero__title-block">
               <div className="breadcrumb">
                 <img src="/assets/images/icon-home-outline.svg" alt="" className="icon-24" />
-                <span>Home</span>
+                <a href="/">Home</a>
                 <img src="/assets/images/icon-chevron-right-rounded.svg" alt="" className="icon-24" />
                 <span>Broker Reviews</span>
                 <img src="/assets/images/icon-chevron-right-rounded.svg" alt="" className="icon-24" />

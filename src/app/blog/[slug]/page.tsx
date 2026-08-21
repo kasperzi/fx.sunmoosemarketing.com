@@ -292,7 +292,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
           <div className="hero__main" style={{ padding: '40px 112px 56px' }}>
             <div className="breadcrumb">
               <img src="/assets/images/icon-home-outline.svg" alt="" className="icon-24" />
-              <span>Home</span>
+              <a href="/">Home</a>
               <img src="/assets/images/icon-chevron-right-rounded.svg" alt="" className="icon-24" />
               <a href="/blog" style={{ color: 'var(--body-text)', textDecoration: 'none', fontSize: 14 }}>Blog</a>
               <img src="/assets/images/icon-chevron-right-rounded.svg" alt="" className="icon-24" />

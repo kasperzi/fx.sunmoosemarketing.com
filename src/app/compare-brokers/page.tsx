@@ -30,7 +30,7 @@ export default function CompareBrokersPage() {
             <div className="hero__main hero__main--search hero__main--search-centered">
               <div className="breadcrumb">
                 <img src="/assets/images/icon-home-outline.svg" alt="" className="icon-24" />
-                <span>Home</span>
+                <a href="/">Home</a>
                 <img src="/assets/images/icon-chevron-right-rounded.svg" alt="" className="icon-24" />
                 <span className="breadcrumb__current">Compare Brokers</span>
               </div>

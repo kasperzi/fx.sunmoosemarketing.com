@@ -1446,7 +1446,8 @@ h3 { font-size: 32px; font-weight: 600; line-height: 1.2; }
 h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 
 .breadcrumb { display: flex; align-items: center; gap: 12px; }
-.breadcrumb span { font-size: 14px; color: var(--body-text); }
+.breadcrumb span, .breadcrumb a { font-size: 14px; color: var(--body-text); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
 .breadcrumb__current { font-weight: 600; color: var(--primary) !important; }
 
 .hero__main--search { flex-direction: column; gap: 24px; padding: 40px 88px 88px; }
@@ -2583,7 +2584,7 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 .side-broker-row__arrow img { width: 24px; height: 24px; }
 
 /* About Us page */
-.about-hero { display: flex; gap: 40px; align-items: flex-start; padding: 0 88px 56px; position: relative; z-index: 1; width: 100%; box-sizing: border-box; max-width: 1440px; margin: 0 auto; }
+.about-hero { display: flex; gap: 40px; align-items: flex-start; padding: 0 112px 56px; position: relative; z-index: 1; width: 100%; box-sizing: border-box; max-width: 1440px; margin: 0 auto; }
 .about-hero__content { display: flex; flex-direction: column; gap: 40px; width: 534px; flex-shrink: 0; padding-top: 80px; }
 .about-hero__copy { display: flex; flex-direction: column; gap: 24px; }
 .about-hero__copy-top { display: flex; flex-direction: column; gap: 12px; }
@@ -2601,13 +2602,13 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 .about-mission__check-item { display: flex; align-items: center; gap: 20px; width: 100%; }
 .about-mission__check-icon { display: flex; flex-shrink: 0; background: var(--light-blue); border: 1px solid var(--gray); border-radius: 8.4px; padding: 11px; }
 .about-mission__check-icon img { width: 25.18px; height: 25.18px; display: block; }
-.about-mission__check-item span { font-size: 20px; color: var(--body-text); }
+.about-mission__check-item span { font-size: 18px; color: var(--body-text); }
 
 .about-stats { display: flex; gap: 24px; width: 100%; }
 .about-stat { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px; border-right: 1px solid var(--text); padding-right: 24px; }
 .about-stat:last-child { border-right: none; padding-right: 0; }
-.about-stat__value { font-size: 64px; font-weight: 600; color: var(--primary); letter-spacing: -3px; line-height: 1; text-align: center; }
-.about-stat__label { font-size: 20px; color: var(--text); text-align: center; }
+.about-stat__value { font-size: 40px; font-weight: 600; color: var(--primary); letter-spacing: -3px; line-height: 1; text-align: center; }
+.about-stat__label { font-size: 16px; color: var(--text); text-align: center; }
 
 .about-trust { display: flex; gap: 40px; align-items: center; padding: 56px 112px; max-width: 1440px; margin: 0 auto; }
 .about-trust__image { width: 590px; flex-shrink: 0; border-radius: var(--radius-lg); }
@@ -2620,7 +2621,7 @@ h4 { font-size: 24px; font-weight: 600; line-height: 1.3; }
 .about-form__copy { width: 496px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; text-align: left; position: relative; z-index: 1; }
 .about-form__card { background: var(--white); box-shadow: var(--shadow-sm); border-radius: var(--radius-lg); padding: 40px 24px; display: flex; flex-direction: column; gap: 40px; flex: 1; min-width: 0; position: relative; z-index: 1; box-sizing: border-box; }
 .about-form__fields { display: flex; flex-direction: column; gap: 20px; width: 100%; }
-.about-form__input, .about-form__textarea { border: 1px solid var(--gray); border-radius: 5px; padding: 12px 14px; font-size: 20px; color: var(--body-text); font-family: inherit; width: 100%; box-sizing: border-box; }
+.about-form__input, .about-form__textarea { border: 1px solid var(--gray); border-radius: 5px; padding: 12px 14px; font-size: 18px; color: var(--body-text); font-family: inherit; width: 100%; box-sizing: border-box; }
 .about-form__textarea { height: 144px; resize: vertical; }
 .about-form__trust { display: flex; gap: 12px; align-items: center; justify-content: center; width: 100%; color: var(--body-text); font-size: 14px; }
 .about-form__trust img { width: 24px; height: 24px; }
